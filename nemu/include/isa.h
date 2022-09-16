@@ -29,7 +29,7 @@ extern char isa_logo[];
 void init_isa();
 
 // reg
-extern CPU_state cpu;
+extern CPU_state cpu; //CPU_state is concatenated with a riscv32
 void isa_reg_display();
 word_t isa_reg_str2val(const char *name, bool *success);
 

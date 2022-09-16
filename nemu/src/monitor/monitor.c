@@ -67,6 +67,7 @@ static long load_img() {
   fclose(fp);
   return size;
 }
+//parse the args from a long instruction, like a "decoder"
 
 static int parse_args(int argc, char *argv[]) {
   const struct option table[] = {
@@ -76,10 +77,10 @@ static int parse_args(int argc, char *argv[]) {
     {"port"     , required_argument, NULL, 'p'},
     {"help"     , no_argument      , NULL, 'h'},
     {0          , 0                , NULL,  0 },
-  };
-  int o;
+  };//defined the option parameters and their behaviours
+  int o;//fetch the argv and parse 
   while ( (o = getopt_long(argc, argv, "-bhl:d:p:", table, NULL)) != -1) {
-    switch (o) {
+    switch (o) {//generate different control messages
       case 'b': sdb_set_batch_mode(); break;
       case 'p': sscanf(optarg, "%d", &difftest_port); break;
       case 'l': log_file = optarg; break;

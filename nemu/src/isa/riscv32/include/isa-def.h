@@ -19,17 +19,16 @@
 #include <common.h>
 
 typedef struct {
-  word_t gpr[32];
-  vaddr_t pc;
+  word_t gpr[32];//General purpose registers, 32!
+  vaddr_t pc;//program counter
 } riscv32_CPU_state;
 
 // decode
 typedef struct {
-  union {
+  union { //share the memory
     uint32_t val;
-  } inst;
+  } inst;//as 
 } riscv32_ISADecodeInfo;
 
 #define isa_mmu_check(vaddr, len, type) (MMU_DIRECT)
-
 #endif

@@ -33,10 +33,10 @@ static void restart() {
   cpu.gpr[0] = 0;
 }
 
-void init_isa() {
+void init_isa() { //
   /* Load built-in image. */
   memcpy(guest_to_host(RESET_VECTOR), img, sizeof(img));
-
+  
   /* Initialize this virtual computer system. */
-  restart();
+  restart();//registers are cleared and generated
 }
