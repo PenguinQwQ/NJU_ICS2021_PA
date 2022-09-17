@@ -27,9 +27,10 @@ void isa_reg_display() {
 for (int i = 0 ; i <= 31 ; i++)
 {
   printf("%s    ", regs[i]);
-  printf("0x%08x    \n", cpu.gpr[i]);
+  printf("0x%08x    \n", cpu.gpr[i]); //cpu.gpr[i] outputs the
+  //address of certain registers! 
 }
-printf("pc   =   0x%08x\n", cpu.pc);
+
 }
 
 word_t isa_reg_str2val(const char *s, bool *success) {

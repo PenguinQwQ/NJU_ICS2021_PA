@@ -18,6 +18,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "sdb.h"
+#include <memory/paddr.h>
 
 static int is_batch_mode = false;
 
@@ -88,10 +89,27 @@ if(args[0] == 'r')
 }
 return 0;
 }
+
+static int cmd_x(char *args)
+{
+  char *arg = strtok(args, " ");
+  int t = 0, len = 0;
+  while(len < strlen(arg))
+  {
+    t = (t << 3) + (t << 1) + arg[len] - '0';
+    len++;
+  }//we have t as the N
+  arg = strtok(NULL, " ");
+  uint32_t addr = 0;
+  for (int i = 2 ; i <= 9 ; i++)//convert manully
+    addr = (addr << 4) + arg[i] - (arg[i] >= 'A') ? ('A'):('0');
+  for (int i = 1 ; i <= t ; i++)
+      printf("Addr:  0x%08x       Data:  0x%08x \n", addr, paddr_read(addr + (i - 1) * 4, 4));
+  return 0;
+}
+
 /*
 static int cmd_p(char *args);
-
-static int cmd_x(char *args);
 
 static int cmd_w(char *args);
 
@@ -113,9 +131,9 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
    /* TODO: Add more commands */
   { "si", "Execute the procedure's next n instructions and pause, and n is set to 1 once not given", cmd_si},
-  { "info", "Print the information of the procedure(info of registers/watchpoints)", cmd_info}
+  { "info", "Print the information of the procedure(info of registers/watchpoints)", cmd_info},
+  { "x", "Scan the memory, give consistent N bytes memory content", cmd_x}
 /*
-  { "x", "Scan the memory, give consistent N bytes memory content", cmd_x},
   { "p", "print the arithmetic result of given expression", cmd_p},
   { "w", "set watchpoints", cmd_w},
   { "d", "delete watchpoints", cmd_d}
