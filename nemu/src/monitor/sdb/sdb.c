@@ -69,7 +69,12 @@ static int cmd_si(char *args)
     cpu_exec(1);
   }
   else {//else, print the selected name
-    int t = arg[0] - '0';
+    int t = 0, len = 0;
+    while(len < strlen(arg))
+    {
+      t = (t << 3) + (t << 1) + arg[len] - '0';
+      len++;
+    }
     cpu_exec(t);
   }
   return 0;
