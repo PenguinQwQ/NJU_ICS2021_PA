@@ -21,14 +21,22 @@
 // ----------- state -----------
 
 enum { NEMU_RUNNING, NEMU_STOP, NEMU_END, NEMU_ABORT, NEMU_QUIT };
-
+/*
+The Macros Listed Below:
+NEMU_RUNNING = 0
+NEMU_STOP = 1
+NEMU_END = 2
+NEMU_ABORT = 3
+NEMU_QUIT = 4
+*/
 typedef struct {
-  int state;
-  vaddr_t halt_pc;
-  uint32_t halt_ret;
+  int state;//used to describe the state of the cpu, all 5 states
+  vaddr_t halt_pc;//save the virtual address which is used
+  //to halt the program counter
+  uint32_t halt_ret;//A register which serves the halt
 } NEMUState;
 
-extern NEMUState nemu_state;
+extern NEMUState nemu_state;//extern declaration
 
 // ----------- timer -----------
 

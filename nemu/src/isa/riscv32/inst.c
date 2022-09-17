@@ -18,6 +18,7 @@
 #include <cpu/ifetch.h>
 #include <cpu/decode.h>
 
+//R[addr]
 #define R(i) gpr(i)
 #define Mr vaddr_read
 #define Mw vaddr_write
@@ -26,13 +27,17 @@ enum {
   TYPE_I, TYPE_U, TYPE_S,
   TYPE_N, // none
 };
-
-#define src1R() do { *src1 = R(rs1); } while (0)
+//0,1,2,3
+//The Marcos below defined reading source operands from registers
+//Signal Extension/ Zero Extension methods
+#define src1R() do { *src1 = R(rs1); } while (0) //
 #define src2R() do { *src2 = R(rs2); } while (0)
 #define immI() do { *imm = SEXT(BITS(i, 31, 20), 12); } while(0)
 #define immU() do { *imm = SEXT(BITS(i, 31, 12), 20) << 12; } while(0)
 #define immS() do { *imm = (SEXT(BITS(i, 31, 25), 7) << 5) | BITS(i, 11, 7); } while(0)
 
+
+//here decode the instruction, finding the rd,rs1,rs2
 static void decode_operand(Decode *s, int *dest, word_t *src1, word_t *src2, word_t *imm, int type) {
   uint32_t i = s->isa.inst.val;
   int rd  = BITS(i, 11, 7);
@@ -45,10 +50,11 @@ static void decode_operand(Decode *s, int *dest, word_t *src1, word_t *src2, wor
     case TYPE_S: src1R(); src2R(); immS(); break;
   }
 }
-
+//this is the riscv32 decode process
 static int decode_exec(Decode *s) {
   int dest = 0;
   word_t src1 = 0, src2 = 0, imm = 0;
+  //src1,src2 are two ALU input source operands
   s->dnpc = s->snpc;
 
 #define INSTPAT_INST(s) ((s)->isa.inst.val)

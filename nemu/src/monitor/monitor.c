@@ -149,11 +149,11 @@ static long load_img() {
 }
 
 void am_init_monitor() {
-  init_rand();
-  init_mem();
-  init_isa();
-  load_img();
-  IFDEF(CONFIG_DEVICE, init_device());
+  init_rand();//init the random seed
+  init_mem();//init the memory
+  init_isa();//init the ISA
+  load_img();//load the img file
+  IFDEF(CONFIG_DEVICE, init_device());//init the device
   welcome();
 }
 #endif
