@@ -15,17 +15,20 @@
 
 #include <common.h>
 
-void init_monitor(int, char *[]);
+void init_monitor(int, char *[]);//init the monitor and call sdb
 void am_init_monitor();
 void engine_start();
-int is_exit_status_bad();
+int is_exit_status_bad();//judge the status of the nemu
 
 int main(int argc, char *argv[]) {
   /* Initialize the monitor. */
 #ifdef CONFIG_TARGET_AM
-  am_init_monitor();
+  am_init_monitor();//If the config target is abstrac-machine
+  //then init the monitor in am mod
+  //In fact, the generated file haven't defined this macro!
+  //So it will enter the next init_monitor(?
 #else
-  init_monitor(argc, argv);
+  init_monitor(argc, argv);//
 #endif
 
   /* Start engine. */

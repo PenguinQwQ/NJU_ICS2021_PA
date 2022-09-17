@@ -57,7 +57,11 @@ static int cmd_help(char *args);
 static struct {
   const char *name;
   const char *description;
-  int (*handler) (char *);
+  int (*handler) (char *);//Defined a 
+  //pointer, which points to a function, as its input is
+  //a string
+  //handler is used to execute certain effects according
+  //to the arguments
 } cmd_table [] = {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
@@ -74,13 +78,13 @@ static int cmd_help(char *args) {
   char *arg = strtok(NULL, " ");
   int i;
 
-  if (arg == NULL) {
+  if (arg == NULL) {//If no argument is given, then print all
     /* no argument given */
     for (i = 0; i < NR_CMD; i ++) {
       printf("%s - %s\n", cmd_table[i].name, cmd_table[i].description);
     }
   }
-  else {
+  else {//else, print the selected name
     for (i = 0; i < NR_CMD; i ++) {
       if (strcmp(arg, cmd_table[i].name) == 0) {
         printf("%s - %s\n", cmd_table[i].name, cmd_table[i].description);
@@ -101,35 +105,49 @@ void sdb_mainloop() {
     cmd_c(NULL);
     return;
   }
+  //each time, from the stdinstream, we read a single 
+  //line as a command string
 
+  //the sdb terminal runs in a single "for" loop
+  //during the for loop, we input commands and args
+  //to control the abstract machine to run
   for (char *str; (str = rl_gets()) != NULL; ) {
-    char *str_end = str + strlen(str);
+    char *str_end = str + strlen(str);//get the end 
+    //of the string
 
     /* extract the first token as the command */
     char *cmd = strtok(str, " ");
     if (cmd == NULL) { continue; }
-
+    //NULL command, then continue;
     /* treat the remaining string as the arguments,
      * which may need further parsing
      */
     char *args = cmd + strlen(cmd) + 1;
+    //get the pointer/address of the arguments
+    //and the parse them
     if (args >= str_end) {
-      args = NULL;
+      args = NULL;//if there is no arguments,set the args
+      //to null
     }
 
 #ifdef CONFIG_DEVICE
     extern void sdl_clear_event_queue();
     sdl_clear_event_queue();
 #endif
+  //compare the cmd we extract to the cmd_table
+  //and select the suitable command as the input
+  //once we find the proper cmd(which derived from strcmp)
+  //we put the args into the function and get a receive
 
     int i;
     for (i = 0; i < NR_CMD; i ++) {
-      if (strcmp(cmd, cmd_table[i].name) == 0) {
-        if (cmd_table[i].handler(args) < 0) { return; }
+      if (strcmp(cmd, cmd_table[i].name) == 0) {//we find the cmd in the table!
+        if (cmd_table[i].handler(args) < 0) { return; }//once the return value < 0, then its quit and return to 
         break;
       }
     }
-
+  //if we searched all the commands and find nothing
+  //then print the "Unknow command"
     if (i == NR_CMD) { printf("Unknown command '%s'\n", cmd); }
   }
 }
