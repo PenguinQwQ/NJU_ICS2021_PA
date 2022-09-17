@@ -99,7 +99,9 @@ static int cmd_x(char *args)
     t = (t << 3) + (t << 1) + arg[len] - '0';
     len++;
   }//we have t as the N
+  printf("t = %d \n", t);
   arg = strtok(NULL, " ");
+  printf("arg = %s \n", arg);
   uint32_t addr = 0;
   for (int i = 2 ; i <= 9 ; i++)//convert manully
     addr = (addr << 4) + arg[i] - (arg[i] >= 'A') ? ('A'):('0');
