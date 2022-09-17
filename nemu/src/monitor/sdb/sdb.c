@@ -103,7 +103,7 @@ static int cmd_x(char *args)
   arg = strtok(NULL, " ");
   printf("arg = %s \n", arg);
   word_t addr = 0;
-  for (int i = 2 ; i <= 9 ; i++)//convert manully
+  for (int i = 2 ; i <= 9 ; i++)//convert char* into 0x%08 manully
   {
   if(arg[i] >= '0' && arg[i] <= '9')
     addr = (addr << 4) + arg[i] - '0';
@@ -112,10 +112,8 @@ static int cmd_x(char *args)
   if(arg[i] >= 'a' && arg[i] <= 'f')
     addr = (addr << 4) + arg[i] - 'a' + 10;
   }
-  printf("Addr:    0x%08x     \n", addr);
   for (int i = 1 ; i <= t ; i++)
       printf("Addr:  0x%08x       Data:  0x%08x \n", addr + (i - 1) * 4, paddr_read(addr + (i - 1) * 4, 4));
-
   return 0;
 }
 
