@@ -113,9 +113,8 @@ static int cmd_x(char *args)
     addr = (addr << 4) + arg[i] - 'a' + 10;
   }
   printf("Addr:    0x%08x     \n", addr);
-
   for (int i = 1 ; i <= t ; i++)
-      printf("Addr:  0x%08x       Data:  0x%08x \n", addr, paddr_read(addr + (i - 1) * 4, 4));
+      printf("Addr:  0x%08x       Data:  0x%08x \n", addr + (i - 1) * 4, paddr_read(addr + (i - 1) * 4, 4));
 
   return 0;
 }
