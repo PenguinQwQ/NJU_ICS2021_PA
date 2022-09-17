@@ -18,18 +18,7 @@
 NEMUState nemu_state = { .state = NEMU_STOP };
 
 int is_exit_status_bad() {
-  bool good = (nemu_state.state == NEMU_END && nemu_state.halt_ret == 0) ||
-    (nemu_state.state == NEMU_QUIT);
- // return !good;
-
-  if(good)
-  {
-    printf("GOOD\n");
-    return 0;
-  }
-  else
-  {
-    printf("BAD!!\n");
-    return -1;
-  }
+  int good = (nemu_state.state == NEMU_END && nemu_state.halt_ret == 0) ||
+    (nemu_state.state == NEMU_QUIT) || (nemu_state.state == NEMU_STOP && nemu_state.halt_ret == 0);
+  return !good;
 }
