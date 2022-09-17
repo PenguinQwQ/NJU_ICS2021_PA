@@ -79,6 +79,12 @@ static int cmd_si(char *args)
   }
   return 0;
 }
+
+static int cmd_info(char *args)
+{
+isa_reg_display();
+return 0;
+}
 /*
 static int cmd_p(char *args);
 
@@ -88,7 +94,7 @@ static int cmd_w(char *args);
 
 static int cmd_d(char *args);
 
-static int cmd_info(char *args);
+
 */
 static struct {
   const char *name;
@@ -103,9 +109,9 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
    /* TODO: Add more commands */
-  { "si", "Execute the procedure's next n instructions and pause, and n is set to 1 once not given", cmd_si}
+  { "si", "Execute the procedure's next n instructions and pause, and n is set to 1 once not given", cmd_si},
+  { "info", "Print the information of the procedure(info of registers/watchpoints)", cmd_info}
 /*
-  { "info", "Print the information of the procedure(info of registers/watchpoints)", cmd_info},
   { "x", "Scan the memory, give consistent N bytes memory content", cmd_x},
   { "p", "print the arithmetic result of given expression", cmd_p},
   { "w", "set watchpoints", cmd_w},
