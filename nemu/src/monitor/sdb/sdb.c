@@ -103,8 +103,11 @@ static int cmd_x(char *args)
   uint32_t addr = 0;
   for (int i = 2 ; i <= 9 ; i++)//convert manully
     addr = (addr << 4) + arg[i] - (arg[i] >= 'A') ? ('A'):('0');
+  printf("Addr:    0x%08x     \n", addr);
+/*
   for (int i = 1 ; i <= t ; i++)
       printf("Addr:  0x%08x       Data:  0x%08x \n", addr, paddr_read(addr + (i - 1) * 4, 4));
+*/
   return 0;
 }
 
