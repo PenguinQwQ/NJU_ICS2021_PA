@@ -26,7 +26,8 @@ const char *regs[] = {
 void isa_reg_display() {
 for (int i = 0 ; i <= 31 ; i++)
 {
-  printf("%s    ", regs[i]);
+  printf("%s    ", regs[i]);//display the register name
+  printf("0x%02x    ", i);//display the register address(in hex)
   printf("0x%08x    \n", cpu.gpr[i]); //cpu.gpr[i] outputs the
   //address of certain registers! 
 }
