@@ -104,7 +104,7 @@ static int cmd_x(char *args)
   printf("arg = %s \n", arg);
   word_t addr = 0;
   for (int i = 2 ; i <= 9 ; i++)//convert manully
-    addr = addr * 16 + arg[i] - (arg[i] >= 'A') ? ('A'):('0');
+    addr = addr * 16 + arg[i] - '0';
   printf("Addr:    0x%08x     \n", addr);
 /*
   for (int i = 1 ; i <= t ; i++)
