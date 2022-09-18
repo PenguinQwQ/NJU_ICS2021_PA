@@ -264,10 +264,7 @@ word_t eval(int l, int r)
       ans = val1 * val2;
       break;
     case TK_DIV:
-      if(val2 == 0)
-        ERR = true;
-      else
-        ans = val1 / val2;
+      ans = val1 / val2;
       break;
     default: assert(0);
     }
