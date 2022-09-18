@@ -46,7 +46,7 @@ How to ensure the token's precedence?
   {"==", TK_EQ},        // equal
   {"\\-", TK_SUB},         // substract
   {"\\*", TK_MUL},         // multiply
-  {"/", TK_DIV},         // divide
+  {"\\/", TK_DIV},         // divide
   {"\\(", TK_LP},         // left parenthesis
   {"\\)", TK_RP},         // right parenthesis
   {"[1-9][0-9]*", TK_NUMBER }   // Number
@@ -239,7 +239,7 @@ word_t eval(int l, int r)
           {
             cur_op_precedence = 1;
           }
-        if(tokens[pos].type >= TK_MUL && tokens[pos].type <= TK_MUL)
+        if(tokens[pos].type >= TK_MUL && tokens[pos].type <= TK_DIV)
           {
             cur_op_precedence = 2;
           }
@@ -264,7 +264,10 @@ word_t eval(int l, int r)
       ans = val1 * val2;
       break;
     case TK_DIV:
-      ans = val1 / val2;
+      if(val2 == 0)
+        ERR = true;
+      else
+        ans = val1 / val2;
       break;
     default: assert(0);
     }
