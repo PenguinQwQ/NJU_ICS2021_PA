@@ -120,7 +120,7 @@ static bool make_token(char *e) {
                 tokens[++nr_token].type = TK_NUMBER;
   //              if(strlen(tokens[nr_token].str) + substr_len >= 32)
             
-                strncpy(tokens[nr_token].str, substr_start, substr_len);
+                strcpy(tokens[nr_token].str, substr_start);
                 printf("TOKEN number str is : %s \n", tokens[nr_token].str);
               }
               break;
