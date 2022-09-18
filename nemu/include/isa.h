@@ -27,7 +27,6 @@ typedef concat(__GUEST_ISA__, _ISADecodeInfo) ISADecodeInfo;
 // monitor
 extern char isa_logo[];
 void init_isa();
-
 // reg
 extern CPU_state cpu; //CPU_state is concatenated with a riscv32
 void isa_reg_display();

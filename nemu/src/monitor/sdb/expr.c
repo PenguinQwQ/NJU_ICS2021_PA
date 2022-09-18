@@ -24,21 +24,32 @@ enum {
   TK_NOTYPE = 256, TK_EQ,
 
   /* TODO: Add more token types */
-
+  TK_NUMBER
 };
 
 static struct rule {
-  const char *regex;
-  int token_type;
+  const char *regex;//This is the regex rule string, which is used to constrain the expr
+  int token_type;//This is the token_type (Can be represented as A Int)
 } rules[] = {
+/*
+How to ensure the token's precedence?
 
+
+*/
   /* TODO: Add more rules.
    * Pay attention to the precedence level of different rules.
    */
-
-  {" +", TK_NOTYPE},    // spaces
+//Here we used
+  {" +", TK_NOTYPE},    // spaces, should be igonred. " +" means consistent >= 1 spaces
+  //should be ignored
   {"\\+", '+'},         // plus
   {"==", TK_EQ},        // equal
+  {"\\-", '-'},         // minus
+  {"\\*", '*'},         // multiply
+  {"\\/", '/'},         // divide
+  {"\\(", '('},         // left parenthesis
+  {"\\)", ')'},         // right parenthesis
+  {"[1-9][0-9]*", TK_NUMBER }   // Number
 };
 
 #define NR_REGEX ARRLEN(rules)
