@@ -117,7 +117,7 @@ static bool make_token(char *e) {
               else
               {
                 tokens[++nr_token].type = TK_NUMBER;
-                strncpy(tokens[nr_token].str, substr_start, substr_len);
+                strcpy(tokens[nr_token].str, substr_start);
               }
               break;
           case '+' :
