@@ -101,7 +101,7 @@ static bool make_token(char *e) {
         Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
             i, rules[i].regex, position, substr_len, substr_len, substr_start);
         position += substr_len;
-   //     printf("TOKEN value is %d \n", rules[i].token_type);
+        printf("TOKEN value is %d \n", rules[i].token_type);
         /* TODO: Now a new token is recognized with rules[i]. Add codes
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
@@ -196,6 +196,7 @@ word_t eval(int l, int r)
         {
           num = (num << 3) + (num << 1) + tokens[l].str[i] - '0';
         }
+      printf("token %d value is %d \n", l, num);
       return num;
     }
     if(tokens[l].type == TK_SUB) //means its neg
@@ -253,6 +254,8 @@ word_t eval(int l, int r)
     word_t val1, val2, ans = 0;
     val1 = eval(l, main_op_pos - 1);
     val2 = eval(main_op_pos + 1, r);
+    printf("(%d,%d): %d   (%d, %d):%d   \n",l, main_op_pos - 1, val1, main_op_pos + 1, r, val2);
+
     switch (tokens[main_op_pos].type)
     {
     case TK_ADD:
