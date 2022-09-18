@@ -44,7 +44,7 @@ How to ensure the token's precedence?
   //should be ignored
   {"\\+", TK_ADD},         // plus
   {"==", TK_EQ},        // equal
-  {"(?<=[0-9|)])[-](?=[0-9|(])", TK_SUB},         // substract
+  {"?<=[0-9|)] [-] ?=[0-9|(]", TK_SUB},         // substract
   {"(?<![0-9|)])[-]", TK_NEG}, //Negative Operation
   {"\\*", TK_MUL},         // multiply
   {"\\/", TK_DIV},         // divide
