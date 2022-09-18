@@ -192,18 +192,14 @@ word_t eval(int l, int r)
           return 0;
         }
       word_t num = 0;
+      if(tokens[l].str[0] == '0')
+        return 0;
       for (int i = 0 ; i <= strlen(tokens[l].str) - 1 ; i++)
         {
           num = (num << 3) + (num << 1) + tokens[l].str[i] - '0';
         }
   //    printf("token %d value is %d \n", l, num);
       return num;
-    }
-    if(tokens[l].type == TK_SUB) //means its neg
-    {
-      word_t rev = -1;
-      word_t cur = eval(l + 1, r);
-      return cur * rev;
     }
   if(check_parenthese(l, r))
     {
@@ -245,12 +241,18 @@ word_t eval(int l, int r)
           {
             cur_op_precedence = 2;
           }
+        if(tokens[pos].type == TK_SUB && (pos == l || (tokens[pos - 1].type != TK_NUMBER && tokens[pos - 1].type != TK_RP))) //It is neg
+          {
+            cur_op_precedence = 3;
+          }
         if(cur_op_precedence <= main_op_precedence)
             {
               main_op_pos = pos;
               main_op_precedence = cur_op_precedence;
             }
     }
+  if(main_op_precedence < 3)
+  {
     word_t val1, val2, ans = 0;
     val1 = eval(l, main_op_pos - 1);
     val2 = eval(main_op_pos + 1, r);
@@ -275,7 +277,14 @@ word_t eval(int l, int r)
       break;
     default: assert(0);
     }
-  return ans;
+    return ans;
+  }
+  else
+  {
+    word_t rev = -1;
+    word_t cur = eval(l + 1, r);
+    return rev * cur;
+  }
 }
 
 word_t expr(char *e, bool *success) {
