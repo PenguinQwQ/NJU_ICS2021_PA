@@ -19,6 +19,9 @@
 #include <readline/history.h>
 #include "sdb.h"
 #include <memory/paddr.h>
+#include <regex.h>
+#include <common.h>
+
 
 static int is_batch_mode = false;
 
@@ -117,9 +120,14 @@ static int cmd_x(char *args)
   return 0;
 }
 
-/*
-static int cmd_p(char *args);
 
+static int cmd_p(char *args)
+{
+  _Bool succ = false;
+  expr(args, &succ);
+  return 0;
+}
+/*
 static int cmd_w(char *args);
 
 static int cmd_d(char *args);
@@ -141,9 +149,9 @@ static struct {
    /* TODO: Add more commands */
   { "si", "Execute the procedure's next n instructions and pause, and n is set to 1 once not given", cmd_si},
   { "info", "Print the information of the procedure(info of registers/watchpoints)", cmd_info},
-  { "x", "Scan the memory, give consistent N bytes memory content", cmd_x}
-/*
-  { "p", "print the arithmetic result of given expression", cmd_p},
+  { "x", "Scan the memory, give consistent N bytes memory content", cmd_x},
+  { "p", "print the arithmetic result of given expression", cmd_p}
+  /*
   { "w", "set watchpoints", cmd_w},
   { "d", "delete watchpoints", cmd_d}
   */

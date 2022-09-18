@@ -14,7 +14,7 @@
 ***************************************************************************************/
 
 #include <isa.h>
-
+#include <string.h>
 /* We use the POSIX regex functions to process regular expressions.
  * Type 'man regex' for more information about POSIX regex functions.
  */
@@ -24,7 +24,7 @@ enum {
   TK_NOTYPE = 256, TK_EQ,
 
   /* TODO: Add more token types */
-  TK_NUMBER
+  TK_NUMBER, TK_ADD, TK_SUB, TK_MUL, TK_DIV, TK_LP, TK_RP
 };
 
 static struct rule {
@@ -42,13 +42,13 @@ How to ensure the token's precedence?
 //Here we used
   {" +", TK_NOTYPE},    // spaces, should be igonred. " +" means consistent >= 1 spaces
   //should be ignored
-  {"\\+", '+'},         // plus
+  {"\\+", TK_ADD},         // plus
   {"==", TK_EQ},        // equal
-  {"\\-", '-'},         // minus
-  {"\\*", '*'},         // multiply
-  {"\\/", '/'},         // divide
-  {"\\(", '('},         // left parenthesis
-  {"\\)", ')'},         // right parenthesis
+  {"\\-", TK_SUB},         // minus
+  {"\\*", TK_MUL},         // multiply
+  {"\\/", TK_DIV},         // divide
+  {"\\(", TK_LP},         // left parenthesis
+  {"\\)", TK_RP},         // right parenthesis
   {"[1-9][0-9]*", TK_NUMBER }   // Number
 };
 
@@ -63,7 +63,7 @@ void init_regex() {
   int i;
   char error_msg[128];
   int ret;
-
+//Here we init all the regex and compile them!
   for (i = 0; i < NR_REGEX; i ++) {
     ret = regcomp(&re[i], rules[i].regex, REG_EXTENDED);
     if (ret != 0) {
@@ -81,9 +81,10 @@ typedef struct token {
 static Token tokens[32] __attribute__((used)) = {};
 static int nr_token __attribute__((used))  = 0;
 
+//input a regular string as expression to be made token
 static bool make_token(char *e) {
-  int position = 0;
-  int i;
+  int position = 0;//the index of string
+  int i;//
   regmatch_t pmatch;
 
   nr_token = 0;
@@ -104,8 +105,39 @@ static bool make_token(char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-
         switch (rules[i].token_type) {
+          case TK_NOTYPE ://is a space, just skip it and no need to record
+              break;
+          case TK_EQ ://is a equal symbol, so we just store the EQ val to type
+              tokens[++nr_token].type = TK_EQ;
+              break;
+          case TK_NUMBER :
+              if(substr_len > 32)//this case will cause buf-overflow
+                assert(0);
+              else
+              {
+                tokens[++nr_token].type = TK_NUMBER;
+                strncpy(tokens[nr_token].str, substr_start, substr_len);
+              }
+              break;
+          case '+' :
+              tokens[++nr_token].type = TK_ADD;
+              break;
+          case '-' :
+              tokens[++nr_token].type = TK_SUB;
+              break;
+          case '*' :
+              tokens[++nr_token].type = TK_MUL;
+              break;
+          case '/' :
+              tokens[++nr_token].type = TK_DIV;
+              break;
+          case '(' :
+              tokens[++nr_token].type = TK_LP;
+              break;
+          case ')' :
+              tokens[++nr_token].type = TK_RP;
+              break;
           default: TODO();
         }
 
@@ -128,7 +160,6 @@ word_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
-
   /* TODO: Insert codes to evaluate the expression. */
   TODO();
 
