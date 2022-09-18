@@ -124,7 +124,8 @@ static int cmd_x(char *args)
 static int cmd_p(char *args)
 {
   _Bool succ = false;
-  expr(args, &succ);
+  word_t ans = expr(args, &succ);
+  printf("The Expression Result Is : %d \n", ans);
   return 0;
 }
 /*

@@ -80,6 +80,8 @@ typedef struct token {
 
 static Token tokens[32] __attribute__((used)) = {};
 static int nr_token __attribute__((used))  = 0;
+static bool ERR = false;//ERR is used to indicate the wrong
+//happened during calculation
 
 //input a regular string as expression to be made token
 static bool make_token(char *e) {
@@ -152,15 +154,128 @@ static bool make_token(char *e) {
 
   return true;
 }
-
+//l,r are the token indices
+bool check_parenthese(int l, int r)
+{
+  //if and only if the t[l], t[r] is LP, RP and the inner content follows the rule of parenthese match!
+  if((tokens[l].type != TK_LP) || (tokens[r].type != TK_RP))
+      return false;
+  int stop = 0;
+  for (int pos = l + 1 ; pos <= r - 1 ; pos++)
+    {
+      if(tokens[pos].type == TK_LP)
+        stop++;
+      if(tokens[pos].type == TK_RP)
+        stop--;
+      if(stop < 0)
+        return false;//not match as ')' is more than '('
+    }
+  if(stop != 0)
+    return false; //not match as '(' != ')'
+  return true;
+}
+long long eval(int l, int r)
+{
+  if(ERR)
+    return 0;//Err occurs, stop the procedure!
+  if(l > r)
+    {
+      ERR = true;
+      return 0;
+    }
+  if(l == r)
+    {
+      if(tokens[l].type != TK_NUMBER)
+        {
+          ERR = true;
+          return 0;
+        }
+      long long num = 0;
+      for (int i = 0 ; i <= strlen(tokens[l].str) - 1 ; i++)
+        {
+          num = (num << 3) + (num << 1) + tokens[l].str[i] - '0';
+        }
+      return num;
+    }
+  if(check_parenthese(l, r))
+    {
+      return eval(l + 1, r - 1);
+    }
+  //find the main operator
+  int in_parenthese = 0;
+  int main_op_pos = l;
+  int main_op_precedence = 1000, cur_op_precedence = 1000;
+  for (int pos = l ; pos <= r ; pos++)
+    {
+        if(tokens[pos].type == TK_NUMBER)
+          continue;
+        if(tokens[pos].type == TK_RP)
+          {
+            in_parenthese--;
+            continue;
+          }
+        if(tokens[pos].type == TK_LP)
+          {
+            in_parenthese++;
+            continue;
+          }
+        if(in_parenthese < 0)//Err parenthese occurs!
+          {
+            ERR = true;
+            return 0;
+          }
+        if(in_parenthese > 0)//In parenthese, not to find!
+          {
+            continue;
+          }
+        //Here musn't in parenthese
+        if(tokens[pos].type >= TK_ADD && tokens[pos].type <= TK_SUB)
+          {
+            cur_op_precedence = 1;
+          }
+        if(tokens[pos].type >= TK_MUL && tokens[pos].type <= TK_MUL)
+          {
+            cur_op_precedence = 2;
+          }
+        if(cur_op_precedence <= main_op_precedence)
+            {
+              main_op_pos = pos;
+              main_op_precedence = cur_op_precedence;
+            }
+    }
+    long long val1, val2, ans = 0;
+    val1 = eval(l, main_op_pos - 1);
+    val2 = eval(main_op_pos + 1, r);
+    switch (tokens[main_op_pos].type)
+    {
+    case TK_ADD:
+      ans = val1 + val2;
+      break;
+    case TK_SUB:
+      ans = val1 - val2;
+      break;
+    case TK_MUL:
+      ans = val1 * val2;
+      break;
+    case TK_DIV:
+      if(val2 == 0)
+        ERR = true;
+      else
+        ans = val1 / val2;
+      break;
+    default: assert(0);
+    }
+  return ans;
+}
 
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
+    printf("Invalid Expression!!!\n");
     return 0;
   }
   /* TODO: Insert codes to evaluate the expression. */
-  
-
-  return 0;
+  ERR = false;//Init the ERR val
+  long long ans = eval(1, nr_token);
+  return (word_t)ans;
 }
