@@ -46,7 +46,7 @@ How to ensure the token's precedence?
   {"==", TK_EQ},        // equal
   {"\\-", TK_SUB},         // substract
   {"\\*", TK_MUL},         // multiply
-  {"\\/", TK_DIV},         // divide
+  {"/", TK_DIV},         // divide
   {"\\(", TK_LP},         // left parenthesis
   {"\\)", TK_RP},         // right parenthesis
   {"[1-9][0-9]*", TK_NUMBER }   // Number
