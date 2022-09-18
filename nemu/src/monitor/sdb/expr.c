@@ -120,31 +120,29 @@ static bool make_token(char *e) {
                 printf("TOKEN number str is : %s \n", tokens[nr_token].str);
               }
               break;
-          case '+' :
+          case TK_ADD :
               tokens[++nr_token].type = TK_ADD;
               break;
-          case '-' :
+          case TK_SUB :
               tokens[++nr_token].type = TK_SUB;
               break;
-          case '*' :
+          case TK_MUL :
               tokens[++nr_token].type = TK_MUL;
               break;
-          case '/' :
+          case TK_DIV :
               tokens[++nr_token].type = TK_DIV;
               break;
-          case '(' :
+          case TK_LP :
               tokens[++nr_token].type = TK_LP;
               break;
-          case ')' :
+          case TK_RP :
               tokens[++nr_token].type = TK_RP;
               break;
           default: TODO();
         }
-
         break;
       }
     }
-
     if (i == NR_REGEX) {
       printf("no match at position %d\n%s\n%*.s^\n", position, e, position, "");
       return false;
