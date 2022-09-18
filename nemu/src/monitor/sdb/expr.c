@@ -49,7 +49,7 @@ How to ensure the token's precedence?
   {"\\/", TK_DIV},         // divide
   {"\\(", TK_LP},         // left parenthesis
   {"\\)", TK_RP},         // right parenthesis
-  {"[1-9][0-9]*", TK_NUMBER }   // Number
+  {"[0-9][0-9]*", TK_NUMBER }   // Number
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -120,7 +120,7 @@ static bool make_token(char *e) {
                 tokens[++nr_token].type = TK_NUMBER;
                 memset(tokens[nr_token].str, 0, sizeof(tokens[nr_token].str));
                 strncpy(tokens[nr_token].str, substr_start, substr_len);
-                printf("TOKEN number str is : %s \n", tokens[nr_token].str);
+      //          printf("TOKEN number str is : %s \n", tokens[nr_token].str);
               }
               break;
           case TK_ADD :
@@ -196,7 +196,7 @@ word_t eval(int l, int r)
         {
           num = (num << 3) + (num << 1) + tokens[l].str[i] - '0';
         }
-      printf("token %d value is %d \n", l, num);
+  //    printf("token %d value is %d \n", l, num);
       return num;
     }
     if(tokens[l].type == TK_SUB) //means its neg
@@ -254,7 +254,7 @@ word_t eval(int l, int r)
     word_t val1, val2, ans = 0;
     val1 = eval(l, main_op_pos - 1);
     val2 = eval(main_op_pos + 1, r);
-    printf("(%d,%d): %d   (%d, %d):%d   \n",l, main_op_pos - 1, val1, main_op_pos + 1, r, val2);
+ //   printf("(%d,%d): %d   (%d, %d):%d   \n",l, main_op_pos - 1, val1, main_op_pos + 1, r, val2);
 
     switch (tokens[main_op_pos].type)
     {
