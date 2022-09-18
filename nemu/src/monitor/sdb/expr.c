@@ -78,7 +78,7 @@ typedef struct token {
   char str[32];
 } Token;
 
-static Token tokens[32] __attribute__((used)) = {};
+static Token tokens[65536] __attribute__((used)) = {};
 static int nr_token __attribute__((used))  = 0;
 static bool ERR = false;//ERR is used to indicate the wrong
 //happened during calculation
@@ -174,7 +174,7 @@ bool check_parenthese(int l, int r)
     return false; //not match as '(' != ')'
   return true;
 }
-long long eval(int l, int r)
+word_t eval(int l, int r)
 {
   if(ERR)
     return 0;//Err occurs, stop the procedure!
@@ -190,7 +190,7 @@ long long eval(int l, int r)
           ERR = true;
           return 0;
         }
-      long long num = 0;
+      word_t num = 0;
       for (int i = 0 ; i <= strlen(tokens[l].str) - 1 ; i++)
         {
           num = (num << 3) + (num << 1) + tokens[l].str[i] - '0';
@@ -243,7 +243,7 @@ long long eval(int l, int r)
               main_op_precedence = cur_op_precedence;
             }
     }
-    long long val1, val2, ans = 0;
+    word_t val1, val2, ans = 0;
     val1 = eval(l, main_op_pos - 1);
     val2 = eval(main_op_pos + 1, r);
     switch (tokens[main_op_pos].type)
@@ -276,6 +276,6 @@ word_t expr(char *e, bool *success) {
   }
   /* TODO: Insert codes to evaluate the expression. */
   ERR = false;//Init the ERR val
-  long long ans = eval(1, nr_token);
-  return (word_t)ans;
+  word_t ans = eval(1, nr_token);
+  return ans;
 }
