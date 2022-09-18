@@ -101,7 +101,7 @@ static bool make_token(char *e) {
         Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
             i, rules[i].regex, position, substr_len, substr_len, substr_start);
         position += substr_len;
-        printf("TOKEN value is %d \n", rules[i].token_type);
+   //     printf("TOKEN value is %d \n", rules[i].token_type);
         /* TODO: Now a new token is recognized with rules[i]. Add codes
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
@@ -118,8 +118,10 @@ static bool make_token(char *e) {
               else
               {
                 tokens[++nr_token].type = TK_NUMBER;
+  //              if(strlen(tokens[nr_token].str) + substr_len >= 32)
+            
                 strncpy(tokens[nr_token].str, substr_start, substr_len);
-               printf("TOKEN number str is : %s \n", tokens[nr_token].str);
+                printf("TOKEN number str is : %s \n", tokens[nr_token].str);
               }
               break;
           case TK_ADD :
