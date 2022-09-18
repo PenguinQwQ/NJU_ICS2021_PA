@@ -138,7 +138,8 @@ static bool make_token(char *e) {
           case TK_RP :
               tokens[++nr_token].type = TK_RP;
               break;
-          default: TODO();
+          default: 
+              break;
         }
         break;
       }
@@ -159,7 +160,7 @@ word_t expr(char *e, bool *success) {
     return 0;
   }
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
+  
 
   return 0;
 }
