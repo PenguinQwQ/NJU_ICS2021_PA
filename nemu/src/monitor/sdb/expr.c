@@ -245,7 +245,7 @@ word_t eval(int l, int r)
           {
             cur_op_precedence = 2;
           }
-        if(cur_op_precedence < main_op_precedence)
+        if(cur_op_precedence <= main_op_precedence)
             {
               main_op_pos = pos;
               main_op_precedence = cur_op_precedence;
