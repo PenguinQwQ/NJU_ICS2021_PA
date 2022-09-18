@@ -24,7 +24,7 @@ enum {
   TK_NOTYPE = 256, TK_EQ,
 
   /* TODO: Add more token types */
-  TK_NUMBER, TK_ADD, TK_SUB, TK_MUL, TK_DIV, TK_LP, TK_RP
+  TK_NUMBER, TK_NEG, TK_ADD, TK_SUB, TK_MUL, TK_DIV, TK_LP, TK_RP
 };
 
 static struct rule {
@@ -44,7 +44,8 @@ How to ensure the token's precedence?
   //should be ignored
   {"\\+", TK_ADD},         // plus
   {"==", TK_EQ},        // equal
-  {"\\-", TK_SUB},         // minus
+  {"(?<=[0-9|)])[-](?=[0-9|(])", TK_SUB},         // substract
+  {"(?<![0-9|)])[-]", TK_NEG}, //Negative Operation
   {"\\*", TK_MUL},         // multiply
   {"\\/", TK_DIV},         // divide
   {"\\(", TK_LP},         // left parenthesis
@@ -128,6 +129,9 @@ static bool make_token(char *e) {
           case TK_SUB :
               tokens[++nr_token].type = TK_SUB;
               break;
+          case TK_NEG :
+              tokens[++nr_token].type = TK_NEG;
+              break;
           case TK_MUL :
               tokens[++nr_token].type = TK_MUL;
               break;
@@ -182,6 +186,12 @@ word_t eval(int l, int r)
     {
       ERR = true;
       return 0;
+    }
+  if(tokens[l].type == TK_NEG) //detected the neg operation!
+    {
+        word_t cur = eval(l + 1, r);
+        word_t rev = -1;
+        return rev * cur;
     }
   if(l == r)
     {
