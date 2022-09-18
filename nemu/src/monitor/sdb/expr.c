@@ -118,7 +118,7 @@ static bool make_token(char *e) {
               else
               {
                 tokens[++nr_token].type = TK_NUMBER;
-                strcpy(tokens[nr_token].str, "");
+                memset(tokens[nr_token].str, 0, sizeof(tokens[nr_token].str));
                 strncpy(tokens[nr_token].str, substr_start, substr_len);
                 printf("TOKEN number str is : %s \n", tokens[nr_token].str);
               }
