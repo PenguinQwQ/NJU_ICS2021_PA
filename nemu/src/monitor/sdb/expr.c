@@ -48,7 +48,7 @@ How to ensure the token's precedence?
   {"\\(", TK_LP},         // left parenthesis
   {"\\)", TK_RP},         // right parenthesis
   {"[0-9][0-9]*", TK_NUMBER } ,  // Number
-  {"[\0xa-f|A-F|0-9]+", TK_HEX} //Hex Number
+  {"[0xa-f|A-F|0-9]+", TK_HEX} //Hex Number
 };
 
 #define NR_REGEX ARRLEN(rules)
