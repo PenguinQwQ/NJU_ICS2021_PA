@@ -385,7 +385,7 @@ word_t eval(int l, int r)
     word_t rev = -1;
     word_t cur = eval(l + 1, r);
  //   printf("main_op_pos = %u , r = %u  ,cur = %d\n", main_op_pos, r, cur );
-    switch (tokens[main_op_pos].type)
+    switch (tokens[l].type)
     {
     case TK_NEG://TK_NEG
       ans = rev * cur;
