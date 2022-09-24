@@ -23,7 +23,7 @@
 
 enum {
   TK_NOTYPE = 256, TK_EQ, TK_NEQ, TK_AND, TK_LE, TK_LSH, TK_RSH,
-  TK_NUMBER, TK_HEX, TK_REG, TK_ADD, TK_SUB, TK_MUL, TK_DIV, TK_LP, TK_RP
+  TK_NUM, TK_REG, TK_ADD, TK_SUB, TK_MUL, TK_DIV, TK_LP, TK_RP
 };
 
 static struct rule {
@@ -53,12 +53,8 @@ How to ensure the token's precedence?
   {"\\/", TK_DIV},         // divide
   {"\\(", TK_LP},         // left parenthesis
   {"\\)", TK_RP},         // right parenthesis
-  {"[0xa-f|A-F|0-9]+", TK_HEX}, //Hex Number x...
+  {"[0xa-f|A-F|0-9]+", TK_NUM}, //Hex Number x...
   {"[$][a-z|A-Z|0-9]+", TK_REG}, //Reg Name (with $!)
-  {"[1-9][0-9]*", TK_NUMBER },  // Number
-  {"[0(?!x)]", TK_NUMBER}, //Zero Case!
-
-
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -127,16 +123,11 @@ static bool make_token(char *e) {
           case TK_EQ ://is a equal symbol, so we just store the EQ val to type
               tokens[++nr_token].type = TK_EQ;
               break;
-          case TK_NUMBER :
-                tokens[++nr_token].type = TK_NUMBER;
+          case TK_NUM :
+                tokens[++nr_token].type = TK_NUM;
                 memset(tokens[nr_token].str, 0, sizeof(tokens[nr_token].str));
                 strncpy(tokens[nr_token].str, substr_start, substr_len);
        //        printf("TOKEN number str is : %s \n", tokens[nr_token].str);
-              break;
-          case TK_HEX :
-                tokens[++nr_token].type = TK_HEX;
-                memset(tokens[nr_token].str, 0, sizeof(tokens[nr_token].str));
-                strncpy(tokens[nr_token].str, substr_start, substr_len);
               break;
           case TK_REG :
                 tokens[++nr_token].type = TK_REG;
@@ -222,19 +213,8 @@ word_t eval(int l, int r)
     }
   if(l == r)
     {
-      if(tokens[l].type == TK_NUMBER)
-      {
-      word_t num = 0;
-      if(tokens[l].str[0] == '0')
-        return 0;
-      for (int i = 0 ; i <= strlen(tokens[l].str) - 1 ; i++)
-        {
-          num = (num << 3) + (num << 1) + tokens[l].str[i] - '0';
-        }
-  //    printf("token %d value is %d \n", l, num);
-      return num;
-      }
-      if(tokens[l].type == TK_HEX)
+      //Its Hex Number!
+      if(tokens[l].type == TK_NUM && strlen(tokens[l].str) > 2 &&  tokens[l].str[0] == '0' && tokens[l].str[1] == 'x')
       {
       word_t num = 0;
       for (int i = 1 ; i <= strlen(tokens[l].str) - 1 ; i++)
@@ -246,6 +226,19 @@ word_t eval(int l, int r)
             num += tokens[l].str[i] - 'a' + 10;
           if(tokens[l].str[i] >= 'A' && tokens[l].str[i] <= 'F')
             num += tokens[l].str[i] - 'A' + 10;          
+        }
+  //    printf("token %d value is %d \n", l, num);
+      return num;
+      }
+      //Its Decimal Number!
+      if(tokens[l].type == TK_NUM && (strlen(tokens[l].str) <= 2 || tokens[l].str[1] != 'x'))
+      {
+      word_t num = 0;
+      if(tokens[l].str[0] == '0')
+        return 0;
+      for (int i = 0 ; i <= strlen(tokens[l].str) - 1 ; i++)
+        {
+          num = (num << 3) + (num << 1) + tokens[l].str[i] - '0';
         }
   //    printf("token %d value is %d \n", l, num);
       return num;
@@ -282,9 +275,7 @@ word_t eval(int l, int r)
   int main_op_precedence = 1000, cur_op_precedence = 1000;
   for (int pos = l ; pos <= r ; pos++)
     {
-        if(tokens[pos].type == TK_NUMBER)
-          continue;
-        if(tokens[pos].type == TK_HEX)
+        if(tokens[pos].type == TK_NUM)
           continue;
         if(tokens[pos].type == TK_RP)
           {
@@ -314,11 +305,11 @@ word_t eval(int l, int r)
           {
             cur_op_precedence = 2;
           }
-        if(tokens[pos].type == TK_SUB && (pos == l || (tokens[pos - 1].type != TK_NUMBER && tokens[pos - 1].type != TK_HEX && tokens[pos - 1].type != TK_RP && tokens[pos - 1].type != TK_REG))) //It is neg
+        if(tokens[pos].type == TK_SUB && (pos == l || (tokens[pos - 1].type != TK_NUM  && tokens[pos - 1].type != TK_RP && tokens[pos - 1].type != TK_REG))) //It is neg
           {
             cur_op_precedence = 3;
           }
-        if(tokens[pos].type == TK_MUL && (pos == l || (tokens[pos - 1].type != TK_NUMBER && tokens[pos - 1].type != TK_HEX && tokens[pos - 1].type != TK_RP && tokens[pos - 1].type != TK_REG))) //It is diff
+        if(tokens[pos].type == TK_MUL && (pos == l || (tokens[pos - 1].type != TK_NUM && tokens[pos - 1].type != TK_RP && tokens[pos - 1].type != TK_REG))) //It is diff
           {
             cur_op_precedence = 3;
           }
