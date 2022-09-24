@@ -414,7 +414,8 @@ word_t expr(char *e, bool *success) {
       if(tokens[i].type == TK_SUB && (i == 1 || (tokens[i - 1].type != TK_REG && tokens[i - 1].type != TK_NUM && tokens[i - 1].type != TK_RP)))
           tokens[i].type = TK_NEG;
       if(tokens[i].type == TK_MUL && (i == 1 || (tokens[i - 1].type != TK_REG && tokens[i - 1].type != TK_NUM && tokens[i - 1].type != TK_RP)))
-          tokens[i].type = TK_DEREF;  
+          tokens[i].type = TK_DEREF; 
+      printf("Operator is %d\n", tokens[i].type); 
     }
   ERR = false;//Init the ERR val
   word_t ans = eval(1, nr_token);
