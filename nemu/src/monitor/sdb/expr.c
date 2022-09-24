@@ -14,6 +14,7 @@
 ***************************************************************************************/
 
 #include <isa.h>
+#include <memory/paddr.h>
 #include <string.h>
 /* We use the POSIX regex functions to process regular expressions.
  * Type 'man regex' for more information about POSIX regex functions.
@@ -42,6 +43,11 @@ How to ensure the token's precedence?
   //should be ignored
   {"\\+", TK_ADD},         // plus
   {"==", TK_EQ},        // equal
+  {"!=", TK_NEQ},       //Not equal
+  {"&&", TK_AND},       //AND
+  {"<=", TK_LE},        //LE
+  {">>", TK_RSH},       //RSH
+  {"<<", TK_LSH},       //LSH
   {"\\-", TK_SUB},         // substract
   {"\\*", TK_MUL},         // multiply
   {"\\/", TK_DIV},         // divide
@@ -49,7 +55,7 @@ How to ensure the token's precedence?
   {"\\)", TK_RP},         // right parenthesis
   {"[0-9][0-9]*", TK_NUMBER } ,  // Number
   {"[0xa-f|A-F|0-9]+", TK_HEX}, //Hex Number
-  {"[$a-z|A-Z]+", TK_REG}
+  {"[$a-z|A-Z|0-9]+", TK_REG} //Reg Name (with $!)
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -134,9 +140,22 @@ static bool make_token(char *e) {
                 memset(tokens[nr_token].str, 0, sizeof(tokens[nr_token].str));
                 strncpy(tokens[nr_token].str, substr_start, substr_len);
                 printf("Reg name is %s \n", tokens[nr_token].str);
-
-
-
+              break;
+          case TK_NEQ:
+                tokens[++nr_token].type = TK_NEQ;
+              break;
+          case TK_LE:
+                tokens[++nr_token].type = TK_LE;
+                break;
+          case TK_LSH:
+                tokens[++nr_token].type = TK_LSH;
+                break;
+          case TK_RSH:
+                tokens[++nr_token].type = TK_RSH;
+                break;
+          case TK_AND:
+                tokens[++nr_token].type = TK_AND;
+                break;
           case TK_ADD :
               tokens[++nr_token].type = TK_ADD;
               break;
@@ -200,11 +219,8 @@ word_t eval(int l, int r)
     }
   if(l == r)
     {
-      if(tokens[l].type != TK_NUMBER)
-        {
-          ERR = true;
-          return 0;
-        }
+      if(tokens[l].type == TK_NUMBER)
+      {
       word_t num = 0;
       if(tokens[l].str[0] == '0')
         return 0;
@@ -214,6 +230,43 @@ word_t eval(int l, int r)
         }
   //    printf("token %d value is %d \n", l, num);
       return num;
+      }
+      if(tokens[l].type == TK_HEX)
+      {
+      word_t num = 0;
+      for (int i = 1 ; i <= strlen(tokens[l].str) - 1 ; i++)
+        {
+          num = (num << 4);
+          if(tokens[l].str[i] >= '0' && tokens[l].str[i] <= '9')
+            num += tokens[l].str[i] - '0';
+          if(tokens[l].str[i] >= 'a' && tokens[l].str[i] <= 'f')
+            num += tokens[l].str[i] - 'a' + 10;
+          if(tokens[l].str[i] >= 'A' && tokens[l].str[i] <= 'F')
+            num += tokens[l].str[i] - 'A' + 10;          
+        }
+  //    printf("token %d value is %d \n", l, num);
+      return num;
+      }
+      if(tokens[l].type == TK_REG)
+      {
+      _Bool succ = false;
+      char s[32];
+      memset(s, 0, sizeof(s));
+      strncpy(s, tokens[l].str + 1, strlen(tokens[l].str) - 1);
+      word_t ans = isa_reg_str2val(s, &succ);
+      if(succ == false)
+        {
+          printf("Decomposition Err!!!\n");
+          ERR = true;
+          assert(0);
+          return 0;
+        }
+      return ans;
+      }
+      printf("ERROR!!!");
+      ERR = true;
+      assert(0);
+      return 0;
     }
   if(check_parenthese(l, r))
     {
@@ -226,6 +279,8 @@ word_t eval(int l, int r)
   for (int pos = l ; pos <= r ; pos++)
     {
         if(tokens[pos].type == TK_NUMBER)
+          continue;
+        if(tokens[pos].type == TK_HEX)
           continue;
         if(tokens[pos].type == TK_RP)
           {
@@ -255,9 +310,29 @@ word_t eval(int l, int r)
           {
             cur_op_precedence = 2;
           }
-        if(tokens[pos].type == TK_SUB && (pos == l || (tokens[pos - 1].type != TK_NUMBER && tokens[pos - 1].type != TK_RP))) //It is neg
+        if(tokens[pos].type == TK_SUB && (pos == l || (tokens[pos - 1].type != TK_NUMBER && tokens[pos - 1].type != TK_HEX && tokens[pos - 1].type != TK_RP && tokens[pos - 1].type != TK_REG))) //It is neg
           {
             cur_op_precedence = 3;
+          }
+        if(tokens[pos].type == TK_MUL && (pos == l || (tokens[pos - 1].type != TK_NUMBER && tokens[pos - 1].type != TK_HEX && tokens[pos - 1].type != TK_RP && tokens[pos - 1].type != TK_REG))) //It is diff
+          {
+            cur_op_precedence = 3;
+          }
+        if(tokens[pos].type >= TK_LSH && tokens[pos].type <= TK_RSH)
+          {
+            cur_op_precedence = 0;//LSH/RSH is 0 pre
+          }
+        if(tokens[pos].type == TK_LE)
+          {
+            cur_op_precedence = -1;
+          }
+        if(tokens[pos].type == TK_EQ || tokens[pos].type == TK_NEQ)
+          {
+            cur_op_precedence = -2;
+          }
+        if(tokens[pos].type == TK_AND)
+          {
+            cur_op_precedence = -3;
           }
         if(cur_op_precedence <= main_op_precedence)
             {
@@ -265,9 +340,10 @@ word_t eval(int l, int r)
               main_op_precedence = cur_op_precedence;
             }
     }
-  if(main_op_precedence < 3)
+  word_t ans = 0;
+  if(main_op_precedence < 3)//Double Parameter Arithmetic
   {
-    word_t val1, val2, ans = 0;
+    word_t val1, val2;
     val1 = eval(l, main_op_pos - 1);
     val2 = eval(main_op_pos + 1, r);
  //   printf("(%d,%d): %d   (%d, %d):%d   \n",l, main_op_pos - 1, val1, main_op_pos + 1, r, val2);
@@ -289,15 +365,42 @@ word_t eval(int l, int r)
       else
         ans = val1 / val2;
       break;
+    case TK_AND:
+      ans = val1 && val2;
+      break;
+    case TK_EQ:
+      ans = (val1 == val2);
+      break;
+    case TK_LE:
+      ans = (val1 <= val2);
+      break;
+    case TK_LSH:
+      ans = (val1 << val2);
+      break;
+    case TK_RSH:
+      ans = (val1 >> val2);
+      break;
     default: assert(0);
     }
     return ans;
   }
-  else
+  else //Single OP
   {
     word_t rev = -1;
     word_t cur = eval(l + 1, r);
-    return rev * cur;
+    switch (tokens[main_op_pos].type)
+    {
+    case TK_SUB://TK_NEG
+      ans = rev * cur;
+      break;
+    case TK_MUL://TK_DIFF
+      word_t addr = eval(l + 1, r);
+      ans = paddr_read(addr, 4);
+      break;
+    default:
+      break;
+    }
+    return ans;
   }
 }
 
