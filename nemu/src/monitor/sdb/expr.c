@@ -253,6 +253,7 @@ word_t eval(int l, int r)
       char s[32];
       memset(s, 0, sizeof(s));
       strncpy(s, tokens[l].str + 1, strlen(tokens[l].str) - 1);
+      printf("REG NAME IS: %s\n", s);
       word_t ans = isa_reg_str2val(s, &succ);
       if(succ == false)
         {
