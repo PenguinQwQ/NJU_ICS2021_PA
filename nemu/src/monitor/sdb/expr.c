@@ -382,7 +382,7 @@ word_t eval(int l, int r)
   else //Single OP
   {
     word_t rev = -1;
-    word_t cur = eval(main_op_pos + 1, r);
+    word_t cur = eval(l + 1, r);
     switch (tokens[main_op_pos].type)
     {
     case TK_NEG://TK_NEG
