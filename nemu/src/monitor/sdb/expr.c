@@ -21,10 +21,8 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ,
-
-  /* TODO: Add more token types */
-  TK_NUMBER, TK_ADD, TK_SUB, TK_MUL, TK_DIV, TK_LP, TK_RP
+  TK_NOTYPE = 256, TK_EQ, TK_NEQ, TK_AND, TK_LE, TK_LSH, TK_RSH,
+  TK_NUMBER, TK_HEX, TK_REG, TK_ADD, TK_SUB, TK_MUL, TK_DIV, TK_LP, TK_RP
 };
 
 static struct rule {
@@ -49,7 +47,8 @@ How to ensure the token's precedence?
   {"\\/", TK_DIV},         // divide
   {"\\(", TK_LP},         // left parenthesis
   {"\\)", TK_RP},         // right parenthesis
-  {"[0-9][0-9]*", TK_NUMBER }   // Number
+  {"[0-9][0-9]*", TK_NUMBER } ,  // Number
+  {"[0xa-f|A-F|0-9]+", TK_HEX} //Hex Number
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -114,13 +113,30 @@ static bool make_token(char *e) {
               break;
           case TK_NUMBER :
               if(substr_len > 32)//this case will cause buf-overflow
+               {
+                printf("TK_NUMBER OVERFLOW!!!\n");
                 assert(0);
+              }
               else
               {
                 tokens[++nr_token].type = TK_NUMBER;
                 memset(tokens[nr_token].str, 0, sizeof(tokens[nr_token].str));
                 strncpy(tokens[nr_token].str, substr_start, substr_len);
       //          printf("TOKEN number str is : %s \n", tokens[nr_token].str);
+              }
+              break;
+          case TK_HEX :
+              if(substr_len > 32)//this case will cause buf-overflow
+               {
+                printf("TK_HEX OVERFLOW!!!\n");
+                assert(0);
+              }
+              else
+              {
+                tokens[++nr_token].type = TK_HEX;
+                memset(tokens[nr_token].str, 0, sizeof(tokens[nr_token].str));
+                strncpy(tokens[nr_token].str, substr_start, substr_len);
+                printf("TOKEN HEX str is : %s \n", tokens[nr_token].str);
               }
               break;
           case TK_ADD :
