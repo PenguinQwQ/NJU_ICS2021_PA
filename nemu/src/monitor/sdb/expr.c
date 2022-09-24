@@ -275,7 +275,8 @@ word_t eval(int l, int r)
   int main_op_precedence = 1000, cur_op_precedence = 1000;
   for (int pos = l ; pos <= r ; pos++)
     {
-        if(tokens[pos].type == TK_NUM)
+        cur_op_precedence = 1000;
+        if(tokens[pos].type == TK_NUM || tokens[pos].type == TK_REG)
           continue;
         if(tokens[pos].type == TK_RP)
           {
@@ -387,10 +388,10 @@ word_t eval(int l, int r)
  //   printf("main_op_pos = %u , r = %u  ,cur = %d\n", main_op_pos, r, cur );
     switch (tokens[l].type)
     {
-    case TK_NEG://TK_NEG
+    case TK_NEG:
       ans = rev * cur;
       break;
-    case TK_DEREF://TK_DIFF
+    case TK_DEREF:
       ans = paddr_read(cur, 4);
       break;
     default:
