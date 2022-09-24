@@ -389,8 +389,7 @@ word_t eval(int l, int r)
       ans = rev * cur;
       break;
     case TK_MUL://TK_DIFF
-      word_t addr = eval(l + 1, r);
-      ans = paddr_read(addr, 4);
+      ans = paddr_read(eval(l + 1, r), 4);
       break;
     default:
       break;
