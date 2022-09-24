@@ -48,7 +48,8 @@ How to ensure the token's precedence?
   {"\\(", TK_LP},         // left parenthesis
   {"\\)", TK_RP},         // right parenthesis
   {"[0-9][0-9]*", TK_NUMBER } ,  // Number
-  {"[0xa-f|A-F|0-9]+", TK_HEX} //Hex Number
+  {"[0xa-f|A-F|0-9]+", TK_HEX}, //Hex Number
+  {"[$a-f|A-F]+", TK_REG}
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -105,6 +106,12 @@ static bool make_token(char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
+        if(substr_len > 32)//this case will cause buf-overflow
+         {
+          printf("TK STRING OVERFLOW!!!\n");
+          assert(0);
+          }
+
         switch (rules[i].token_type) {
           case TK_NOTYPE ://is a space, just skip it and no need to record
               break;
@@ -112,33 +119,24 @@ static bool make_token(char *e) {
               tokens[++nr_token].type = TK_EQ;
               break;
           case TK_NUMBER :
-              if(substr_len > 32)//this case will cause buf-overflow
-               {
-                printf("TK_NUMBER OVERFLOW!!!\n");
-                assert(0);
-              }
-              else
-              {
                 tokens[++nr_token].type = TK_NUMBER;
                 memset(tokens[nr_token].str, 0, sizeof(tokens[nr_token].str));
                 strncpy(tokens[nr_token].str, substr_start, substr_len);
-      //          printf("TOKEN number str is : %s \n", tokens[nr_token].str);
-              }
+       //        printf("TOKEN number str is : %s \n", tokens[nr_token].str);
               break;
           case TK_HEX :
-              if(substr_len > 32)//this case will cause buf-overflow
-               {
-                printf("TK_HEX OVERFLOW!!!\n");
-                assert(0);
-              }
-              else
-              {
                 tokens[++nr_token].type = TK_HEX;
                 memset(tokens[nr_token].str, 0, sizeof(tokens[nr_token].str));
                 strncpy(tokens[nr_token].str, substr_start, substr_len);
-                printf("TOKEN HEX str is : %s \n", tokens[nr_token].str);
-              }
               break;
+          case TK_REG :
+                tokens[++nr_token].type = TK_REG;
+                memset(tokens[nr_token].str, 0, sizeof(tokens[nr_token].str));
+                strncpy(tokens[nr_token].str, substr_start, substr_len);
+                printf("Reg name is %s \n", tokens[nr_token].str);
+
+
+
           case TK_ADD :
               tokens[++nr_token].type = TK_ADD;
               break;
