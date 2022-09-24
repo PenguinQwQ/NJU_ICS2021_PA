@@ -39,9 +39,11 @@ for (int i = 0 ; i <= 31 ; i++)
   {
     if(strcmp(s, regs[i]) == 0)
       {
+        *success = true;
         return cpu.gpr[i];
       }
   }
+  *success = false;
   printf("ERROR:NO SUCH NAME REGISTER FOUND!!!\n");
   assert(0);
   return 0;
