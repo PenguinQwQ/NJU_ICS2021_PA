@@ -332,7 +332,7 @@ word_t eval(int l, int r)
             }
     }
   word_t ans = 0;
-  printf("Operator is %s\n", tokens[main_op_pos].str);
+  printf("Operator is %d\n", tokens[main_op_pos].type);
   if(main_op_precedence < 3)//Double Parameter Arithmetic
   {
     word_t val1, val2;
