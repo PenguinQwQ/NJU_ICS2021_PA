@@ -22,7 +22,7 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ, TK_NEQ, TK_AND, TK_LE, TK_LSH, TK_RSH,
+  TK_NOTYPE = 256, TK_EQ, TK_NEQ, TK_AND, TK_LE, TK_LSH, TK_RSH, TK_DEREF, TK_NEG,
   TK_NUM, TK_REG, TK_ADD, TK_SUB, TK_MUL, TK_DIV, TK_LP, TK_RP
 };
 
@@ -271,7 +271,7 @@ word_t eval(int l, int r)
     }
   //find the main operator
   int in_parenthese = 0;
-  int main_op_pos = l;
+  int main_op_pos = r;
   int main_op_precedence = 1000, cur_op_precedence = 1000;
   for (int pos = l ; pos <= r ; pos++)
     {
@@ -305,11 +305,7 @@ word_t eval(int l, int r)
           {
             cur_op_precedence = 2;
           }
-        if(tokens[pos].type == TK_SUB && (pos == l || (tokens[pos - 1].type != TK_NUM  && tokens[pos - 1].type != TK_RP && tokens[pos - 1].type != TK_REG))) //It is neg
-          {
-            cur_op_precedence = 3;
-          }
-        if(tokens[pos].type == TK_MUL && (pos == l || (tokens[pos - 1].type != TK_NUM && tokens[pos - 1].type != TK_RP && tokens[pos - 1].type != TK_REG))) //It is diff
+        if(tokens[pos].type == TK_NEG || tokens[pos].type == TK_DEREF)
           {
             cur_op_precedence = 3;
           }
@@ -386,14 +382,14 @@ word_t eval(int l, int r)
   else //Single OP
   {
     word_t rev = -1;
-    word_t cur = eval(l + 1, r);
+    word_t cur = eval(main_op_pos + 1, r);
     switch (tokens[main_op_pos].type)
     {
-    case TK_SUB://TK_NEG
+    case TK_NEG://TK_NEG
       ans = rev * cur;
       break;
-    case TK_MUL://TK_DIFF
-      ans = paddr_read(eval(l + 1, r), 4);
+    case TK_DEREF://TK_DIFF
+      ans = paddr_read(cur, 4);
       break;
     default:
       break;
@@ -409,7 +405,16 @@ word_t expr(char *e, bool *success) {
     return 0;
   }
   /* TODO: Insert codes to evaluate the expression. */
+  //Preprocess the expression
+  for (int i = 1 ; i <= nr_token ; i++)
+    {
+      if(tokens[i].type == TK_SUB && (i == 1 || (tokens[i - 1].type != TK_REG && tokens[i - 1].type != TK_NUM && tokens[i - 1].type != TK_RP)))
+          tokens[i].type = TK_NEG;
+      if(tokens[i].type == TK_MUL && (i == 1 || (tokens[i - 1].type != TK_REG && tokens[i - 1].type != TK_NUM && tokens[i - 1].type != TK_RP)))
+          tokens[i].type = TK_DEREF;  
+    }
   ERR = false;//Init the ERR val
   word_t ans = eval(1, nr_token);
+
   return ans;
 }
