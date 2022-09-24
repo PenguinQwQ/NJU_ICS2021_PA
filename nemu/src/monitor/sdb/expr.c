@@ -375,7 +375,7 @@ word_t eval(int l, int r)
     case TK_RSH:
       ans = (val1 >> val2);
       break;
-    default: assert(0);
+    default: break;
     }
     return ans;
   }
