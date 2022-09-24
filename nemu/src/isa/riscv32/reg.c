@@ -31,7 +31,10 @@ for (int i = 0 ; i <= 31 ; i++)
   printf("0x%08x    \n", cpu.gpr[i]); //cpu.gpr[i] outputs the
   //address of certain registers! 
 }
-
+  printf("pc    ");//display the register name
+  printf("0x%02x    ", 32);//display the register address(in hex)
+  printf("0x%08x    \n", cpu.pc); //cpu.gpr[i] outputs the
+  //address of certain registers! 
 }
 
 word_t isa_reg_str2val(const char *s, bool *success) {
@@ -43,6 +46,11 @@ for (int i = 0 ; i <= 31 ; i++)
         return cpu.gpr[i];
       }
   }
+  if(strcmp(s, "pc") == 0)
+    {
+        *success = true;
+        return cpu.pc;
+    }
   *success = false;
   printf("ERROR:NO SUCH NAME REGISTER FOUND!!!\n");
   assert(0);

@@ -217,7 +217,7 @@ word_t eval(int l, int r)
       if(tokens[l].type == TK_NUM && strlen(tokens[l].str) > 2 &&  tokens[l].str[0] == '0' && tokens[l].str[1] == 'x')
       {
       word_t num = 0;
-      for (int i = 1 ; i <= strlen(tokens[l].str) - 1 ; i++)
+      for (int i = 2 ; i <= strlen(tokens[l].str) - 1 ; i++)
         {
           num = (num << 4);
           if(tokens[l].str[i] >= '0' && tokens[l].str[i] <= '9')
