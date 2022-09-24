@@ -56,7 +56,7 @@ How to ensure the token's precedence?
   {"[0xa-f|A-F|0-9]+", TK_HEX}, //Hex Number x...
   {"[$][a-z|A-Z|0-9]+", TK_REG}, //Reg Name (with $!)
   {"[1-9][0-9]*", TK_NUMBER },  // Number
-  {"[0](\?!x)", TK_NUMBER} //Zero Case!
+  {"([0](?!x))", TK_NUMBER} //Zero Case!
 };
 
 #define NR_REGEX ARRLEN(rules)
