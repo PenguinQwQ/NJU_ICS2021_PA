@@ -356,7 +356,11 @@ word_t eval(int l, int r)
       break;
     case TK_DIV:
       if(val2 == 0)
+      {
         ERR = true;
+        printf("DIVIDE ZERO!!!\n");
+        assert(0);
+      }
       else
         ans = val1 / val2;
       break;
