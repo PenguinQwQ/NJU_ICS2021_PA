@@ -49,7 +49,7 @@ How to ensure the token's precedence?
   {"\\)", TK_RP},         // right parenthesis
   {"[0-9][0-9]*", TK_NUMBER } ,  // Number
   {"[0xa-f|A-F|0-9]+", TK_HEX}, //Hex Number
-  {"[$a-f|A-F]+", TK_REG}
+  {"[$a-z|A-Z]+", TK_REG}
 };
 
 #define NR_REGEX ARRLEN(rules)
