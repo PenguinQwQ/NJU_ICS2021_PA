@@ -27,6 +27,12 @@ static int is_batch_mode = false;
 
 void init_regex();
 void init_wp_pool();
+WP* new_wp();
+void free_wp(WP *wp);
+WP* find_NO_watchpoint(int num);
+void scan_watchpoints();
+void display_watchpoints();
+
 
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
@@ -90,6 +96,10 @@ if(args[0] == 'r')
 {
   isa_reg_display();
 }
+if(args[0] == 'w') //if it is watchpoint
+{
+  display_watchpoints();
+}
 return 0;
 }
 
@@ -128,13 +138,44 @@ static int cmd_p(char *args)
   printf("The Expression Result Is : %u \n", ans);
   return 0;
 }
-/*
-static int cmd_w(char *args);
 
-static int cmd_d(char *args);
+static int cmd_w(char *args)
+{
+  WP* wp = new_wp();
+  strcpy(wp->str, args);//copy the args into the wp->str
+  bool succ = false;
+  wp->prev_val = expr(args, &succ);
+  if(succ == false)
+    {
+      assert(0);
+      printf("Invalid Expression Or Fault occurred during arithmetic!!!\n");
+      return 0;
+    }
+  printf("New Watchpoint is set, as NO: %d \n On expression: %s \n with value: %u \n", wp->NO, wp->str, wp->prev_val);
+  return 0;
+}
 
-
-*/
+static int cmd_d(char *args)//delete the NO watchpoint
+{
+  int t = 0, len = 0;
+  while(len < strlen(args))
+  {
+    t = (t << 3) + (t << 1) + args[len] - '0';
+    len++;
+  }//we have t as the N 
+  WP* it = find_NO_watchpoint(t);
+  if(it == NULL)
+    {
+      printf("Delete Watchpoint failed: Not Found Watchpoint with NO:%u", t);
+      assert(0);
+    }
+  else
+    {
+      printf("Free Success!!!\n");
+      free_wp(it);
+    }
+  return 0;
+}
 static struct {
   const char *name;
   const char *description;
@@ -151,11 +192,9 @@ static struct {
   { "si", "Execute the procedure's next n instructions and pause, and n is set to 1 once not given", cmd_si},
   { "info", "Print the information of the procedure(info of registers/watchpoints)", cmd_info},
   { "x", "Scan the memory, give consistent N bytes memory content", cmd_x},
-  { "p", "print the arithmetic result of given expression", cmd_p}
-  /*
-  { "w", "set watchpoints", cmd_w},
-  { "d", "delete watchpoints", cmd_d}
-  */
+  { "p", "print the arithmetic result of given expression", cmd_p},
+  { "w", "set watchpoints on specified expressions", cmd_w},
+  { "d", "delete the NO specified watchpoints", cmd_d}
 };
 
 #define NR_CMD ARRLEN(cmd_table)

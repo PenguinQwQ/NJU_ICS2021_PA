@@ -15,18 +15,11 @@
 
 #include "sdb.h"
 
-#define NR_WP 32
+#define NR_WP 32 //define the size of the watchpoints
 
-typedef struct watchpoint {
-  int NO;
-  struct watchpoint *next;
-
-  /* TODO: Add more members if necessary */
-
-} WP;
-
+static int WP_NUM = 0;
 static WP wp_pool[NR_WP] = {};
-static WP *head = NULL, *free_ = NULL;
+static WP *head = NULL, *free_ = NULL;//two lists of WP
 
 void init_wp_pool() {
   int i;
@@ -34,10 +27,110 @@ void init_wp_pool() {
     wp_pool[i].NO = i;
     wp_pool[i].next = (i == NR_WP - 1 ? NULL : &wp_pool[i + 1]);
   }
-
   head = NULL;
   free_ = wp_pool;
 }
 
 /* TODO: Implement the functionality of watchpoint */
 
+WP* new_wp()
+{
+   WP* ptr = free_;
+   WP* prev = ptr;
+   if(ptr == NULL)//No empty wp exists!
+    {
+      assert(0);
+      return NULL;
+    }
+   WP_NUM++;
+   while(ptr->next != NULL)
+   {
+    prev = ptr;
+    ptr = ptr->next;
+   }
+   memset(ptr->str, 0, sizeof(ptr->str));
+   ptr->NO = WP_NUM;
+   //ptr, the last; while prev the second last!
+   if(prev->next == ptr) //The Empty is the last
+   {
+      prev->next = NULL;
+      return ptr;
+   }
+   //Only One WP* exists!
+   if(prev == ptr && ptr == free_)
+   {
+      free_ = NULL;
+      return ptr;
+   }
+   return NULL;
+}
+
+WP* find_NO_watchpoint(int num)
+{
+  WP* ptr = head;
+  while(ptr != NULL)
+  {
+    if(ptr->NO == num)
+      return ptr;
+    ptr = ptr->next;
+  }
+  return NULL;
+}
+
+void free_wp(WP *wp)
+{
+  WP *prev = head;
+  while(prev->next != wp)
+    prev = prev->next;
+  prev->next = wp->next;
+  wp->NO = 0;
+  wp->next = NULL;
+  WP *ptr = free_;
+  if(ptr == NULL) //free list doesn't exist
+    {
+      free_ = wp;
+      return;
+    }
+  while(ptr->next != NULL)
+      ptr = ptr->next;
+  ptr->next = wp;//add wp to the tail!
+  return;
+}
+
+void scan_watchpoints() //pause when variables changes!
+{
+  WP* ptr = head;
+  while(ptr != NULL)
+    {
+      bool succ = false;
+      word_t val = expr(ptr->str, &succ);
+      if(succ == false)
+        {
+          assert(0);
+          printf("Invalid expression or Err Arithmetic!!\n");
+          return;
+        }
+      if(val != ptr->prev_val)
+      {
+        printf("The watchpoint NO. %d is changed\n With expression %s \n Prev_val is %u and Now_val is %u \n", ptr->NO,  ptr->str, ptr->prev_val, val);
+        nemu_state.state = NEMU_STOP;
+      }
+    }
+  if(nemu_state.state == NEMU_STOP)
+    {
+      printf("The watchpoint is triggered! Please check them out!\n");
+    }
+}
+
+void display_watchpoints()
+{
+  WP* ptr = head;
+  while(ptr != NULL)
+    {
+      printf("The watchpoint NO is : %d\n", ptr->NO);
+      printf("Expression stored: %s \n", ptr->str);
+      printf("The value of Expression : %u\n", ptr->prev_val);
+      ptr = ptr->next;
+    }
+  return;
+}
