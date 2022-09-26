@@ -54,15 +54,13 @@ WP* new_wp()
    WP* cur = head;
    //Insert the ptr into the head list.
    if(head == NULL)
-    head = cur;
+    head = ptr;
    else
    {
     while(cur->next != NULL)
       cur = cur->next;
     cur->next = ptr;
    }
-
-
    if(prev->next == ptr) //The Empty is the last
    {
       prev->next = NULL;
