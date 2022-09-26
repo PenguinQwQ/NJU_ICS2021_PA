@@ -121,10 +121,10 @@ void free_wp(WP *wp)
 void scan_watchpoints() //pause when variables changes!
 {
   WP* ptr = head;
+  char tmp[32];
   while(ptr != NULL)
     {
       bool succ = false;
-      char tmp[32];
       memset(tmp, 0, sizeof(tmp));
       strcpy(tmp, ptr->str);
       word_t val = expr(tmp, &succ);
