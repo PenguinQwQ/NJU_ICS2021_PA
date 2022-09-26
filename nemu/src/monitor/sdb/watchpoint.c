@@ -122,21 +122,21 @@ void scan_watchpoints() //pause when variables changes!
 {
   WP* ptr = head;
   char tmp[32];
+//  bool flag = false;
+  bool succ = false;
   while(ptr != NULL)
     {
-      bool succ = false;
       memset(tmp, 0, sizeof(tmp));
       strcpy(tmp, ptr->str);
       word_t val = expr(tmp, &succ);
       printf("%s ", ptr->str);
-      /*
       if(succ == false)
         {
-          assert(0);
+          printf("value is %u\n", val);
           printf("Invalid expression or Err Arithmetic!!\n");
+          assert(0);
           return;
         }
-        */
       if(val != ptr->prev_val)
       {
         printf("The watchpoint NO. %d is changed\n With expression %s \n Prev_val is %u and Now_val is %u \n", ptr->NO,  ptr->str, ptr->prev_val, val);
