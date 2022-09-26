@@ -12,7 +12,6 @@ config ISA_riscv32
 config ISA_riscv64
   bool "riscv64"
 endchoice
-
 config ISA
   string
   default "x86" if ISA_x86
@@ -30,6 +29,9 @@ config ISA64
 choice
   prompt "NEMU execution engine"
   default ENGINE_INTERPRETER
+
+config CONFIG_WATCHPOINT
+  bool "Watchpoint"
 
 config ENGINE_INTERPRETER
   bool "Interpreter"
@@ -51,6 +53,9 @@ config MODE_SYSTEM
   help
     Support full-system functionality, including privileged instructions, MMU and devices.
 endchoice
+
+
+
 
 choice
   prompt "Build target"
