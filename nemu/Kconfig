@@ -1,6 +1,13 @@
 mainmenu "NEMU Configuration Menu"
 
 choice
+  prompt "Watchpoint Function Open"
+  default CONFIG_WATCHPOINT
+config CONFIG_WATCHPOINT
+  bool "true"
+
+
+choice
   prompt "Base ISA"
   default ISA_riscv32
 config ISA_x86
@@ -30,8 +37,6 @@ choice
   prompt "NEMU execution engine"
   default ENGINE_INTERPRETER
 
-config CONFIG_WATCHPOINT
-  bool "Watchpoint"
 
 config ENGINE_INTERPRETER
   bool "Interpreter"
