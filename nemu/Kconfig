@@ -1,16 +1,5 @@
 mainmenu "NEMU Configuration Menu"
 
-
-
-choice
-  prompt "Watchpoint Settings"
-  default NCONFIG_WATCHPOINT
-config CONFIG_WATCHPOINT
-  bool "Open Watchpoint"
-endchoice
-
-
-
 choice
   prompt "Base ISA"
   default ISA_riscv32
