@@ -2,8 +2,9 @@ mainmenu "NEMU Configuration Menu"
 
 menu "Watchpoint Settings"
 config CONFIG_WATCHPOINT
-  bool "open"
-  default y
+  bool "Open Watchpoint"
+config NCONFIG_WATCHPOINT
+  bool "Close Watchpoint"
 endmenu
 
 
