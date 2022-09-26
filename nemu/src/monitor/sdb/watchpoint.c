@@ -129,12 +129,14 @@ void scan_watchpoints() //pause when variables changes!
       strcpy(tmp, ptr->str);
       word_t val = expr(tmp, &succ);
       printf("%s ", ptr->str);
+      /*
       if(succ == false)
         {
           assert(0);
           printf("Invalid expression or Err Arithmetic!!\n");
           return;
         }
+        */
       if(val != ptr->prev_val)
       {
         printf("The watchpoint NO. %d is changed\n With expression %s \n Prev_val is %u and Now_val is %u \n", ptr->NO,  ptr->str, ptr->prev_val, val);
