@@ -144,7 +144,8 @@ static int cmd_w(char *args)
   WP* wp = new_wp();
   strcpy(wp->str, args);//copy the args into the wp->str
   bool succ = false;
-  wp->prev_val = expr(args, &succ);
+  printf("%s", wp->str);
+  wp->prev_val = expr(wp->str, &succ);
   if(succ == false)
     {
       assert(0);
