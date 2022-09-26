@@ -146,12 +146,14 @@ static int cmd_w(char *args)
   bool succ = false;
   printf("%s", wp->str);
   wp->prev_val = expr(wp->str, &succ);
+  /*
   if(succ == false)
     {
       assert(0);
       printf("Invalid Expression Or Fault occurred during arithmetic!!!\n");
       return 0;
     }
+    */
   printf("New Watchpoint is set, as NO: %d \n On expression: %s \n with value: %u \n", wp->NO, wp->str, wp->prev_val);
   return 0;
 }
