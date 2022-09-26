@@ -123,14 +123,13 @@ void scan_watchpoints() //pause when variables changes!
   WP* ptr = head;
   char tmp[32];
 //  bool flag = false;
-  bool succ = false;
+  _Bool succ = false;
   while(ptr != NULL)
     {
       memset(tmp, 0, sizeof(tmp));
       strcpy(tmp, ptr->str);
       word_t val = expr(tmp, &succ);
       printf("%s ", ptr->str);
-      /*
       if(succ == false)
         {
           printf("value is %u\n", val);
@@ -138,7 +137,6 @@ void scan_watchpoints() //pause when variables changes!
           assert(0);
           return;
         }
-        */
       if(val != ptr->prev_val)
       {
         printf("The watchpoint NO. %d is changed\n With expression %s \n Prev_val is %u and Now_val is %u \n", ptr->NO,  ptr->str, ptr->prev_val, val);
