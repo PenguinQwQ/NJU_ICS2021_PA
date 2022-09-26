@@ -124,7 +124,10 @@ void scan_watchpoints() //pause when variables changes!
   while(ptr != NULL)
     {
       bool succ = false;
-      word_t val = expr(ptr->str, &succ);
+      char tmp[32];
+      memset(tmp, 0, sizeof(tmp));
+      strcpy(tmp, ptr->str);
+      word_t val = expr(tmp, &succ);
       printf("%s ", ptr->str);
       if(succ == false)
         {
