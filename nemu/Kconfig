@@ -3,7 +3,7 @@ mainmenu "NEMU Configuration Menu"
 menu "Watchpoint Settings"
 config CONFIG_WATCHPOINT
   bool "open"
-  default n
+  default y
 endmenu
 
 
