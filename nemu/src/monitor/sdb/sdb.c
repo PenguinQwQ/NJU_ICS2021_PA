@@ -166,6 +166,7 @@ static int cmd_d(char *args)//delete the NO watchpoint
     t = (t << 3) + (t << 1) + args[len] - '0';
     len++;
   }//we have t as the N 
+  printf("%d \n", t);
   WP* it = find_NO_watchpoint(t);
   if(it == NULL)
     {
