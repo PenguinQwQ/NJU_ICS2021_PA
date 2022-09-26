@@ -5,6 +5,7 @@ choice
   default CONFIG_WATCHPOINT
 config CONFIG_WATCHPOINT
   bool "open"
+  default n
 endchoice
 
 
