@@ -90,9 +90,17 @@ WP* find_NO_watchpoint(int num)
 void free_wp(WP *wp)
 {
   WP *prev = head;
-  while(prev->next != wp)
+  if(prev == NULL)
+    {
+      printf("DELETE EMPTY LIST!!\n");
+      assert(0);
+
+    }
+  while(prev->next != wp && prev->next != NULL)
     prev = prev->next;
-  prev->next = wp->next;
+  if(prev->next != NULL)
+     prev->next = wp->next;
+
   wp->NO = 0;
   wp->next = NULL;
   WP *ptr = free_;
