@@ -1,14 +1,14 @@
 mainmenu "NEMU Configuration Menu"
 
+
+
 choice
-  prompt "Watchpoint settings"
-config NCONFIG_WATCHPOINT
-  bool "NO WATCHPOINT"
-  default n
+  prompt "Watchpoint Settings"
+  default NCONFIG_WATCHPOINT
 config CONFIG_WATCHPOINT
-  bool "OPEN WATCHPOINT"
-  default n
+  bool "Open Watchpoint"
 endchoice
+
 
 
 choice
