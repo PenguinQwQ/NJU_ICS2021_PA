@@ -51,6 +51,18 @@ WP* new_wp()
    memset(ptr->str, 0, sizeof(ptr->str));
    ptr->NO = WP_NUM;
    //ptr, the last; while prev the second last!
+   WP* cur = head;
+   //Insert the ptr into the head list.
+   if(head == NULL)
+    head = cur;
+   else
+   {
+    while(cur->next != NULL)
+      cur = cur->next;
+    cur->next = ptr;
+   }
+
+
    if(prev->next == ptr) //The Empty is the last
    {
       prev->next = NULL;
