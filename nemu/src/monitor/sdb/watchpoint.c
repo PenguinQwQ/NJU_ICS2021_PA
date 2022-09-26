@@ -94,7 +94,6 @@ void free_wp(WP *wp)
     {
       printf("DELETE EMPTY LIST!!\n");
       assert(0);
-
     }
   if(wp == head)
   {
@@ -126,6 +125,7 @@ void scan_watchpoints() //pause when variables changes!
     {
       bool succ = false;
       word_t val = expr(ptr->str, &succ);
+      printf("%s ", ptr->str);
       if(succ == false)
         {
           assert(0);
