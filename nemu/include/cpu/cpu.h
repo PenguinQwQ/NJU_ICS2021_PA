@@ -24,6 +24,6 @@ void set_nemu_state(int state, vaddr_t pc, int halt_ret);//set the nemu state
 void invalid_inst(vaddr_t thispc);
 
 #define NEMUTRAP(thispc, code) set_nemu_state(NEMU_END, thispc, code)
-#define INV(thispc) invalid_inst(thispc)
+#define INV(thispc) invalid_inst(thispc) 
 
 #endif
