@@ -43,20 +43,20 @@ char *strncpy(char *dst, const char *src, size_t n) {
   return dst;
 }
 
-/*
+
 char *strcat(char *dst, const char *src) {
   	size_t len_dst = strlen(dst), len_src = strlen(src);
-    if(len_dst + len_src + 1 > sizeof(dst))
+    if(strlen(dst) + strlen(src) + 1 > sizeof(dst))
         panic("strcat overflow! src+dst > sizeof dst!");
     for (int i = len_dst ; i <= len_dst + len_src; i++)
     	*(dst + i) = *(src + i - len_dst);
     return dst;
 }
-*/
 
+/*
 char *strcat(char *dst, const char *src) {
     assert((dst != NULL) && (src != NULL));
-     //*pos = dst + sizeof(dst) - 1, 
+     *pos = dst + sizeof(dst) - 1, 
     char *beg = dst;
     while(*dst){dst++;}
     int len_src = strlen(src);
@@ -66,7 +66,7 @@ char *strcat(char *dst, const char *src) {
     	*(dst + i) = *(src + i);
     return beg;
 }
-
+*/
 int strcmp(const char *s1, const char *s2) {
  	int i = 0, len_s1 = strlen(s1), len_s2 = strlen(s2);
     while((i <= len_s1 - 1) && (i <= len_s2 - 1) && (s1[i] == s2[i]))
