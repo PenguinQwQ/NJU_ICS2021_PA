@@ -9,7 +9,7 @@ size_t strlen(const char *s) {
     //If s is a nullptr, then we should return 0;
     if(s == NULL)
       return 0;
-    while(*s != '\0')
+    while(*s != '\0' && (s != NULL))
     {
      len++;	
      s++;   
