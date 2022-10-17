@@ -6,6 +6,9 @@
 
 size_t strlen(const char *s) {
     size_t len = 0;
+    //If s is a nullptr, then we should return 0;
+    if(s == NULL)
+      return 0;
     while(*s != '\0')
     {
      len++;	
@@ -16,8 +19,8 @@ size_t strlen(const char *s) {
 
 char *strcpy(char *dst, const char *src) {
   int len_src = strlen(src);
-//  if(len_dst < len_src)
-//      panic("The Destination String is Too short!! String Overflow!");
+  if(sizeof(dst) < len_src + 1)
+      panic("The Destination String is Too short!! String Overflow!");
   for (int i = 0 ; i <= len_src ; i++) //Including the '\0', so it ends with len_src
       	*(dst + i) = *(src + i);
   return dst;
