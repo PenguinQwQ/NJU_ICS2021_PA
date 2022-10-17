@@ -15,9 +15,9 @@ size_t strlen(const char *s) {
 }
 
 char *strcpy(char *dst, const char *src) {
-  size_t len_dst = strlen(dst), len_src = strlen(src);
+  int len_dst = strlen(dst), len_src = strlen(src);
   if(len_dst < len_src)
-      panic("The Destination String is To short!! String Overflow!");
+      panic("The Destination String is Too short!! String Overflow!");
   for (int i = 0 ; i <= len_src ; i++) //Including the '\0', so it ends with len_src
       	dst[i] = src[i];
   return dst;
