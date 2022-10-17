@@ -56,12 +56,11 @@ char *strcat(char *dst, const char *src) {
 
 char *strcat(char *dst, const char *src) {
     assert((dst != NULL) && (src != NULL));
-//    char *pos = dst + sizeof(dst) - 1;
-    char *beg = dst;
+    char *pos = dst + sizeof(dst) - 1, *beg = dst;
     while(*dst){dst++;}
     int len_src = strlen(src);
- //   if(len_src + dst > pos)
- //   	panic("strcat overflow! src+dst > sizeof dst!");
+    if(pos - dst + 1 < len_src)
+    	panic("strcat overflow! src+dst > sizeof dst!");
     for (int i = 0 ; i <= len_src; i++)
     	*(dst + i) = *(src + i);
     return beg;
