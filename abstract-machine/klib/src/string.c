@@ -46,8 +46,8 @@ char *strncpy(char *dst, const char *src, size_t n) {
 
 char *strcat(char *dst, const char *src) {
   	size_t len_dst = strlen(dst), len_src = strlen(src);
-    if(strlen(dst) + strlen(src) + 1 > sizeof(dst))
-        panic("strcat overflow! src+dst > sizeof dst!");
+//    if(strlen(dst) + strlen(src) + 1 > sizeof(dst))
+ //       panic("strcat overflow! src+dst > sizeof dst!");
     for (int i = len_dst ; i <= len_dst + len_src; i++)
     	*(dst + i) = *(src + i - len_dst);
     return dst;
