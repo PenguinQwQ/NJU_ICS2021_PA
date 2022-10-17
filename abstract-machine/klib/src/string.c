@@ -86,36 +86,52 @@ int strncmp(const char *s1, const char *s2, size_t n) {
 }
 
 void *memset(void *s, int c, size_t n) {
-    for (int i = 0 ; i <= n - 1 ; i++)
-    	{
-        *(((char *)s + i)) = c;
-      }
+	assert(s);
+    char* tmp = (char *)s;
+    for (int i = 1 ; i <= n ; i++)
+    {
+        *tmp = (char)c;
+        tmp++;
+    }
     return s;
 }
 
 void *memmove(void *dst, const void *src, size_t n) {
-    for (int i = 0 ; i <= n - 1 ; i++)
-    	{
-      *(((char *)dst + i)) = *(((char *)src + i)); 	
-      }
+	assert((dst != NULL) && (src != NULL));
+    char* t1 = (char *)dst;
+    char* t2 = (char *)src;
+    for (int i = 1 ; i <= n ; i++)
+    {
+        *t1 = *t2;
+        t1++;
+        t2++;
+    }
     return dst;
 }
 
 void *memcpy(void *out, const void *in, size_t n) {
-    for (int i = 0 ; i <= n - 1 ; i++)
-    	{
-      *(((char *)out + i)) = *(((char *)in + i));
-      } 
+	assert((out != NULL) && (in != NULL));
+    char* o = (char *)out;
+    char* i = (char *)in;
+    while(n--)
+    {
+       *o = *i;
+        o++;
+        i++;
+    }
     return out;
 }
 
 int memcmp(const void *s1, const void *s2, size_t n) {
- 	int len_s1 = strlen(s1), len_s2 = strlen(s2), i = 0;
-    while((i <= len_s1) && (i <= len_s2) && (i <= n - 1) && ((*(((char *)s1 + i))) == (*(((char *)s2 + i)))))
-       { 
-        i++;
-       }
-   	return *(((char *)s1 + i)) - *(((char *)s2 +i));
+ 	assert((s1 != NULL) && (s2 != NULL));
+    char* x = (char *)s1;
+    char* y = (char *)s2;
+    while(n--)
+    {
+        if(*x != *y)
+            break;
+    }
+    return *x - *y;
 }
 
 #endif
