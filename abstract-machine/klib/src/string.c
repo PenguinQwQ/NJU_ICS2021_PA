@@ -104,18 +104,18 @@ void *memmove(void *dst, const void *src, size_t n) {
 void *memcpy(void *out, const void *in, size_t n) {
     for (int i = 0 ; i <= n - 1 ; i++)
     	{
-      *((int *)(out + i * 4)) = *((int *)(in + i * 4));
+      *((int *)out + i * 4) = *((int *)in + i * 4);
       } 
     return out;
 }
 
 int memcmp(const void *s1, const void *s2, size_t n) {
  	int len_s1 = strlen(s1), len_s2 = strlen(s2), i = 0;
-    while((i <= len_s1) && (i <= len_s2) && (i <= n - 1) && ((*((int *)(s1 + 4 * i))) == (*((int *)(s2 + 4 * i)))))
+    while((i <= len_s1) && (i <= len_s2) && (i <= n - 1) && (*((int *)s1 + 4 * i) == *((int *)s2 + 4 * i)))
        { 
         i++;
        }
-   	return *((int *)(s1 + 4 * i)) - *((int *)(s2 + 4 * i));
+   	return *((int *)s1 + 4 * i) - *((int *)s2 + 4 * i);
 }
 
 #endif
