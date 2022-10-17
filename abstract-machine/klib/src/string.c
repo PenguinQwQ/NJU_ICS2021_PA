@@ -48,7 +48,7 @@ char *strcat(char *dst, const char *src) {
     if(len_dst + len_src + 1 > sizeof(dst))
         panic("strcat overflow! src+dst > sizeof dst!");
     for (int i = len_dst ; i <= len_dst + len_src ; i++)
-    	dst[i] = src[i - len_dst];
+    	*(dst + i) = *(src + i - len_dst);
     return dst;
 }
 
