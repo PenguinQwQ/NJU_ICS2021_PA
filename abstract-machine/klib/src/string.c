@@ -18,9 +18,8 @@ char *strcpy(char *dst, const char *src) {
   int len_dst = strlen(dst), len_src = strlen(src);
   if(len_dst < len_src)
       panic("The Destination String is Too short!! String Overflow!");
-  for (int i = 0 ; i <= len_src-1 ; i++) //Including the '\0', so it ends with len_src
-      	dst[i] = src[i];
-  dst[len_src] = '\0';
+  for (int i = 0 ; i <= len_src ; i++) //Including the '\0', so it ends with len_src
+      	*(dst + 2 * i) = *(src + 2 * i);
   return dst;
 }
 
