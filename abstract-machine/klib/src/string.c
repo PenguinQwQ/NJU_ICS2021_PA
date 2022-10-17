@@ -27,21 +27,20 @@ char *strcpy(char *dst, const char *src) {
 }
 
 char *strncpy(char *dst, const char *src, size_t n) {
-  size_t len_dst = strlen(dst), len_src = strlen(src);
-  if(len_dst + 1 < ((n < len_src + 1) ? n : len_src + 1))
+  size_t len_src = strlen(src);
+  if(sizeof(dst) < ((n < sizeof(src)) ? n : sizeof(src))) //Check if the dst array holds the src array
       panic("The Destination String is too short!! String Overflow!");
   if(len_src + 1 <= n) //包括上'\0'，还是小于count，就整个复制。否则，只复制count个
   {
-    for (int i = 0 ; i <= len_src ; i++) //Including the '\0', so it ends with len_src
-      	dst[i] = src[i];
+  for (int i = 0 ; i <= len_src ; i++) //Including the '\0', so it ends with len_src
+      	*(dst + i) = *(src + i);
   }
   else
   {
     for (int i = 0 ; i <= n - 1; i++) //Including the '\0', so it ends with len_src
-      	dst[i] = src[i];   
+      	*(dst + i) = *(src + i);
   }
-  char* ptr = dst;
-  return ptr;
+  return dst;
 }
 
 char *strcat(char *dst, const char *src) {
