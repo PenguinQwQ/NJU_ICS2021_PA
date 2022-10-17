@@ -88,7 +88,7 @@ int strncmp(const char *s1, const char *s2, size_t n) {
 void *memset(void *s, int c, size_t n) {
     for (int i = 0 ; i <= n - 1 ; i++)
     	{
-        *((char *)(s + i)) = c;
+        *(((char *)s + i)) = c;
       }
     return s;
 }
@@ -96,7 +96,7 @@ void *memset(void *s, int c, size_t n) {
 void *memmove(void *dst, const void *src, size_t n) {
     for (int i = 0 ; i <= n - 1 ; i++)
     	{
-      *((char *)(dst + i)) = *((char *)(src + i)); 	
+      *(((char *)dst + i)) = *(((char *)src + i)); 	
       }
     return dst;
 }
@@ -104,18 +104,18 @@ void *memmove(void *dst, const void *src, size_t n) {
 void *memcpy(void *out, const void *in, size_t n) {
     for (int i = 0 ; i <= n - 1 ; i++)
     	{
-      *((char *)(out + i)) = *((char *)(in + i));
+      *(((char *)out + i)) = *(((char *)in + i));
       } 
     return out;
 }
 
 int memcmp(const void *s1, const void *s2, size_t n) {
  	int len_s1 = strlen(s1), len_s2 = strlen(s2), i = 0;
-    while((i <= len_s1) && (i <= len_s2) && (i <= n - 1) && ((*((char *)(s1 + i))) == (*((char *)(s2 + i)))))
+    while((i <= len_s1) && (i <= len_s2) && (i <= n - 1) && ((*(((char *)s1 + i))) == (*(((char *)s2 + i)))))
        { 
         i++;
        }
-   	return *((char *)(s1 + i)) - *((int *)(s2 +i));
+   	return *(((char *)s1 + i)) - *(((char *)s2 +i));
 }
 
 #endif
