@@ -9,7 +9,7 @@ size_t strlen(const char *s) {
     //If s is a nullptr, then we should return 0;
     if(s == NULL)
       return 0;
-    while(*s != '\0' && (s != NULL))
+    while((*s != '\0') && (s != NULL))
     {
      len++;	
      s++;   
@@ -45,9 +45,9 @@ char *strncpy(char *dst, const char *src, size_t n) {
 
 char *strcat(char *dst, const char *src) {
   	size_t len_dst = strlen(dst), len_src = strlen(src);
-    if(len_dst + len_src + 1 > sizeof(dst))
-        panic("strcat overflow! src+dst > sizeof dst!");
-    for (int i = len_dst ; i <= len_dst + len_src ; i++)
+//    if(len_dst + len_src + 1 > sizeof(dst))
+//        panic("strcat overflow! src+dst > sizeof dst!");
+    for (int i = len_dst ; i <= len_dst + len_src; i++)
     	*(dst + i) = *(src + i - len_dst);
     return dst;
 }
