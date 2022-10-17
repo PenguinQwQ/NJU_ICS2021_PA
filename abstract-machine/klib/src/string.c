@@ -5,12 +5,11 @@
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
 size_t strlen(const char *s) {
-  	const char* ptr = s;
     size_t len = 0;
-    while(*ptr != '\0')
+    while(*s != '\0')
     {
      len++;	
-     ptr++;   
+     s++;   
     }
     return len;
 }
@@ -21,8 +20,7 @@ char *strcpy(char *dst, const char *src) {
       panic("The Destination String is To short!! String Overflow!");
   for (int i = 0 ; i <= len_src ; i++) //Including the '\0', so it ends with len_src
       	dst[i] = src[i];
-  char* ptr = dst;
-  return ptr;
+  return dst;
 }
 
 char *strncpy(char *dst, const char *src, size_t n) {
@@ -49,8 +47,7 @@ char *strcat(char *dst, const char *src) {
         panic("strcat overflow! src+dst > sizeof dst!");
     for (int i = len_dst ; i <= len_dst + len_src ; i++)
     	dst[i] = src[i - len_dst];
-    char* ptr = dst;
-    return ptr;
+    return dst;
 }
 
 int strcmp(const char *s1, const char *s2) {
