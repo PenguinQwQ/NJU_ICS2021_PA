@@ -48,9 +48,9 @@ int sprintf(char *out, const char *fmt, ...) {
          if((*fmt == '%') && (*(fmt + 1) == 's'))
         {
              ret++;
-            str = va_arg(ap, char*);
+            str = va_arg(ap, char *);
             tot = strlen(str);
-			for (int i = 0 ; i < tot ; i++)
+			  for (int i = 0 ; i < tot ; i++)
             {
                 *(out + cnt) = *(str + i);
                 cnt++;
