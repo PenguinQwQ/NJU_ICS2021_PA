@@ -1,11 +1,15 @@
 #include <am.h>
 #include <nemu.h>
 
+static int boot_time = 0;
 void __am_timer_init() {
+  ioe_read(6, (void *)(&boot_time));
 }
 
 void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime) {
-  uptime->us = 0;
+  int now_time = 0;
+  ioe_read(6, (void *)(&now_time));
+  uptime->us = now_time - boot_time;
 }
 
 void __am_timer_rtc(AM_TIMER_RTC_T *rtc) {
