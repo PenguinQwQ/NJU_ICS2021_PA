@@ -89,10 +89,45 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 }
 
 int sprintf(char *out, const char *fmt, ...) {
+    char *str = NULL;//%s buf
+    int tot = 0;
+ //   int d_val = 0;
+    int cnt = 0;
     int ret = 0;
     va_list ap;//声明指向参数的指针
     va_start(ap, fmt);//指针初始化
-    ret = vsprintf(out, fmt, ap);
+    while(fmt != NULL && *fmt != '\0')
+    {
+        //如果读到了%d
+        if((*fmt == '%') && (*(fmt + 1) == 'd'))
+        {
+            ret++;
+  //          tot = 0;
+     //       d_val = va_arg(ap, int);
+            
+            fmt++;
+            fmt++;
+            continue;
+        }
+        //如果读到了%s
+         if((*fmt == '%') && (*(fmt + 1) == 's'))
+        {
+             ret++;
+            str = va_arg(ap, char *);
+            tot = strlen(str);
+			for (int i = 0 ; i < tot ; i++)
+            {
+                *(out + cnt) = *(str + i);
+                cnt++;
+            }
+             fmt++;
+             continue;
+        }
+        //如果读到了其他字符
+        *(out + cnt) = *fmt;
+        cnt++;
+       	fmt++;
+    }
     va_end(ap);
   	return ret;
 }
