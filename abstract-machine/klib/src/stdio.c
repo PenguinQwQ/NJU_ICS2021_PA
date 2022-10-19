@@ -5,10 +5,11 @@
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
-void num_process(char *str, long num, int base)
+int num_process(char *str, long num, int base)
 {
     int buf_tmp[20000];
     int i = 0;
+    int len = 0;
     bool sign = false, zero = false;
 	if(num < 0)
     {
@@ -28,19 +29,22 @@ void num_process(char *str, long num, int base)
     {
         *str = '0';
         str++;
-        return;
+        len++;
+        return len;
     }
     if(sign)
     {
         *str = '-';
         str++;
+        len++;
     }
     while(i--)
     {
         *str = buf_tmp[i] + '0';
         str++;
+        len++;
     }
-    return;
+    return len;
 }
 
 
@@ -103,7 +107,7 @@ int sprintf(char *out, const char *fmt, ...) {
         {
             ret++;
             d_val = va_arg(ap, int);
-            num_process(out, d_val, 10);
+            cnt = cnt + num_process(out, d_val, 10);
             fmt++;
             fmt++;
             continue;
