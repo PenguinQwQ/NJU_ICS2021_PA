@@ -69,7 +69,7 @@ char *strcat(char *dst, const char *src) {
 */
 int strcmp(const char *s1, const char *s2) {
  	int i = 0, len_s1 = strlen(s1), len_s2 = strlen(s2);
-    while((i <= len_s1) && (i <= len_s2) && (s1[i] == s2[i]))
+    while((i <= len_s1 - 1) && (i <= len_s2 - 1) && (s1[i] == s2[i]))
         {
           i++;
         }
