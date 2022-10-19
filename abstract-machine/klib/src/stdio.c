@@ -7,7 +7,7 @@
 
 void num_process(char *str, long num, int base)
 {
-    char buf_tmp[20000];
+    int buf_tmp[20000];
     int i = 0;
     bool sign = false, zero = false;
 	if(num < 0)
@@ -37,7 +37,7 @@ void num_process(char *str, long num, int base)
     }
     while(i--)
     {
-        *str = buf_tmp[i];
+        *str = buf_tmp[i] + '0';
         str++;
     }
     return;
