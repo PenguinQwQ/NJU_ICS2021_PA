@@ -5,50 +5,8 @@
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
-void num_process(char *str, int num, int base)
-{
-    int buf_tmp[20000];
-    int i = 0;
-    int len = 0;
-    bool sign = false, zero = false;
-	if(num < 0)
-    {
-		sign = true;
-        num = -num;
-    }
-    if(num == 0)
-    {
-        zero = true;
-    }
-    while(num > 0)
-    {
-        buf_tmp[++i] = num % base;
-        num = num / base;
-    }
-    if(zero)
-    {
-        *str = '0';
-        str++;
-        len++;
-        return;
-    }
-    if(sign)
-    {
-        *str = '-';
-        str++;
-        len++;
-    }
-    while(i--)
-    {
-        *str = buf_tmp[i] + '0';
-        str++;
-        len++;
-    }
-}
-
-
-
 int printf(const char *fmt, ...) {
+    /*
   char output_buf[20000];
   int len = 0;
   va_list ap;
@@ -57,11 +15,14 @@ int printf(const char *fmt, ...) {
   va_end(ap);
   for (int i = 0 ; i < len ; i++)
     putch(output_buf[i]);
-
   return len;
+  */
+  panic("Not implemented!");
 }
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
+     panic("Not implemented");
+     /*
    char *s = NULL;//%s str pointer
    int d_val = 0;//%d integer
    int len = 0;//string length
@@ -137,9 +98,12 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
     }
   *out = '\0';//Here is important!
    return cnt;
+   */
 }
 
 int sprintf(char *out, const char *fmt, ...) {
+      panic("Not implemented");
+  /*
    char *s = NULL;//%s str pointer
    int d_val = 0;//%d integer
    int len = 0;//string length
@@ -218,6 +182,7 @@ int sprintf(char *out, const char *fmt, ...) {
   *out = '\0';//Here is important!
    va_end(ap);
    return cnt;
+   */
 }
 int snprintf(char *out, size_t n, const char *fmt, ...) {
   panic("Not implemented");
