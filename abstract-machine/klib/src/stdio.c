@@ -91,7 +91,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 int sprintf(char *out, const char *fmt, ...) {
     char *str = NULL;//%s buf
     int tot = 0;
- //   int d_val = 0;
+    int d_val = 0;
     int cnt = 0;
     int ret = 0;
     va_list ap;//声明指向参数的指针
@@ -102,6 +102,8 @@ int sprintf(char *out, const char *fmt, ...) {
         if((*fmt == '%') && (*(fmt + 1) == 'd'))
         {
             ret++;
+            d_val = va_arg(ap, int);
+            num_process(out, d_val, 10);
             fmt++;
             fmt++;
             continue;
