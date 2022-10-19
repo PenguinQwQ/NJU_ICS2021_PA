@@ -37,7 +37,7 @@ int sprintf(char *out, const char *fmt, ...) {
             }
             while(tot)
             {
-                *(out + cnt) = s[tot];
+                *(out + cnt) = s[tot] + '0';
                 cnt++;
                 tot--;
             }
@@ -64,7 +64,6 @@ int sprintf(char *out, const char *fmt, ...) {
         *(out + cnt) = *fmt;
         cnt++;
        	fmt++;
-        continue;
     }
     va_end(ap);
   	return ret;
