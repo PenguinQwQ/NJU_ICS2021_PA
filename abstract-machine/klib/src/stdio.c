@@ -102,9 +102,6 @@ int sprintf(char *out, const char *fmt, ...) {
         if((*fmt == '%') && (*(fmt + 1) == 'd'))
         {
             ret++;
-  //          tot = 0;
-     //       d_val = va_arg(ap, int);
-            
             fmt++;
             fmt++;
             continue;
@@ -112,7 +109,7 @@ int sprintf(char *out, const char *fmt, ...) {
         //如果读到了%s
          if((*fmt == '%') && (*(fmt + 1) == 's'))
         {
-             ret++;
+            ret++;
             str = va_arg(ap, char *);
             tot = strlen(str);
 			for (int i = 0 ; i < tot ; i++)
@@ -120,6 +117,7 @@ int sprintf(char *out, const char *fmt, ...) {
                 *(out + cnt) = *(str + i);
                 cnt++;
             }
+             fmt++;
              fmt++;
              continue;
         }
