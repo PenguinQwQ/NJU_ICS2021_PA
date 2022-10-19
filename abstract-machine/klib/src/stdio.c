@@ -16,7 +16,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 int sprintf(char *out, const char *fmt, ...) {
     int d_val = 0;//%d buf
     char* str = NULL;
-    int s[20000];//%d s buffer
+  //  int s[20000];//%d s buffer
     int tot = 0;
     int cnt = 0;
     int ret = 0;
@@ -30,17 +30,8 @@ int sprintf(char *out, const char *fmt, ...) {
             ret++;
             tot = 0;
             d_val = va_arg(ap, int);
-            while(d_val)
-            {
-                s[++tot] = d_val % 10;
-                d_val /= 10;
-            }
-            while(tot)
-            {
-                *(out + cnt) = s[tot] + '0';
-                cnt++;
-                tot--;
-            }
+            *(out + cnt) = d_val + '0';
+            cnt++;
             fmt++;
             fmt++;
             continue;
