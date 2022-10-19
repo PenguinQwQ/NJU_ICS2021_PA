@@ -16,7 +16,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 int sprintf(char *out, const char *fmt, ...) {
     int d_val = 0;//%d buf
     char* str = NULL;
-    char s[20000];//%d s buffer
+    int s[20000];//%d s buffer
     int tot = 0;
     int cnt = 0;
     int ret = 0;
