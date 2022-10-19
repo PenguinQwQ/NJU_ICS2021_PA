@@ -63,6 +63,7 @@ int sprintf(char *out, const char *fmt, ...) {
        	fmt++;
     }
     va_end(ap);
+    printf("%s\n", out);
   	return ret;
 }
 int snprintf(char *out, size_t n, const char *fmt, ...) {
