@@ -138,4 +138,8 @@ int memcmp(const void *s1, const void *s2, size_t n) {
     return *x - *y;
 }
 
+int charcmp(char x, char y)
+{
+    return x - y;
+}
 #endif
