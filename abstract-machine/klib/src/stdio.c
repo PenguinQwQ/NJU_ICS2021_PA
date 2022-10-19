@@ -35,10 +35,11 @@ int sprintf(char *out, const char *fmt, ...) {
                 s[++tot] = d_val % 10;
                 d_val /= 10;
             }
-            while(tot--)
+            while(tot)
             {
                 *(out + cnt) = s[tot];
                 cnt++;
+                tot--;
             }
             fmt++;
             fmt++;
@@ -63,6 +64,7 @@ int sprintf(char *out, const char *fmt, ...) {
         *(out + cnt) = *fmt;
         cnt++;
        	fmt++;
+        continue;
     }
     va_end(ap);
   	return ret;
