@@ -87,6 +87,7 @@ int sprintf(char *out, const char *fmt, ...) {
                     out++;
                     s++;
                 }
+                break;
             case 'd':
                 d_val = va_arg(ap, int);
                 sign = false;
@@ -120,6 +121,7 @@ int sprintf(char *out, const char *fmt, ...) {
                         out++;
                     }
                 }
+                break;
               default:
                    break;
         }
