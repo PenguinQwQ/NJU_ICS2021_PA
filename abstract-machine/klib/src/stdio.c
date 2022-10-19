@@ -66,7 +66,7 @@ int sprintf(char *out, const char *fmt, ...) {
     while(fmt != NULL && *fmt != '\0')
     {
         //如果读到了%d
-        if((*fmt == '%') && (*(fmt + 1) == 'd'))
+        if((*fmt == '%') &&  ((*(fmt + 1)) != '\0') && (*(fmt + 1) == 'd'))
         {
             ret++;
             d_val = va_arg(ap, int);
