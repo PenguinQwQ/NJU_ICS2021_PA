@@ -73,7 +73,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
             len = strlen(s);
             for (int i = 0 ; i < len ; i++)
             {
-				*str = *s;
+				       *str = *s;
                 str++;
                 s++;
             }
@@ -81,6 +81,8 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
             base = 10;
             val = va_arg(ap, int);
             num_process(str, val, base);
+        default:
+            break;
     }
 	}
   return cnt;
