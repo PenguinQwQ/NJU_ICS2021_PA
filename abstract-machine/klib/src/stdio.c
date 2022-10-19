@@ -5,7 +5,7 @@
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
-int num_process(char *str, long num, int base)
+void num_process(char *str, int num, int base)
 {
     int buf_tmp[20000];
     int i = 0;
@@ -30,7 +30,7 @@ int num_process(char *str, long num, int base)
         *str = '0';
         str++;
         len++;
-        return len;
+        return;
     }
     if(sign)
     {
@@ -44,7 +44,6 @@ int num_process(char *str, long num, int base)
         str++;
         len++;
     }
-    return len;
 }
 
 
@@ -54,49 +53,13 @@ int printf(const char *fmt, ...) {
 }
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
-  int cnt = 0;
-  int val = 0;
-  int len = 0;
-  int base = 10;
-  char *s = NULL;
-  char *str = NULL;
-  for (str = out ; fmt != NULL && *fmt != '\0' ; fmt++) {
-	if(*fmt != '%'){//If fmt is not %，input directly!
-        *str = *fmt;
-        str++;
-        continue;
-    }
-    /* Here we process some flags*/
-    /* The Only Flag we should process in PA 2.2 is the minus! */ 
-    cnt++;
-    fmt++;//Jump over the %
-    /* We check the conversion qualifier */
-    switch (*fmt) {
-        case 's':     
-            s = va_arg(ap, char *);
-            len = strlen(s);
-            for (int i = 0 ; i < len ; i++)
-            {
-				       *str = *s;
-                str++;
-                s++;
-            }
-        case 'd':
-            base = 10;
-            val = va_arg(ap, int);
-            num_process(str, val, base);
-        default:
-            break;
-    }
-	}
-  return cnt;
+  panic("Not implemented");
 }
 
 int sprintf(char *out, const char *fmt, ...) {
     char *str = NULL;//%s buf
     int tot = 0;
     int d_val = 0;
-    int cnt = 0;
     int ret = 0;
     va_list ap;//声明指向参数的指针
     va_start(ap, fmt);//指针初始化
@@ -107,7 +70,7 @@ int sprintf(char *out, const char *fmt, ...) {
         {
             ret++;
             d_val = va_arg(ap, int);
-            cnt = cnt + num_process(out, d_val, 10);
+            num_process(out, d_val, 10);
             fmt++;
             fmt++;
             continue;
@@ -120,16 +83,16 @@ int sprintf(char *out, const char *fmt, ...) {
             tot = strlen(str);
 			for (int i = 0 ; i < tot ; i++)
             {
-                *(out + cnt) = *(str + i);
-                cnt++;
+                *out= *(str + i);
+                out++;
             }
              fmt++;
              fmt++;
              continue;
         }
         //如果读到了其他字符
-        *(out + cnt) = *fmt;
-        cnt++;
+        *out = *fmt;
+        out++;
        	fmt++;
     }
     va_end(ap);
