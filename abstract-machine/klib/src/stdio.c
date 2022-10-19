@@ -49,7 +49,15 @@ void num_process(char *str, int num, int base)
 
 
 int printf(const char *fmt, ...) {
-  panic("Not implemented");
+  char output_buf[20000];
+  int len = 0;
+  va_list ap;
+  va_start(ap, fmt);
+  len = sprintf(output_buf, fmt, ap);
+  va_end(ap);
+  for (int i = 0 ; i < len ; i++)
+    putch(output_buf[i]);
+  return len;
 }
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
@@ -72,10 +80,10 @@ int sprintf(char *out, const char *fmt, ...) {
         {
             *out = *fmt;
             out++;
+            cnt++;
             continue;
         }
         fmt++;//此时,*fmt是%，我们需要跳过！
-        cnt++;
         switch(*fmt)
         {
             case 's':
@@ -86,6 +94,7 @@ int sprintf(char *out, const char *fmt, ...) {
                     *out = *s;
                     out++;
                     s++;
+                    cnt++;
                 }
                 break;
             case 'd':
@@ -107,6 +116,7 @@ int sprintf(char *out, const char *fmt, ...) {
                 {
                     *out = '0';
                     out++;
+                    cnt++;
                 } 
                 else
                 {
@@ -114,12 +124,14 @@ int sprintf(char *out, const char *fmt, ...) {
                     {
                       *out = '-';
                       out++;
+                      cnt++;
                     }
                     while(top)
                     {
                         *out = num_buf[top] + '0';
                         top--;
                         out++;
+                        cnt++;
                     }
                 }
                 break;
