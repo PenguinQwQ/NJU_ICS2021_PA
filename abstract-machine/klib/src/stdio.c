@@ -116,7 +116,7 @@ int sprintf(char *out, const char *fmt, ...) {
                     }
                     while(top)
                     {
-                        *out = num_buf[top];
+                        *out = num_buf[top] + '0';
                         top--;
                         out++;
                     }
