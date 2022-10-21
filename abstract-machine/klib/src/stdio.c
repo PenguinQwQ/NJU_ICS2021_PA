@@ -12,7 +12,7 @@ __res; })
 
 #define ZEROPAD 1
 
-static char *number(char *str, long num, int base, int size, int type)
+static char *number(char *str, int num, int base, int size, int type)
 {
     /* we are called with base 8, 10 or 16, only, thus don't need "G..." */
     static const char digits[16] = "0123456789ABCDEF"; /* "GHIJKLMNOPQRSTUVWXYZ"; */
