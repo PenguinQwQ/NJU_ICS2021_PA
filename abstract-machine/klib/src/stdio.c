@@ -20,7 +20,7 @@ static char *number(char *str, int num, int base, int size, int type)
     char tmp[66];
     char* beg = str;
    // char c,
-   char sign;
+   bool sign = false;
     int i;
  //   c = (type & ZEROPAD) ? '0' : ' ';//c是用来补位宽的字符
     if(num == -2147483648)//特殊处理最小的数
@@ -30,7 +30,7 @@ static char *number(char *str, int num, int base, int size, int type)
        	return str;
     }
     if(num < 0){//一般的数，取反后写入
-        sign = '-';
+        sign = true;
         num = -num;
     }
     i = 0;
@@ -43,8 +43,8 @@ static char *number(char *str, int num, int base, int size, int type)
     for (int j = i ; j >= 0 ; j--)
         putch(tmp[j]);
     putch('\n');
-    if (sign == '-')//处理符号位
-        *str++ = sign;
+    if (sign)//处理符号位
+        *str++ = '-';
     while (i--)//倒序存入
         *str++ = tmp[i];
     for (;beg < str; beg++)
