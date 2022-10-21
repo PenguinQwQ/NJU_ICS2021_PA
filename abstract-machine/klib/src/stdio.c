@@ -11,6 +11,15 @@ n = ((int)n) / (int) base; \
 __res; })
 
 #define ZEROPAD 1
+static int skip_atoi(const char **s)
+{
+    int i = 0;
+
+    while ((**s) >= '0' && (**s) <= '9')
+        i = i * 10 + *((*s)++) - '0';
+    return i;
+}
+
 
 static char *number(char *str, int num, int base, int size, int type)
 {
@@ -65,23 +74,21 @@ int vsprintf(char *buf, const char *fmt, va_list args)
             continue;
         }
         /* process flags */
-        flags = 0;
-        fmt++;
-//     repeat:
-//        ++fmt;        
-//       switch (*fmt) {
-//        case '0':
-//            flags |= ZEROPAD;
-//            goto repeat;
-//        }
+        flags = 0;   
+        repeat:
+            ++fmt;        
+           switch (*fmt) {
+            case '0':
+                flags |= ZEROPAD;
+                goto repeat;
+            }
 
- /*       
+        
         field_width = -1;
         if (*fmt >= '0' && *fmt <= '9')
             field_width = skip_atoi(&fmt);
         if(field_width < 0)
             field_width = -field_width;
-*/
         /* 原本的基设为十进制 */
         base = 10;
 
