@@ -56,7 +56,16 @@ static char *number(char *str, int num, int base, int size, int type)
 
 
 int printf(const char *fmt, ...) {
-  panic("Not implemented!");
+  int len = 0;
+  char output_buf[20000];
+  va_list ap;
+  va_start(ap, fmt);
+  len = vsprintf(output_buf, fmt, ap);
+  va_end(ap);
+  len = strlen(output_buf);
+ // for (int i = 0 ; i < len ; i++)
+ //   putch(output_buf[i]);
+  return len;
 }
 
 int vsprintf(char *buf, const char *fmt, va_list args)
