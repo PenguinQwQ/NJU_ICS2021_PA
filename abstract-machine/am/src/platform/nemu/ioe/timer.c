@@ -14,7 +14,7 @@ void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime) {
   outl(RTC_ADDR, now_time + 1);
 //  printf("now time is:%d\n", &now_time);
   uptime->us = now_time - boot_time;
-  printf("us is %d\n", uptime->us);
+//  printf("us is %d\n", uptime->us);
 }
  
 void __am_timer_rtc(AM_TIMER_RTC_T *rtc) {
