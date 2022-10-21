@@ -67,8 +67,8 @@ int printf(const char *fmt, ...) {
   len = vsprintf(output_buf, fmt, ap);
   va_end(ap);
   len = strlen(output_buf);
- // for (int i = 0 ; i < len ; i++)
- //   putch(output_buf[i]);
+  for (int i = 0 ; i < len ; i++)
+    putch(output_buf[i]);
   return len;
 }
 
