@@ -110,12 +110,12 @@ int vsprintf(char *buf, const char *fmt, va_list args)
             *str++ = '%';
             continue;
         case 'd':
-            break;
+            num = va_arg(args, int);
+            str = number(str, num, base, field_width, flags);
+            continue;
         default:
 			break;
         }
-        num = va_arg(args, int);
-        str = number(str, num, base, field_width, flags);
     }
     *str = '\0';
     return str - buf;
