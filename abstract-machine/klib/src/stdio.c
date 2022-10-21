@@ -10,13 +10,6 @@ __res = ((unsigned long) n) % (unsigned) base; \
 n = ((unsigned long) n) / (unsigned) base; \
 __res; })
 
-static int skip_atoi(const char **s)
-{
-    int i = 0;
-    while ((**s) >= '0' && (**s) <= '9')
-        i = i * 10 + *((*s)++) - '0';
-    return i;
-}
 #define ZEROPAD 1
 
 static char *number(char *str, long num, int base, int size, int type)
@@ -48,7 +41,7 @@ static char *number(char *str, long num, int base, int size, int type)
             tmp[i++] = (digits[__do_div(num, base)]);
     if (sign == '-')//处理符号位
         *str++ = sign;
-    while (i-- > 0)//倒序存入
+    while (i--)//倒序存入
         *str++ = tmp[i];
     return str;
 }
@@ -74,21 +67,22 @@ int vsprintf(char *buf, const char *fmt, va_list args)
         }
         /* process flags */
         flags = 0;
-     repeat:
-        ++fmt;        /* this also skips first '%' */
-        switch (*fmt) {
-        case '0':
-            flags |= ZEROPAD;
-            goto repeat;
-        }
+        fmt++;
+//     repeat:
+//        ++fmt;        
+//       switch (*fmt) {
+//        case '0':
+//            flags |= ZEROPAD;
+//            goto repeat;
+//        }
 
-        /* 获取位宽 */
+ /*       
         field_width = -1;
         if (*fmt >= '0' && *fmt <= '9')
             field_width = skip_atoi(&fmt);
         if(field_width < 0)
             field_width = -field_width;
-
+*/
         /* 原本的基设为十进制 */
         base = 10;
 
