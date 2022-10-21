@@ -49,6 +49,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
   {
     IFDEF(CONFIG_ITRACE, puts(_this->logbuf));
   }
+  /*
   IFDEF(CONFIG_IRINGBUF, strcpy(iringbuf[iringbuf_cnt], _this->logbuf));
   if (nemu_state.state == NEMU_ABORT)
   {
@@ -58,8 +59,9 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
     puts(iringbuf[iringbuf_cnt]);
   }
   iringbuf_cnt = (iringbuf_cnt + 1) % 20;
+  */
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
-  scan_watchpoints();
+ // scan_watchpoints();
 }
 
 // This is the API of exec_once needs
