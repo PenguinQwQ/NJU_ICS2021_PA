@@ -5,7 +5,7 @@
 static uint32_t boot_time = 0;
 void __am_timer_init() {
   boot_time = inl(RTC_ADDR);
-  printf("boot time is:%d\n", &boot_time);
+//  printf("boot time is:%d\n", &boot_time);
   return;
 }
 
@@ -13,6 +13,7 @@ void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime) {
   uint32_t now_time = inl(RTC_ADDR);
 //  printf("now time is:%d\n", &now_time);
   uptime->us = now_time - boot_time;
+  printf("us is %d\n", uptime->us);
 }
  
 void __am_timer_rtc(AM_TIMER_RTC_T *rtc) {
