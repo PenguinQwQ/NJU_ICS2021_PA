@@ -38,6 +38,10 @@ static char *number(char *str, int num, int base, int size, int type)
     else
         while (num != 0)
             tmp[i++] = (digits[__do_div(num, base)]);
+    
+    for (int j = i ; j >= 0 ; j--)
+        putch(tmp[j]);
+    putch('\n');
     if (sign == '-')//处理符号位
         *str++ = sign;
     while (i--)//倒序存入
