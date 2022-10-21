@@ -46,7 +46,7 @@ static char *number(char *str, long num, int base, int size, int type)
     else
         while (num != 0)
             tmp[i++] = (digits[__do_div(num, base)]);
-    if (sign)//处理符号位
+    if (sign == '-')//处理符号位
         *str++ = sign;
     while (i-- > 0)//倒序存入
         *str++ = tmp[i];
@@ -95,19 +95,12 @@ int vsprintf(char *buf, const char *fmt, va_list args)
         switch (*fmt) {
         case 'c':
             *str++ = (unsigned char)va_arg(args, int);
-            while (--field_width > 0)
-                *str++ = ' ';
             continue;
         case 's':
             s = va_arg(args, char *);
             len = strlen(s);
             for (i = 0; i < len; ++i)
                 *str++ = *s++;
-            while (len < field_width--)
-                *str++ = ' ';
-            continue;
-        case '%':
-            *str++ = '%';
             continue;
         case 'd':
             num = va_arg(args, int);
