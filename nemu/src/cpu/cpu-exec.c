@@ -53,8 +53,10 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
   iringbuf_cnt = (iringbuf_cnt + 1) % 20;
   if (nemu_state.state == NEMU_ABORT)
   {
-    for (int i = 0 ; i <= iringbuf_cnt; i++)
+    for (int i = 0 ; i < iringbuf_cnt; i++)
       puts(iringbuf[i]);
+    printf("-->");
+    puts(iringbuf[iringbuf_cnt]);
   }
 
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
