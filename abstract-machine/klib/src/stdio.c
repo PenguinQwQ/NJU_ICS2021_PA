@@ -4,185 +4,130 @@
 #include <stdarg.h>
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
+#define __do_div(n, base) ({ \
+int __res; \
+__res = ((unsigned long) n) % (unsigned) base; \
+n = ((unsigned long) n) / (unsigned) base; \
+__res; })
+
+static int skip_atoi(const char **s)
+{
+    int i = 0;
+    while ((**s) >= '0' && (**s) <= '9')
+        i = i * 10 + *((*s)++) - '0';
+    return i;
+}
+#define ZEROPAD 1
+
+static char *number(char *str, long num, int base, int size, int type)
+{
+    /* we are called with base 8, 10 or 16, only, thus don't need "G..." */
+    static const char digits[16] = "0123456789ABCDEF"; /* "GHIJKLMNOPQRSTUVWXYZ"; */
+	static const char min_int[11] = "-2147483648";//0-10构成最小数
+    char tmp[66];
+   // char c,
+   char sign;
+    int i;
+ //   c = (type & ZEROPAD) ? '0' : ' ';//c是用来补位宽的字符
+    if(num == -2147483648)//特殊处理最小的数
+    {
+        for (int j = 0 ; j <= 10 ; j++)
+            *str++ = min_int[j];
+       	return str;
+    }
+    if(num < 0){//一般的数，取反后写入
+        sign = '-';
+        num = -num;
+        size--;
+    }
+    i = 0;
+    if (num == 0)
+        tmp[i++] = '0';
+    else
+        while (num != 0)
+            tmp[i++] = (digits[__do_div(num, base)]);
+    if (sign)//处理符号位
+        *str++ = sign;
+    while (i-- > 0)//倒序存入
+        *str++ = tmp[i];
+    return str;
+}
+
 
 int printf(const char *fmt, ...) {
-    /*
-  char output_buf[20000];
-  int len = 0;
-  va_list ap;
-  va_start(ap, fmt);
-  len = vsprintf(output_buf, fmt, ap);
-  va_end(ap);
-  for (int i = 0 ; i < len ; i++)
-    putch(output_buf[i]);
-  return len;
-  */
   panic("Not implemented!");
 }
 
-int vsprintf(char *out, const char *fmt, va_list ap) {
-     panic("Not implemented");
-     /*
-   char *s = NULL;//%s str pointer
-   int d_val = 0;//%d integer
-   int len = 0;//string length
-    int num_buf[200];
-    int top = 0;
-   	int cnt = 0;
-    bool sign = false;
-    for (; fmt != NULL && *fmt != '\0' ; fmt++)
-    {
-        if(*fmt != '%')
-        {
-            *out = *fmt;
-            out++;
-            cnt++;
+int vsprintf(char *buf, const char *fmt, va_list args)
+{
+    int len;
+    int num;
+    int i, base;
+    char *str;
+    const char *s;
+    int flags;        /* flags to number() */
+    int field_width;    /* width of output field */
+    for (str = buf; *fmt; ++fmt) {
+        if (*fmt != '%') {
+            *str++ = *fmt;
             continue;
         }
-        fmt++;//此时,*fmt是%，我们需要跳过！
-        switch(*fmt)
-        {
-            case 's':
-                s = va_arg(ap, char *);
-                len = strlen(s);
-                for (int i = 0 ; i < len ; i++)
-                {
-                    *out = *s;
-                    out++;
-                    s++;
-                    cnt++;
-                }
-                break;
-            case 'd':
-                d_val = 0;
-                d_val += va_arg(ap, int);
-                sign = false;
-                top = 0;
-                if(d_val < 0)
-                {
-                    sign = true;
-                    d_val = -d_val;
-                }
-                while(d_val)
-                {
-                    num_buf[++top] = d_val % 10;
-                    d_val = d_val / 10;
-                }
-                if(top == 0)//也就是,d_val = 0
-                {
-                    *out = '0';
-                    out++;
-                    cnt++;
-                } 
-                else
-                {
-                    if(sign)
-                    {
-                      *out = '-';
-                      out++;
-                      cnt++;
-                    }
-                    while(top)
-                    {
-                        *out = num_buf[top] + '0';
-                        top--;
-                        out++;
-                        cnt++;
-                    }
-                }
-                break;
-              default:
-                   break;
+        /* process flags */
+        flags = 0;
+     repeat:
+        ++fmt;        /* this also skips first '%' */
+        switch (*fmt) {
+        case '0':
+            flags |= ZEROPAD;
+            goto repeat;
         }
-        
+
+        /* 获取位宽 */
+        field_width = -1;
+        if (*fmt >= '0' && *fmt <= '9')
+            field_width = skip_atoi(&fmt);
+        if(field_width < 0)
+            field_width = -field_width;
+
+        /* 原本的基设为十进制 */
+        base = 10;
+
+        switch (*fmt) {
+        case 'c':
+            *str++ = (unsigned char)va_arg(args, int);
+            while (--field_width > 0)
+                *str++ = ' ';
+            continue;
+        case 's':
+            s = va_arg(args, char *);
+            len = strlen(s);
+            for (i = 0; i < len; ++i)
+                *str++ = *s++;
+            while (len < field_width--)
+                *str++ = ' ';
+            continue;
+        case '%':
+            *str++ = '%';
+            continue;
+        case 'd':
+            break;
+        default:
+			break;
+        }
+        num = va_arg(args, int);
+        str = number(str, num, base, field_width, flags);
     }
-  *out = '\0';//Here is important!
-   return cnt;
-   */
+    *str = '\0';
+    return str - buf;
 }
 
 int sprintf(char *out, const char *fmt, ...) {
-      panic("Not implemented");
-  /*
-   char *s = NULL;//%s str pointer
-   int d_val = 0;//%d integer
-   int len = 0;//string length
-    int num_buf[200];
-    int top = 0;
-   	int cnt = 0;
-    bool sign = false;
+    int len = 0;
     va_list ap;
     va_start(ap, fmt);
-    for (; fmt != NULL && *fmt != '\0' ; fmt++)
-    {
-        if(*fmt != '%')
-        {
-            *out = *fmt;
-            out++;
-            cnt++;
-            continue;
-        }
-        fmt++;//此时,*fmt是%，我们需要跳过！
-        switch(*fmt)
-        {
-            case 's':
-                s = va_arg(ap, char *);
-                len = strlen(s);
-                for (int i = 0 ; i < len ; i++)
-                {
-                    *out = *s;
-                    out++;
-                    s++;
-                    cnt++;
-                }
-                break;
-            case 'd':
-                d_val = 0;
-                d_val += va_arg(ap, int);
-                sign = false;
-                top = 0;
-                if(d_val < 0)
-                {
-                    sign = true;
-                    d_val = -d_val;
-                }
-                while(d_val)
-                {
-                    num_buf[++top] = d_val % 10;
-                    d_val = d_val / 10;
-                }
-                if(top == 0)//也就是,d_val = 0
-                {
-                    *out = '0';
-                    out++;
-                    cnt++;
-                } 
-                else
-                {
-                    if(sign)
-                    {
-                      *out = '-';
-                      out++;
-                      cnt++;
-                    }
-                    while(top)
-                    {
-                        *out = num_buf[top] + '0';
-                        top--;
-                        out++;
-                        cnt++;
-                    }
-                }
-                break;
-              default:
-                   break;
-        }
-        
-    }
-  *out = '\0';//Here is important!
-   va_end(ap);
-   return cnt;
-   */
+    len = vsprintf(out, fmt, ap);
+    va_end(ap);
+    return len;
 }
 int snprintf(char *out, size_t n, const char *fmt, ...) {
   panic("Not implemented");
