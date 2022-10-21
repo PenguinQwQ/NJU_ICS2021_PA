@@ -28,6 +28,7 @@ static char *number(char *str, int num, int base, int size, int type)
 	static const char min_int[11] = "-2147483648";//0-10构成最小数
     char tmp[66];
 //    char c;
+    char* beg = str;
    bool sign = false;
     int i;
 //    c = (type & ZEROPAD) ? '0' : ' ';//c是用来补位宽的字符
@@ -51,6 +52,8 @@ static char *number(char *str, int num, int base, int size, int type)
         *str++ = '-';
     while (i--)//倒序存入
         *str++ = tmp[i];
+    for (;beg < str ; beg++)
+        putch(*beg);
     return str;
 }
 
