@@ -47,7 +47,7 @@ static char *number(char *str, int num, int base, int size, int type)
         *str++ = sign;
     while (i--)//倒序存入
         *str++ = tmp[i];
-    for (;beg <= str; beg++)
+    for (;beg < str; beg++)
         putch(*beg);
     return str;
 }
