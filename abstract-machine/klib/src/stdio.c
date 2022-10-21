@@ -27,10 +27,10 @@ static char *number(char *str, int num, int base, int size, int type)
     static const char digits[16] = "0123456789ABCDEF"; /* "GHIJKLMNOPQRSTUVWXYZ"; */
 	static const char min_int[11] = "-2147483648";//0-10构成最小数
     char tmp[66];
-   // char c,
+//    char c;
    bool sign = false;
     int i;
- //   c = (type & ZEROPAD) ? '0' : ' ';//c是用来补位宽的字符
+//    c = (type & ZEROPAD) ? '0' : ' ';//c是用来补位宽的字符
     if(num == -2147483648)//特殊处理最小的数
     {
         for (int j = 0 ; j <= 10 ; j++)
