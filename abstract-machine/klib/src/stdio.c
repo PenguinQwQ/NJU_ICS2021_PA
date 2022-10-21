@@ -6,8 +6,8 @@
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 #define __do_div(n, base) ({ \
 int __res; \
-__res = ((unsigned long) n) % (unsigned) base; \
-n = ((unsigned long) n) / (unsigned) base; \
+__res = ((int)n) % (int) base; \
+n = ((int)n) / (int) base; \
 __res; })
 
 #define ZEROPAD 1
@@ -31,7 +31,6 @@ static char *number(char *str, int num, int base, int size, int type)
     if(num < 0){//一般的数，取反后写入
         sign = '-';
         num = -num;
-        size--;
     }
     i = 0;
     if (num == 0)
