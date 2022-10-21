@@ -39,11 +39,12 @@ static char *number(char *str, int num, int base, int size, int type)
         while (num != 0)
             tmp[i++] = (digits[__do_div(num, base)]);
     
-    for (int j = i ; j >= 0 ; j--)
+    for (int j = i-1 ; j >= 0 ; j--)
         putch(tmp[j]);
     putch('\n');
     if (sign == '-')//处理符号位
         *str++ = sign;
+    i--;
     while (i--)//倒序存入
         *str++ = tmp[i];
     return str;
