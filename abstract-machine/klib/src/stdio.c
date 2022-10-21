@@ -18,7 +18,6 @@ static char *number(char *str, int num, int base, int size, int type)
     static const char digits[16] = "0123456789ABCDEF"; /* "GHIJKLMNOPQRSTUVWXYZ"; */
 	static const char min_int[11] = "-2147483648";//0-10构成最小数
     char tmp[66];
-    char* beg = str;
    // char c,
    bool sign = false;
     int i;
@@ -39,16 +38,10 @@ static char *number(char *str, int num, int base, int size, int type)
     else
         while (num != 0)
             tmp[i++] = (digits[__do_div(num, base)]);
-    
-    for (int j = i ; j >= 0 ; j--)
-        putch(tmp[j]);
-    putch('\n');
     if (sign)//处理符号位
         *str++ = '-';
     while (i--)//倒序存入
         *str++ = tmp[i];
-    for (;beg < str; beg++)
-        putch(*beg);
     return str;
 }
 
