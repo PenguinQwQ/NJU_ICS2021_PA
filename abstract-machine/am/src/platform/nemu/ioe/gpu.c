@@ -26,8 +26,10 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
   {
   for (int i = ctl->x ; i <= ctl->x + ctl->w - 1 ; i++)
     for (int j = ctl->y ; j <= ctl->y + ctl->h - 1 ; j++)
-      ctl->pixels = fb + i * 400 + j * 4;
-  outl(SYNC_ADDR, 1);
+    {
+      ctl->pixels = fb + i * 400 + j;
+      outl(SYNC_ADDR + i * 1600 + j * 4, *(uint32_t *)(ctl->pixels));
+    }
   }
 }
 
