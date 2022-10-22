@@ -23,14 +23,13 @@ void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
 }
 
 void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
-  uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
   int x = ctl->x, y = ctl->y, w = ctl->w, h = ctl->h;
   if(ctl->sync)
   {
       for (int i = x ; i <= x + w - 1 ; i++)
         for (int j = y ; j <= y + h - 1 ; j++)
           {
-            outl(DISPLAY_ADDR + 1600 * i + 4 * j, fb[400 * i + j]);
+            outl(DISPLAY_ADDR + 1600 * i + 4 * j, *(uint32_t *)(ctl->pixels + 1600 * i + 4 * j));
           }
   }
 }
