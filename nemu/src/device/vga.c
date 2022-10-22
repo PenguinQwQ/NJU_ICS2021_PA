@@ -70,10 +70,22 @@ static inline void update_screen() {
 #endif
 #endif
 
+#define DEVICE_BASE 0xa0000000
+#define VGACTAL_ADDR (DEVICE_BASE + 0x0000100)
+#define SYNC_ADDR (VGACTAL_ADDR + 4)
+word_t mmio_read(paddr_t addr, int len);
+ 
+void mmio_write(paddr_t addr, int len, word_t data);
+
 void vga_update_screen() {
   // TODO: call `update_screen()` when the sync register is non-zero,
   // then zero out the sync register
-  update_screen();
+  bool upd = (bool)mmio_read(SYNC_ADDR, 4);
+  if(upd == true)
+  {
+    update_screen();
+    mmio_write(SYNC_ADDR, 4, 0);
+  }
 }
 
 void init_vga() {
