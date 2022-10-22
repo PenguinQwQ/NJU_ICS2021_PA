@@ -2,6 +2,7 @@
 #include <nemu.h>
 
 #define SYNC_ADDR (VGACTL_ADDR + 4)
+#define DISPLAY_ADDR (DEVICE_BASE + 0x01000000)
 
 void __am_gpu_init() {
    int i;
@@ -16,21 +17,21 @@ void __am_gpu_init() {
 void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
   *cfg = (AM_GPU_CONFIG_T) {
     .present = true, .has_accel = false,
-    .width = 400, .height = 300,
-    .vmemsz = 400 * 300 * 4
+    .width = 400 * 32, .height = 300 * 32,
+    .vmemsz = 0
   };
 }
 
 void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
   uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
+  int x = ctl->x, y = ctl->y, w = ctl->w, h = ctl->h;
   if(ctl->sync)
   {
-  for (int i = ctl->x ; i <= ctl->x + ctl->w - 1 ; i++)
-    for (int j = ctl->y ; j <= ctl->y + ctl->h - 1 ; j++)
-    {
-      ctl->pixels = fb + i * 400 + j;
-      outl(SYNC_ADDR, fb[i * 400 + j]);
-    }
+      for (int i = x ; i <= x + w - 1 ; i++)
+        for (int j = y ; j <= y + h - 1 ; j++)
+          {
+            outl(DISPLAY_ADDR + 1600 * i + 4 * j, fb[400 * i + j]);
+          }
   }
 }
 
