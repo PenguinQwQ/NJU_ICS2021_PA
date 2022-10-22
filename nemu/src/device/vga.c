@@ -80,12 +80,15 @@ void mmio_write(paddr_t addr, int len, word_t data);
 void vga_update_screen() {
   // TODO: call `update_screen()` when the sync register is non-zero,
   // then zero out the sync register
+  update_screen();
+  /*
   bool upd = (bool)mmio_read(SYNC_ADDR, 4);
   if(upd == true)
   {
     update_screen();
     mmio_write(SYNC_ADDR, 4, 0);
   }
+  */
 }
 
 void init_vga() {
