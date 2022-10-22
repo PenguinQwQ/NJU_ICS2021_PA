@@ -4,9 +4,6 @@
 
 static uint64_t boot_time = 0;
 void __am_timer_init() {
-  boot_time = ((uint64_t)inl(RTC_ADDR)) + (((uint64_t)inl(RTC_ADDR + 4)) << 32);
-//  printf("boot time is:%d\n", &boot_time);
-  return;
 }
 void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime) {
   uint64_t now_time =(uint64_t)inl(RTC_ADDR) + (((uint64_t)inl(RTC_ADDR + 4)) << 32);
