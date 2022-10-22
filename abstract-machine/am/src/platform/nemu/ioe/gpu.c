@@ -22,7 +22,11 @@ void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
 
 void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
   if (ctl->sync) {
-    outl(VGACTL_ADDR, 1);
+    for (int i = 0 ; i < 400 ; i++)
+      for (int j = 0 ; j < 300 ; j++)
+        {
+          outl(SYNC_ADDR + i * 4 + j * 400, *((int *)(ctl->pixels + i + 400 * j)));
+        }
   }
 }
 
