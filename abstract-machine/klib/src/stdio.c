@@ -105,6 +105,7 @@ int vsprintf(char *buf, const char *fmt, va_list args)
 
         
         field_width = 0;
+        /*
         if (*fmt >= '0' && *fmt <= '9')
             fmt_atoi(fmt, field_width)
        	else{
@@ -117,7 +118,7 @@ int vsprintf(char *buf, const char *fmt, va_list args)
             }
             fmt++;
         }
-        
+        */
         static char arg_str[MAX_BUFFER_SIZE];
         /* 原本的基设为十进制 */
         base = 10;
