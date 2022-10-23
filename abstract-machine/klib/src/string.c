@@ -20,7 +20,7 @@ char *strcpy(char *dst, const char *src) {
     assert((dst != NULL) && (src != NULL));
     char* beg = dst;
     while(*src != '\0') *dst++ = *src++;
-    *dst = *src;
+    *dst = '\0';
   return beg;
 }
 

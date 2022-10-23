@@ -144,7 +144,7 @@ int vsprintf(char *buf, const char *fmt, va_list args)
         if((flags & LEFT) == false)
         	for (int i = 0 ; i + s_len < field_width ; i++)
  				*str++ = c;
-        str = strcpy(str, arg_str);
+        strcpy(str, arg_str);
         str += s_len;
         if(flags & LEFT)
         	for (int i = 0 ; i + s_len < field_width ; i++)
