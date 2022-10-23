@@ -78,7 +78,6 @@ int strcmp(const char *s1, const char *s2) {
         {
         flag = 8;
         }
-
    	return flag;
 }
 
