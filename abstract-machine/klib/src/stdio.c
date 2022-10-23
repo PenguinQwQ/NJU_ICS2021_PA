@@ -23,11 +23,10 @@ __res; })
 #define fmt_atoi(fmt, val) {\
 	while(*(fmt) >= '0' && *(fmt) <= '9') val = (val << 3) + (val << 1) + *(fmt) - '0', fmt++;}
 
-
+/*
 static char *number(char *str, int num, int base, int size, int flags)
 {
-    /* we are called with base 8, 10 or 16, only, thus don't need "G..." */
-    static const char digits[16] = "0123456789ABCDEF"; /* "GHIJKLMNOPQRSTUVWXYZ"; */
+    static const char digits[16] = "0123456789ABCDEF";
 	static const char min_int[11] = "-2147483648";//0-10构成最小数
     char tmp[66];
     int i;
@@ -56,6 +55,7 @@ static char *number(char *str, int num, int base, int size, int flags)
         *str++ = tmp[i];
     return str;
 }
+*/
 
 
 int printf(const char *fmt, ...) {
@@ -73,19 +73,22 @@ int printf(const char *fmt, ...) {
 
 int vsprintf(char *buf, const char *fmt, va_list args)
 {
-    int num;
-    int base;
+ //   int num;
+ //   int base;
     char* s;
     char *str;
-    size_t flags;        /* flags to number() */
-    size_t field_width;    /* width of output field */
+ //   size_t flags;        /* flags to number() */
+ //   size_t field_width;    /* width of output field */
     for (str = buf; *fmt; ++fmt) {
         if (*fmt != '%') {
             *str++ = *fmt;
             continue;
         }
         /* process flags */
-        flags = 0;   
+        fmt++;
+        
+   //     flags = 0;   
+        /*
         repeat:
             ++fmt;        
            switch (*fmt) {
@@ -105,11 +108,10 @@ int vsprintf(char *buf, const char *fmt, va_list args)
 
         
         field_width = 0;
-        /*
         if (*fmt >= '0' && *fmt <= '9')
             fmt_atoi(fmt, field_width)
        	else{
-            if(*fmt == '*')
+             if(*fmt == '*')
             field_width = va_arg(args, int);
             if(field_width < 0)
             {
@@ -121,34 +123,42 @@ int vsprintf(char *buf, const char *fmt, va_list args)
         */
         static char arg_str[MAX_BUFFER_SIZE];
         /* 原本的基设为十进制 */
-        base = 10;
+    //    base = 10;
 		char* tmp_str = arg_str;
         switch (*fmt) {
-        case 'd':
+/*
+            case 'd':
             num = va_arg(args, int);
             tmp_str = number(tmp_str, num, base, field_width, flags);
             continue;
+            */
         case 's':
             s = va_arg(args, char *);
             while(*s != '\0') *tmp_str++ = *s++;
             continue;
+                /*
         case 'c':
             *tmp_str++ = (unsigned char)va_arg(args, int);
             continue;
+            */
         default:
 			break;
         }
         *tmp_str = '\0';
         size_t s_len = strlen(arg_str);
+        /*
         char c = (flags & ZEROPAD) ? '0' : ' ';
         if((flags & LEFT) == false)
         	for (int i = 0 ; i + s_len < field_width ; i++)
  				*str++ = c;
+ 				*/
         strcpy(str, arg_str);
         str += s_len;
+        /*
         if(flags & LEFT)
         	for (int i = 0 ; i + s_len < field_width ; i++)
  				*str++ = ' ';
+ 				*/
     }
     *str = '\0';
     return str - buf;
