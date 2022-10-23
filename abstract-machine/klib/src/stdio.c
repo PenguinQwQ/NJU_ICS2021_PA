@@ -141,10 +141,9 @@ int vsprintf(char *buf, const char *fmt, va_list args)
 			break;
         }
         *tmp_str = '\0';
-        int s_len = strlen(arg_str);
+        int s_len = tmp_str - arg_str;
         if(s_len == 0)
             putch('!');
-        putch('\n');
         char c = (flags & ZEROPAD) ? '0' : ' ';
         if((flags & LEFT) == false)
         	for (int i = 0 ; i + s_len < field_width ; i++)
