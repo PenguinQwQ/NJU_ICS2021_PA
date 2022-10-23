@@ -10,26 +10,26 @@ __res = ((int)n) % (int) base; \
 n = ((int)n) / (int) base; \
 __res; })
 
-#define ZEROPAD 1
-static int skip_atoi(const char **s)
-{
-    int i = 0;
-
-    while ((**s) >= '0' && (**s) <= '9')
-        i = i * 10 + *((*s)++) - '0';
-    return i;
-}
 
 
-static char *number(char *str, int num, int base, int size, int type)
+//Here we do some macro definition
+#define MAX_BUFFER_SIZE 20000
+#define NOTYPE 1 //Notype output
+#define ZEROPAD 1 //Zeropad the output stream
+#define LEFT  2 //left aligned
+#define POSITIVE  4 //positive number
+#define EMPTY  8 //Empty pad
+
+#define fmt_atoi(fmt, val) {\
+	while(*(fmt) >= '0' && *(fmt) <= '9') val = (val << 3) + (val << 1) + *(fmt) - '0', fmt++;}
+static char arg_str[MAX_BUFFER_SIZE];
+
+static char *number(char *str, int num, int base, int size, int flags)
 {
     /* we are called with base 8, 10 or 16, only, thus don't need "G..." */
     static const char digits[16] = "0123456789ABCDEF"; /* "GHIJKLMNOPQRSTUVWXYZ"; */
 	static const char min_int[11] = "-2147483648";//0-10构成最小数
     char tmp[66];
-//    char c;
- //   char* beg = str;
-   bool sign = false;
     int i;
 //    c = (type & ZEROPAD) ? '0' : ' ';//c是用来补位宽的字符
     if(num == -2147483648)//特殊处理最小的数
@@ -38,23 +38,22 @@ static char *number(char *str, int num, int base, int size, int type)
             *str++ = min_int[j];
        	return str;
     }
+    
+    if(num >= 0 && (flags & POSITIVE))
+        *str++ = '+';
     if(num < 0){//一般的数，取反后写入
-        sign = true;
+        *str++ = '-';
         num = -num;
     }
     i = 0;
+    
     if (num == 0)
         tmp[i++] = '0';
     else
         while (num != 0)
             tmp[i++] = (digits[__do_div(num, base)]);
-    if (sign)//处理符号位
-        *str++ = '-';
     while (i--)//倒序存入
         *str++ = tmp[i];
- //   for (;beg < str ; beg++)
- //       putch(*beg);
- //   putch('\n');
     return str;
 }
 
@@ -74,13 +73,11 @@ int printf(const char *fmt, ...) {
 
 int vsprintf(char *buf, const char *fmt, va_list args)
 {
-    int len;
     int num;
-    int i, base;
+    int base;
     char *str;
-    const char *s;
-    int flags;        /* flags to number() */
-    int field_width;    /* width of output field */
+    size_t flags;        /* flags to number() */
+    size_t field_width;    /* width of output field */
     for (str = buf; *fmt; ++fmt) {
         if (*fmt != '%') {
             *str++ = *fmt;
@@ -91,37 +88,63 @@ int vsprintf(char *buf, const char *fmt, va_list args)
         repeat:
             ++fmt;        
            switch (*fmt) {
-            case '0':
+               case '0':
                 flags |= ZEROPAD;
                 goto repeat;
+               case '-':
+                flags |= LEFT;
+                goto repeat;
+               case '+':
+                flags |= POSITIVE;
+                goto repeat;
+               default:
+                   flags |= NOTYPE;
+                   break;
             }
 
         
-        field_width = -1;
+        field_width = 0;
         if (*fmt >= '0' && *fmt <= '9')
-            field_width = skip_atoi(&fmt);
-        if(field_width < 0)
-            field_width = -field_width;
+            fmt_atoi(fmt, field_width)
+       	else{
+             if(*fmt == '*')
+            field_width = va_arg(args, int);
+            if(field_width < 0)
+            {
+                field_width = -field_width;
+                flags |= LEFT;
+            }
+            fmt++;
+        }
+        
         /* 原本的基设为十进制 */
         base = 10;
-
+		char* tmp_str = arg_str;
         switch (*fmt) {
-        case 'c':
-            *str++ = (unsigned char)va_arg(args, int);
-            continue;
-        case 's':
-            s = va_arg(args, char *);
-            len = strlen(s);
-            for (i = 0; i < len; ++i)
-                *str++ = *s++;
-            continue;
         case 'd':
             num = va_arg(args, int);
-            str = number(str, num, base, field_width, flags);
+            tmp_str = number(tmp_str, num, base, field_width, flags);
+            continue;
+        case 's':
+            tmp_str = va_arg(args, char *);
+            continue;
+        case 'c':
+            *tmp_str++ = (unsigned char)va_arg(args, int);
             continue;
         default:
 			break;
         }
+        *tmp_str = '\0';
+        size_t s_len = strlen(tmp_str);
+        char c = (flags & ZEROPAD) ? '0' : ' ';
+        if((flags & LEFT) == false)
+        	for (int i = 0 ; i + s_len < field_width ; i++)
+ 				*str++ = c;
+        strcpy(str, tmp_str);
+        str += s_len;
+        if(flags & LEFT)
+        	for (int i = 0 ; i + s_len < field_width ; i++)
+ 				*str++ = ' ';
     }
     *str = '\0';
     return str - buf;
