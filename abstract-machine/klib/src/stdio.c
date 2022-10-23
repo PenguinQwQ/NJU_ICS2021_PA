@@ -87,10 +87,7 @@ int vsprintf(char *buf, const char *fmt, va_list args)
             continue;
         }
         /* process flags */
-        fmt++;
-        
         flags = 0;   
-
         repeat:
             ++fmt;        
            switch (*fmt) {
