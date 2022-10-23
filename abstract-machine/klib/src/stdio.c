@@ -114,13 +114,15 @@ int vsprintf(char *buf, const char *fmt, va_list args)
             fmt_atoi(fmt, field_width)
        	else{
              if(*fmt == '*')
+             {
             field_width = va_arg(args, int);
             if(field_width < 0)
             {
                 field_width = -field_width;
                 flags |= LEFT;
             }
-            fmt++;
+                fmt++; 
+            }
         }
         /* 原本的基设为十进制 */
         base = 10;
