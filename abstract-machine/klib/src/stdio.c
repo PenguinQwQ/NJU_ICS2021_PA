@@ -126,13 +126,13 @@ int vsprintf(char *buf, const char *fmt, va_list args)
         base = 10;
 		char *tmp_str = arg_str;
         switch (*fmt) {
-            case 'd':
+        case 'd':
             num = va_arg(args, int);
             tmp_str = number(tmp_str, num, base, field_width, flags);
 			break;
         case 's':
             s = va_arg(args, char *);
-            while(*s != '\0') *tmp_str++ = *s++;
+            strcpy(arg_str, s);
 			break;
         case 'c':
             *tmp_str++ = (unsigned char)va_arg(args, int);
@@ -140,8 +140,7 @@ int vsprintf(char *buf, const char *fmt, va_list args)
         default:
 			break;
         }
-        *tmp_str = '\0';
-        int s_len = tmp_str - arg_str;
+        int s_len = strlen(arg_str);
         if(s_len == 0)
             putch('!');
         char c = (flags & ZEROPAD) ? '0' : ' ';
