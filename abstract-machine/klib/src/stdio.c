@@ -22,7 +22,7 @@ __res; })
 
 #define fmt_atoi(fmt, val) {\
 	while(*(fmt) >= '0' && *(fmt) <= '9') val = (val << 3) + (val << 1) + *(fmt) - '0', fmt++;}
-static char arg_str[MAX_BUFFER_SIZE];
+
 
 static char *number(char *str, int num, int base, int size, int flags)
 {
@@ -75,6 +75,7 @@ int vsprintf(char *buf, const char *fmt, va_list args)
 {
     int num;
     int base;
+    char* s;
     char *str;
     size_t flags;        /* flags to number() */
     size_t field_width;    /* width of output field */
@@ -117,6 +118,7 @@ int vsprintf(char *buf, const char *fmt, va_list args)
             fmt++;
         }
         
+        static char arg_str[MAX_BUFFER_SIZE];
         /* 原本的基设为十进制 */
         base = 10;
 		char* tmp_str = arg_str;
@@ -126,7 +128,8 @@ int vsprintf(char *buf, const char *fmt, va_list args)
             tmp_str = number(tmp_str, num, base, field_width, flags);
             continue;
         case 's':
-            tmp_str = va_arg(args, char *);
+            s = va_arg(args, char *);
+            while(*s != '\0') *tmp_str++ = *s++;
             continue;
         case 'c':
             *tmp_str++ = (unsigned char)va_arg(args, int);
@@ -135,12 +138,12 @@ int vsprintf(char *buf, const char *fmt, va_list args)
 			break;
         }
         *tmp_str = '\0';
-        size_t s_len = strlen(tmp_str);
+        size_t s_len = strlen(arg_str);
         char c = (flags & ZEROPAD) ? '0' : ' ';
         if((flags & LEFT) == false)
         	for (int i = 0 ; i + s_len < field_width ; i++)
  				*str++ = c;
-        strcpy(str, tmp_str);
+        strcpy(str, arg_str);
         str += s_len;
         if(flags & LEFT)
         	for (int i = 0 ; i + s_len < field_width ; i++)
