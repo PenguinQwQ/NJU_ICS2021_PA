@@ -121,8 +121,7 @@ int vsprintf(char *buf, const char *fmt, va_list args)
             fmt++;
         }
         
-        static char arg_str[MAX_BUFFER_SIZE];
-        memset(arg_str, 0, sizeof(arg_str));
+        char arg_str[MAX_BUFFER_SIZE];
         /* 原本的基设为十进制 */
         base = 10;
 		char* tmp_str = arg_str;
