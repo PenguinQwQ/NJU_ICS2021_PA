@@ -124,7 +124,7 @@ int vsprintf(char *buf, const char *fmt, va_list args)
         char arg_str[MAX_BUFFER_SIZE];
         /* 原本的基设为十进制 */
         base = 10;
-		char* tmp_str = arg_str;
+		char *tmp_str = arg_str;
         switch (*fmt) {
             case 'd':
             num = va_arg(args, int);
