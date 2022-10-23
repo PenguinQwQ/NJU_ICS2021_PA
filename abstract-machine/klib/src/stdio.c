@@ -13,7 +13,7 @@ __res; })
 
 
 //Here we do some macro definition
-#define MAX_BUFFER_SIZE 20000
+#define MAX_BUFFER_SIZE 1 << 24
 #define NOTYPE 1 //Notype output
 #define ZEROPAD 1 //Zeropad the output stream
 #define LEFT  2 //left aligned
