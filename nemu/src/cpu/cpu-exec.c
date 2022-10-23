@@ -48,9 +48,9 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
   if (g_print_step)
   {
     IFDEF(CONFIG_ITRACE, puts(_this->logbuf));
+    IFDEF(CONFIG_ITRACE, strcpy(iringbuf[iringbuf_cnt], _this->logbuf));
   }
-  /*
-  IFDEF(CONFIG_IRINGBUF, strcpy(iringbuf[iringbuf_cnt], _this->logbuf));
+#ifdef CONFIG_IRINGBUF
   if (nemu_state.state == NEMU_ABORT)
   {
     for (int i = 0 ; i < iringbuf_cnt; i++)
@@ -59,7 +59,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
     puts(iringbuf[iringbuf_cnt]);
   }
   iringbuf_cnt = (iringbuf_cnt + 1) % 20;
-  */
+#endif
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
  // scan_watchpoints();
 }

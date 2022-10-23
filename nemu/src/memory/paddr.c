@@ -30,11 +30,17 @@ paddr_t host_to_guest(uint8_t *haddr) { return haddr - pmem + CONFIG_MBASE; }
 //4 bytes mean a word, which is the width of the datapath
 static word_t pmem_read(paddr_t addr, int len) {
   word_t ret = host_read(guest_to_host(addr), len);
+  #ifdef CONFIG_MTRACE
+    Log("[Mtrace]: (pmem_read) read %d byte information from address %x \n", len, ret);
+  #endif
   return ret;
 }
 
 static void pmem_write(paddr_t addr, int len, word_t data) {
   host_write(guest_to_host(addr), len, data);
+  #ifdef CONFIG_MTRACE
+    Log("[Mtrace]: (pmem_write) write %d byte information %lx into address %x \n", len, data, addr);
+  #endif
 }
 
 static void out_of_bound(paddr_t addr) {
