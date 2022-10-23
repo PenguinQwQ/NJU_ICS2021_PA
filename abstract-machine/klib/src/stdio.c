@@ -31,6 +31,7 @@ static char *number(char *str, int num, int base, int size, int flags)
 	static const char min_int[11] = "-2147483648";//0-10构成最小数
     char tmp[66];
     int i;
+    char *beg = str;
 //    c = (type & ZEROPAD) ? '0' : ' ';//c是用来补位宽的字符
     if(num == -2147483648)//特殊处理最小的数
     {
@@ -54,7 +55,8 @@ static char *number(char *str, int num, int base, int size, int flags)
             tmp[i++] = (digits[__do_div(num, base)]);
     while (i--)//倒序存入
         *str++ = tmp[i];
-    return str;
+        
+    return beg;
 }
 
 
