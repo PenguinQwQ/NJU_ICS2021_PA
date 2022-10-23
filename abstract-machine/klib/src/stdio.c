@@ -104,8 +104,6 @@ int vsprintf(char *buf, const char *fmt, va_list args)
                    flags |= NOTYPE;
                    break;
             }
-
-        
         field_width = 0;
         if (*fmt >= '0' && *fmt <= '9')
             fmt_atoi(fmt, field_width)
@@ -131,13 +129,7 @@ int vsprintf(char *buf, const char *fmt, va_list args)
 			break;
         case 's':
             s = va_arg(args, char *);
-            while (*s != '\0')
-            {
-                *tmp_str = *s;
-                tmp_str++;
-                s++;
-            }
-            
+            while (*s != '\0') *tmp_str++ = *s++;
 			break;
         case 'c':
             *tmp_str = (unsigned char)va_arg(args, int);
@@ -147,16 +139,11 @@ int vsprintf(char *buf, const char *fmt, va_list args)
 			break;
         }
         int s_len = strlen(arg_str);
-        if(s_len == 0)
-            putch('!');
         char c = (flags & ZEROPAD) ? '0' : ' ';
         if((flags & LEFT) == false)
         	for (int i = 0 ; i + s_len < field_width ; i++)
  				*str++ = c;
         strcpy(str, arg_str);
-        for (int i= 0 ; i < s_len ; i++)
-            putch(arg_str[i]);
-       putch('\n');
         str += s_len;
         if(flags & LEFT)
         	for (int i = 0 ; i + s_len < field_width ; i++)
