@@ -19,7 +19,7 @@ void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
     .width = w, .height = h,
     .vmemsz = 0
   };
-  cfg->vmemsz= cfg->width * cfg->height * sizeof(uint32_t);
+  cfg->vmemsz= w * h * sizeof(uint32_t);
 }
 
 void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
