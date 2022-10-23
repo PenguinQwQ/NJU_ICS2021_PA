@@ -135,7 +135,7 @@ int vsprintf(char *buf, const char *fmt, va_list args)
         case 's':
             s = va_arg(args, char *);
             strcpy(tmp_str, s);
-            continue;
+            break;
                 /*
         case 'c':
             *tmp_str++ = (unsigned char)va_arg(args, int);
