@@ -54,8 +54,10 @@ static char *number(char *str, int num, int base, int size, int flags)
         while (num != 0)
             tmp[i++] = (digits[__do_div(num, base)]);
     while (i--)//倒序存入
+    {
+        putch(tmp[i]);
         *str++ = tmp[i];
-        
+    }
     return beg;
 }
 
