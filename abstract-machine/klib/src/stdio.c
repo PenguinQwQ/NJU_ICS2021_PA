@@ -121,7 +121,7 @@ int vsprintf(char *buf, const char *fmt, va_list args)
             fmt++;
         }
         */
-        static char arg_str[MAX_BUFFER_SIZE];
+        char arg_str[MAX_BUFFER_SIZE];
         /* 原本的基设为十进制 */
     //    base = 10;
 		char* tmp_str = arg_str;
@@ -134,7 +134,7 @@ int vsprintf(char *buf, const char *fmt, va_list args)
             */
         case 's':
             s = va_arg(args, char *);
-            while(*s != '\0') *tmp_str++ = *s++;
+            strcpy(tmp_str, s);
             continue;
                 /*
         case 'c':
@@ -144,7 +144,7 @@ int vsprintf(char *buf, const char *fmt, va_list args)
         default:
 			break;
         }
-        *tmp_str = '\0';
+//        *tmp_str = '\0';
         size_t s_len = strlen(arg_str);
         /*
         char c = (flags & ZEROPAD) ? '0' : ' ';
