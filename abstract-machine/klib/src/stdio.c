@@ -148,6 +148,9 @@ int vsprintf(char *buf, const char *fmt, va_list args)
         	for (int i = 0 ; i + s_len < field_width ; i++)
  				*str++ = c;
         strcpy(str, arg_str);
+        for (int i= 0 ; i < s_len ; i++)
+            putch(arg_str[i]);
+       putch('\n');
         str += s_len;
         if(flags & LEFT)
         	for (int i = 0 ; i + s_len < field_width ; i++)
