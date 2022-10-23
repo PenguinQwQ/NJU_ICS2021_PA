@@ -108,7 +108,7 @@ int vsprintf(char *buf, const char *fmt, va_list args)
         if (*fmt >= '0' && *fmt <= '9')
             fmt_atoi(fmt, field_width)
        	else{
-             if(*fmt == '*')
+            if(*fmt == '*')
             field_width = va_arg(args, int);
             if(field_width < 0)
             {
