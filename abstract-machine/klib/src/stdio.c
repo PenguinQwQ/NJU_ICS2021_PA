@@ -141,7 +141,7 @@ int vsprintf(char *buf, const char *fmt, va_list args)
 			break;
         }
         *tmp_str = '\0';
-        size_t s_len = strlen(arg_str);
+        int s_len = strlen(arg_str);
         char c = (flags & ZEROPAD) ? '0' : ' ';
         if((flags & LEFT) == false)
         	for (int i = 0 ; i + s_len < field_width ; i++)
