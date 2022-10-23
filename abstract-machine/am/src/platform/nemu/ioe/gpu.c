@@ -7,10 +7,12 @@ static int w, h;
 void __am_gpu_init() {
    w = (uint32_t)(inw(VGACTL_ADDR + 2));  // TODO: get the correct width
    h = (uint32_t)(inw(VGACTL_ADDR));  // TODO: get the correct height
+/*
    uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
    int i = 0;
    for (i = 0; i < w * h; i ++) fb[i] = i;
    outl(SYNC_ADDR, 1);
+   */
 }
  
 void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
