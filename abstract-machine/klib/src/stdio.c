@@ -144,14 +144,14 @@ int vsprintf(char *buf, const char *fmt, va_list args)
         default:
 			break;
         }
-         size_t s_len = strlen(arg_str);
+         size_t s_len = strlen(tmp_str);
         /*
         char c = (flags & ZEROPAD) ? '0' : ' ';
         if((flags & LEFT) == false)
         	for (int i = 0 ; i + s_len < field_width ; i++)
  				*str++ = c;
  				*/
-        strcpy(str, arg_str);
+        strcpy(str, tmp_str);
         str += s_len;
         /*
         if(flags & LEFT)
