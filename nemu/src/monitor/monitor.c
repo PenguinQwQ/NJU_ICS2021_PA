@@ -59,6 +59,7 @@ struct fuction_unit{
   word_t out_addr;
 }func[2000];
 static char *elf_file = NULL;
+
 static char strtab_info[20000];
 uint32_t func_cnt = 0;
 /*
@@ -128,8 +129,8 @@ static void load_elf()
         return;
     }
     FILE *fp = fopen(elf_file, "rb");
-    fseek(fp, 0, SEEK_SET);
     Assert(fp, "Invalid Elf File! Unable to open the file!\n ");
+    fseek(fp, 0, SEEK_SET);
     if(check_elf_info(fp) == false) return; 
     Elf32_Ehdr ehdr;
     fseek(fp, 0, SEEK_END);
