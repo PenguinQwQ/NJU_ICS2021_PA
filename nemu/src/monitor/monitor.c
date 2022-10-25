@@ -205,7 +205,7 @@ static long load_img() {
 
 static int parse_args(int argc, char *argv[]) {
   const struct option table[] = {
-    {"elf_file" , required_argument, NULL, 'e'},
+    {"elf"      , required_argument, NULL, 'e'},
     {"batch"    , no_argument      , NULL, 'b'},
     {"log"      , required_argument, NULL, 'l'},
     {"diff"     , required_argument, NULL, 'd'},
@@ -228,7 +228,7 @@ static int parse_args(int argc, char *argv[]) {
         printf("\t-l,--log=FILE           output log to FILE\n");
         printf("\t-d,--diff=REF_SO        run DiffTest with reference REF_SO\n");
         printf("\t-p,--port=PORT          run DiffTest with port PORT\n");
-        printf("\t-e,--elf_file=FILE      load the elf file to the nemu\n");
+        printf("\t-e,--elf=FILE           load the elf file to the nemu\n");
         printf("\n");
         exit(0);
     }
