@@ -69,8 +69,8 @@ int strncmp(const char *s1, const char *s2, size_t n) {
 void *memset(void *s, int c, size_t n) {
 	assert(s);
   unsigned char* p = (unsigned char* )s;
-  unsigned char ch = (unsigned char) c;
-  for(int i = 1;i <= n;i++){ *p = ch; p++;}
+  unsigned char ch = (unsigned char)c;
+  for(int i = 1;i <= n && (p != NULL);i++){ *p = ch; p++;}
   return s;
 }
 
@@ -82,7 +82,7 @@ void *memcpy(void *out, const void *in, size_t n) {
   assert(out != NULL);
   unsigned char* p1 = (unsigned char*)out;
   const char* p2 = (const char*)in;
-  for(int i = 1;i <= n;i++) *p1++ = *p2++;
+  for(int i = 1;i <= n && (p1 != NULL) && (p2 != NULL);i++) *p1++ = *p2++;
   return out;
 }
 int memcmp(const void *s1, const void *s2, size_t n) {
@@ -93,7 +93,7 @@ int memcmp(const void *s1, const void *s2, size_t n) {
 
   for(int i = 1;i <= n;i++){
     if(*p1 < *p2){ flag = -8; break; }
-    if(*p1 > *p2){ flag = 8;break; }
+    if(*p1 > *p2){ flag = 8;  break; }
     p1++;p2++;
   }
   return flag;
