@@ -123,6 +123,8 @@ static void load_elf()
         Log("There is no elf file to be read. \n ");
         return;
     }
+    else
+      Log("elf_file is not NULL!");
     FILE *fp = fopen(elf_file, "rb");
   //  Assert(fp == NULL, "Invalid Elf File! Unable to open the file!\n ");
     fseek(fp, 0, SEEK_SET);
