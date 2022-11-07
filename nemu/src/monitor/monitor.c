@@ -101,14 +101,14 @@ static bool check_elf_info(FILE * fp)
       return false;
     }
 
-    if(!(ehdr.e_ident[4] != ELFCLASS32))
+    if(ehdr.e_ident[4] != ELFCLASS32)
     {
       Log("The Elf ISA doesn't support riscv32-nemu!\n");
       assert(0);
       return false;
     }
     
-    if(!(ehdr.e_ident[5] != ELFDATA2LSB))
+    if(ehdr.e_ident[5] != ELFDATA2LSB)
     {
       Log("The Elf data doesn't support Little Endian storage!");
       assert(0);
