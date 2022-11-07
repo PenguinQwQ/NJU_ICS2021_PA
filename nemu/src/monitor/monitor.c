@@ -55,7 +55,7 @@ struct fuction_unit{
 }func[2000];
 static char *elf_file = NULL;
 
-// static char strtab_info[20000];
+ static char strtab_info[20000];
 uint32_t func_cnt = 0;
 /*
 type = 0:none
@@ -80,7 +80,7 @@ void ftrace_display(uint32_t addr)
 }
   return;
 }
-/*
+
 
 static bool check_elf_info(FILE * fp)
 {
@@ -116,7 +116,7 @@ static bool check_elf_info(FILE * fp)
     }
   return true;
 }
-*/
+
 static void load_elf()
 {
     if(elf_file == NULL)
@@ -127,11 +127,11 @@ static void load_elf()
     else
       Log("elf_file is not NULL!\n");
     FILE *fp = fopen(elf_file, "rb");
-  //  Assert(fp == NULL, "Invalid Elf File! Unable to open the file!\n ");
+    Assert(fp , "Invalid Elf File! Unable to open the file!\n ");
     fseek(fp, 0, SEEK_SET);
-  //  if(check_elf_info(fp) == false) return; 
-  //  if(check_elf_info(fp)) Log("elf_file check successfully!!! \n");
-    /*
+    if(check_elf_info(fp) == false) return; 
+    if(check_elf_info(fp)) Log("elf_file check successfully!!! \n");
+    
     Elf32_Ehdr ehdr;
     fseek(fp, 0, SEEK_END);
     assert(fread(&ehdr, sizeof(ehdr), 1, fp) == 1);
@@ -173,7 +173,7 @@ static void load_elf()
       break;
       }
     }
-    */
+    
    fclose(fp);
     Log("The Elf file loaded successfully!\n");
 }
