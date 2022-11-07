@@ -154,10 +154,10 @@ static void load_elf()
         Elf32_Shdr symtab = shdr;
         Elf32_Half symnum = shdr.sh_size / shdr.sh_entsize;
         Elf32_Shdr strtab;
-        assert(fread(&strtab, sizeof(Elf32_Shdr), 1, fp) == 1);
+        assert(fread(&strtab, sh_sz, 1, fp) == 1);
         fseek(fp, strtab.sh_offset, SEEK_SET);
         //store the strtab strings to memory the function name
-        assert(fread(&strtab_info, sizeof(Elf32_Shdr), 1, fp) == 1);
+        assert(fread(&strtab_info, strtab.sh_size, 1, fp) == 1);
         fseek(fp, symtab.sh_offset, SEEK_SET);
         for (Elf32_Half num = 0 ; num < symnum ; num++)
         {
