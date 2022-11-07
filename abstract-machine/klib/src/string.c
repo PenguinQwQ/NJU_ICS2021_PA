@@ -30,31 +30,24 @@ char *strncpy(char *dst, const char *src, size_t n) {
 
 
 char *strcat(char *dst, const char *src) {
-  assert(dst != NULL);
-  assert(src != NULL);
-  char* pd = dst;
-  const char* ps = src;
-  while(*pd != '\0') pd++;
-  while(*ps != '\0') *pd++ = *ps++;
-  *pd='\0';
+  assert((dst != NULL) && (src != NULL));
+  char* p1 = dst;
+  const char* p2 = src;
+  while(*p1 != '\0') p1++;
+  while(*p2 != '\0') *p1++ = *p2++;
+  *p1='\0';
   return dst;
-//  panic("Not implemented");
 }
 
 int strcmp(const char *s1, const char *s2) {
     assert((s1 != NULL) && (s2 != NULL));
     while((*s1 != '\0') && (*s2 != '\0') && (*s1 == *s2))
-        s1++,s2++;
-    int flag = 0;
+        { s1++; s2++;}
     if((*s1) < (*s2))
-       {
-        flag = -8;
-       }
+        return -8;
     if((*s1) > (*s2))
-        {
-        flag = 8;
-        }
-   	return flag;
+        return 8;
+    return 0;
 }
 
 int strncmp(const char *s1, const char *s2, size_t n) {
@@ -87,15 +80,14 @@ void *memcpy(void *out, const void *in, size_t n) {
 }
 int memcmp(const void *s1, const void *s2, size_t n) {
  	assert((s1 != NULL) && (s2 != NULL));
-  int flag = 0;
   const char* p1 = (const char*)s1; 
   const char* p2 = (const char*)s2;
 
   for(int i = 1;i <= n;i++){
-    if(*p1 < *p2){ flag = -8; break; }
-    if(*p1 > *p2){ flag = 8;  break; }
+    if(*p1 < *p2){ return -8;}
+    if(*p1 > *p2){ return 8;}
     p1++;p2++;
   }
-  return flag;
+  return 0;
 }
 #endif
