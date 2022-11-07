@@ -124,7 +124,7 @@ static void load_elf()
         return;
     }
     FILE *fp = fopen(elf_file, "rb");
-    Assert(fp, "Invalid Elf File! Unable to open the file!\n ");
+    Assert(fp == NULL, "Invalid Elf File! Unable to open the file!\n ");
     fseek(fp, 0, SEEK_SET);
     if(check_elf_info(fp) == false) return; 
     Elf32_Ehdr ehdr;
@@ -208,7 +208,7 @@ static int parse_args(int argc, char *argv[]) {
     {"diff"     , required_argument, NULL, 'd'},
     {"port"     , required_argument, NULL, 'p'},
     {"help"     , no_argument      , NULL, 'h'},
-    {0          , 0                , NULL,  0 },
+    {0          , 0                , NULL,  0 }, 
   };//defined the option parameters and their behaviours
   int o;//fetch the argv and parse 
   while ( (o = getopt_long(argc, argv, "-bhl:d:p:", table, NULL)) != -1) {
