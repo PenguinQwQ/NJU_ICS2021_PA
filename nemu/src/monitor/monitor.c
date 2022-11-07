@@ -133,8 +133,9 @@ static void load_elf()
     if(check_elf_info(fp)) Log("elf_file check successfully!!! \n");
     
     Elf32_Ehdr ehdr;
-    fseek(fp, 0, SEEK_END);
+    fseek(fp, 0, SEEK_SET);
     assert(fread(&ehdr, sizeof(ehdr), 1, fp) == 1);
+    fseek(fp, 0, SEEK_END);
     int size = ftell(fp);
     Log("Elf size = %d\n",size);
     Elf32_Half sh_cnt = ehdr.e_shnum, sh_sz = ehdr.e_shentsize;
