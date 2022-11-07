@@ -124,7 +124,7 @@ static void load_elf()
         return;
     }
     FILE *fp = fopen(elf_file, "rb");
-    Assert(fp == NULL, "Invalid Elf File! Unable to open the file!\n ");
+  //  Assert(fp == NULL, "Invalid Elf File! Unable to open the file!\n ");
     fseek(fp, 0, SEEK_SET);
     if(check_elf_info(fp) == false) return; 
     Elf32_Ehdr ehdr;
