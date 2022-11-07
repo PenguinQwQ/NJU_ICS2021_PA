@@ -126,9 +126,9 @@ static void load_elf()
     }
     else
       Log("elf_file is not NULL!\n");
-    FILE *fp = fopen(elf_file, "rb");
+  //  FILE *fp = fopen(elf_file, "rb");
   //  Assert(fp == NULL, "Invalid Elf File! Unable to open the file!\n ");
-    fseek(fp, 0, SEEK_SET);
+  //  fseek(fp, 0, SEEK_SET);
   //  if(check_elf_info(fp) == false) return; 
   //  if(check_elf_info(fp)) Log("elf_file check successfully!!! \n");
     /*
@@ -174,7 +174,7 @@ static void load_elf()
       }
     }
     */
-    fclose(fp);
+  // fclose(fp);
     Log("The Elf file loaded successfully!\n");
 }
 
