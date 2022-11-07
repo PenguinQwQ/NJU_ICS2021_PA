@@ -80,7 +80,7 @@ void ftrace_display(uint32_t addr)
 }
   return;
 }
-
+/*
 
 static bool check_elf_info(FILE * fp)
 {
@@ -116,6 +116,7 @@ static bool check_elf_info(FILE * fp)
     }
   return true;
 }
+*/
 static void load_elf()
 {
     if(elf_file == NULL)
@@ -128,8 +129,8 @@ static void load_elf()
     FILE *fp = fopen(elf_file, "rb");
   //  Assert(fp == NULL, "Invalid Elf File! Unable to open the file!\n ");
     fseek(fp, 0, SEEK_SET);
-    if(check_elf_info(fp) == false) return; 
-    if(check_elf_info(fp)) Log("elf_file check successfully!!! \n");
+  //  if(check_elf_info(fp) == false) return; 
+  //  if(check_elf_info(fp)) Log("elf_file check successfully!!! \n");
     /*
     Elf32_Ehdr ehdr;
     fseek(fp, 0, SEEK_END);
