@@ -33,13 +33,17 @@ static word_t pmem_read(paddr_t addr, int len) {
   #ifdef CONFIG_MTRACE
     Log("[Mtrace]: (pmem_read) read %d byte information from address %x \n", len, ret);
   #endif
+
+
+
+
   return ret;
 }
 
 static void pmem_write(paddr_t addr, int len, word_t data) {
   host_write(guest_to_host(addr), len, data);
   #ifdef CONFIG_MTRACE
-    Log("[Mtrace]: (pmem_write) write %d byte information %lx into address %x \n", len, data, addr);
+    Log("[Mtrace]: (pmem_write) write %d byte information %x into address %x \n", len, data, addr);
   #endif
 }
 
