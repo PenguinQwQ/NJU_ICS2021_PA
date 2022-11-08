@@ -130,7 +130,7 @@ static void load_elf()
     Assert(fp , "Invalid Elf File! Unable to open the file!\n ");
     fseek(fp, 0, SEEK_SET);
     if(check_elf_info(fp) == false) return; 
-    if(check_elf_info(fp)) Log("elf_file check successfully!!! \n");
+  //  if(check_elf_info(fp)) Log("elf_file check successfully!!! \n");
     
     Elf32_Ehdr ehdr;
     fseek(fp, 0, SEEK_SET);
@@ -174,16 +174,9 @@ static void load_elf()
       break;
       }
     }
-    
    fclose(fp);
     Log("The Elf file loaded successfully!\n");
 }
-
-
-
-
-
-
 static long load_img() {
   if (img_file == NULL) {
     Log("No image is given. Use the default build-in image.");
