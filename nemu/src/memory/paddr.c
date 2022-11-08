@@ -43,7 +43,7 @@ static word_t pmem_read(paddr_t addr, int len) {
 static void pmem_write(paddr_t addr, int len, word_t data) {
   host_write(guest_to_host(addr), len, data);
   #ifdef CONFIG_MTRACE
-    Log("[Mtrace]: (pmem_write) write %d byte information %x into address %x \n", len, data, addr);
+    Log("[Mtrace]: (pmem_write) write " FMT_WORD "byte information" FMT_WORD " into address " FMT_WORD, len, data, addr);
   #endif
 }
 
