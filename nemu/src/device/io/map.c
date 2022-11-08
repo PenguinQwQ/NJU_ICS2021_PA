@@ -65,7 +65,7 @@ word_t map_read(paddr_t addr, int len, IOMap *map) {
   word_t ret = host_read(map->space + offset, len);
   return ret;
 }
- 
+
 void map_write(paddr_t addr, int len, word_t data, IOMap *map) {
   assert(len >= 1 && len <= 8);
   check_bound(map, addr);
