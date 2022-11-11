@@ -44,9 +44,9 @@ int strcmp(const char *s1, const char *s2) {
     while((*s1 != '\0') && (*s2 != '\0') && (*s1 == *s2))
         { s1++; s2++;}
     if((*s1) < (*s2))
-        return -8;
+        return -1024;
     if((*s1) > (*s2))
-        return 8;
+        return 1024;
     return 0;
 }
 
@@ -84,8 +84,8 @@ int memcmp(const void *s1, const void *s2, size_t n) {
   const char* p2 = (const char*)s2;
 
   for(int i = 1;i <= n;i++){
-    if(*p1 < *p2){ return -8;}
-    if(*p1 > *p2){ return 8;}
+    if(*p1 < *p2){ return -1024;}
+    if(*p1 > *p2){ return 1024;}
     p1++;p2++;
   }
   return 0;
