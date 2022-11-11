@@ -33,10 +33,6 @@ static word_t pmem_read(paddr_t addr, int len) {
   #ifdef CONFIG_MTRACE
     Log("[Mtrace]: (pmem_read) read %d byte information from address %x \n", len, ret);
   #endif
-
-
-
-
   return ret;
 }
 

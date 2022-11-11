@@ -3,16 +3,10 @@
 
 #define SYNC_ADDR (VGACTL_ADDR + 4)
 #define DISPLAY_ADDR (DEVICE_BASE + 0x01000000)
-static int w, h;
+static uint32_t w, h;
 void __am_gpu_init() {
-   w = (uint32_t)(inw(VGACTL_ADDR + 2));  // TODO: get the correct width
-   h = (uint32_t)(inw(VGACTL_ADDR));  // TODO: get the correct height
-/*
-   uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
-   int i = 0;
-   for (i = 0; i < w * h; i ++) fb[i] = i;
-   outl(SYNC_ADDR, 1);
-   */
+  w = inw(VGACTL_ADDR + 2);
+  h = inw(VGACTL_ADDR);
 }
  
 void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
@@ -21,7 +15,7 @@ void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
     .width = w, .height = h,
     .vmemsz = 0
   };
-  cfg->vmemsz= w * h * sizeof(uint32_t);
+  cfg->vmemsz= w * h * 4;
 }
 
 void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {

@@ -55,7 +55,7 @@ struct fuction_unit{
 }func[2000];
 static char *elf_file = NULL;
 
- static char strtab_info[20000];
+static char strtab_info[20000];
 uint32_t func_cnt = 0;
 /*
 type = 0:none
