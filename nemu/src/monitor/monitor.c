@@ -45,24 +45,32 @@ void sdb_set_batch_mode();
 static char *log_file = NULL;
 static char *diff_so_file = NULL;
 static char *img_file = NULL;
+static char *elf_file = NULL;
 
 static int difftest_port = 1234;
+
+
+#ifdef CONFIG_FTRACE
 
 struct fuction_unit{
   char function_name[256];
   word_t in_addr;
   word_t out_addr;
 }func[2000];
-static char *elf_file = NULL;
+
 
 static char strtab_info[20000];
 uint32_t func_cnt = 0;
+#endif
+
 /*
 type = 0:none
 type = 1: call
 type = 2: ret
 
 */
+#ifdef CONFIG_FTRACE
+
 void ftrace_display(uint32_t addr)
 {
   for (int i = 0 ; i < func_cnt ; i++)
@@ -177,6 +185,8 @@ static void load_elf()
    fclose(fp);
     Log("The Elf file loaded successfully!\n");
 }
+#endif
+
 static long load_img() {
   if (img_file == NULL) {
     Log("No image is given. Use the default build-in image.");
@@ -255,7 +265,9 @@ void init_monitor(int argc, char *argv[]) {
   init_isa();
 
   /*load the elf file to support the ftrace*/
+  #ifdef CONFIG_FTRACE
   load_elf();
+  #endif
 
   /* Load the image to memory. This will overwrite the built-in image. */
   long img_size = load_img();

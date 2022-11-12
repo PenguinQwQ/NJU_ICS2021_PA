@@ -24,9 +24,9 @@
 #define Mr vaddr_read
 #define Mw vaddr_write
 
-
+#ifdef CONFIG_FTRACE
 void ftrace_display(uint32_t addr);
-
+#endif
 
 
 enum {
@@ -76,8 +76,16 @@ static int decode_exec(Decode *s) {
   INSTPAT("??????? ????? ????? ??? ????? 01101 11", lui    , U, R(dest) = imm);
   INSTPAT("??????? ????? ????? 010 ????? 01000 11", sw     , S, Mw(src1 + imm, 4, src2));
   INSTPAT("??????? ????? ????? ??? ????? 00101 11", auipc, U, R(dest) = s->pc + imm);
-  INSTPAT("??????? ????? ????? ??? ????? 11011 11", jal, J, s->dnpc = s->pc + imm ; R(dest) = s->snpc; ftrace_display(s->dnpc););
-  INSTPAT("??????? ????? ????? 000 ????? 11001 11", jalr, I, s->dnpc = src1 + imm ; R(dest) = s->snpc; ftrace_display(s->dnpc););
+  INSTPAT("??????? ????? ????? ??? ????? 11011 11", jal, J, s->dnpc = s->pc + imm ; R(dest) = s->snpc; 
+                                                                                    #ifdef CONFIG_FTRACE
+                                                                                    ftrace_display(s->dnpc);
+                                                                                    #endif
+                                                                                    );
+  INSTPAT("??????? ????? ????? 000 ????? 11001 11", jalr, I, s->dnpc = src1 + imm ; R(dest) = s->snpc; 
+                                                                                    #ifdef CONFIG_FTRACE
+                                                                                    ftrace_display(s->dnpc);
+                                                                                    #endif
+                                                                                    );
 
 //B-type Instructions
 //BNE
