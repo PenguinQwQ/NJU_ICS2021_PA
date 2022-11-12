@@ -5,6 +5,7 @@
 #define DISPLAY_ADDR (DEVICE_BASE + 0x01000000)
 static uint32_t w, h;
 void __am_gpu_init() {
+  Log("GPU initialization!");
   w = inw(VGACTL_ADDR + 2);
   h = inw(VGACTL_ADDR);
 }

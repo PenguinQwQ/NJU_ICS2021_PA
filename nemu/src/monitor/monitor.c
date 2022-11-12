@@ -51,7 +51,6 @@ static int difftest_port = 1234;
 
 
 #ifdef CONFIG_FTRACE
-
 struct fuction_unit{
   char function_name[256];
   word_t in_addr;
