@@ -5,6 +5,11 @@
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
 size_t strlen(const char *s) {
+      if(s == NULL)
+    {
+      panic("s is a nullptr!");
+      return 0;
+    }
     size_t len = 0;
     //If s is a nullptr, then we should return 0;
     while((s != NULL) && (*s != '\0'))
@@ -16,6 +21,11 @@ size_t strlen(const char *s) {
 }
 
 char *strcpy(char *dst, const char *src) {
+    if((dst == NULL) || (src == NULL))
+    {
+      panic("dst or src is a nullptr!");
+      return dst;
+    }
     char* beg = dst;
     while(*src != '\0') 
     {
@@ -32,6 +42,11 @@ char *strncpy(char *dst, const char *src, size_t n) {
 
 
 char *strcat(char *dst, const char *src) {
+    if((dst == NULL) || (src == NULL))
+    {
+      panic("dst or src is a nullptr!");
+      return dst;
+    }
   char * beg = dst + strlen(dst);
 	while(*src != '\0')
   {
@@ -65,6 +80,11 @@ int strncmp(const char *s1, const char *s2, size_t n) {
 }
 
 void *memset(void *s, int c, size_t n) {
+   	if(s == NULL)
+  {
+    panic("The s is a nullptr!!!");
+    return NULL;
+  }
   unsigned char* p = (unsigned char* )s;
   unsigned char ch = (unsigned char)c;
   int i = 1;
