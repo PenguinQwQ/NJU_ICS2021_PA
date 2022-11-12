@@ -5,14 +5,14 @@
 #define DISPLAY_ADDR (DEVICE_BASE + 0x01000000)
 static uint32_t w, h;
 void __am_gpu_init() {
-  w = inw(VGACTL_ADDR + 2);
-  h = inw(VGACTL_ADDR);
+  w = (uint32_t)inw(VGACTL_ADDR + 2);
+  h = (uint32_t)inw(VGACTL_ADDR);
 }
  
 void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
   *cfg = (AM_GPU_CONFIG_T) {
     .present = true, .has_accel = false,
-    .width = inw(VGACTL_ADDR + 2), .height = inw(VGACTL_ADDR),
+    .width = w, .height = h,
     .vmemsz = 0
   };
   cfg->vmemsz= w * h * 4;
@@ -24,7 +24,7 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
   for(int i = 0;i < height ; i++)
   	for(int j = 0;j < width ; j++)
     {
-  		outl((w * (y + i) + (x + j)) * 4 + FB_ADDR , *ptr );
+  		outl((w * (y + i) + (x + j)) * 4 + FB_ADDR , *ptr);
       ptr++;
     }
   if(ctl->sync)

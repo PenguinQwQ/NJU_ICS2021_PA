@@ -126,7 +126,7 @@ static bool check_elf_info(FILE * fp)
 
 static void load_elf()
 {
-    if(elf_file == NULL)
+    if(elf_file == NULL)//if the elf_file is NULL, then we return directly!
     {
         Log("There is no elf file to be read. \n ");
         return;
