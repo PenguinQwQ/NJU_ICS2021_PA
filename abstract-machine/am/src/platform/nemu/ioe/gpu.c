@@ -13,20 +13,16 @@ void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
   *cfg = (AM_GPU_CONFIG_T) {
     .present = true, .has_accel = false,
     .width = w, .height = h,
-    .vmemsz = 0
-  };
-  cfg->vmemsz= w * h * 4;
+    .vmemsz = w * h * 4
+  }; 
 }
 
 void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
   int x = ctl->x, y = ctl->y, width = ctl->w, height = ctl->h;
-  uint32_t* ptr = ctl->pixels;
+  uint32_t* p = ctl->pixels;
   for(int i = 0;i < height ; i++)
   	for(int j = 0;j < width ; j++)
-    {
-  		outl((w * (y + i) + (x + j)) * 4 + FB_ADDR , *ptr);
-      ptr++;
-    }
+  		outl((w * (y + i) + (x + j)) * 4 + FB_ADDR , p[i * width + j]);
   if(ctl->sync)
   {
     outl(SYNC_ADDR, 1);
