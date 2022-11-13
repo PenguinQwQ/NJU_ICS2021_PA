@@ -18,9 +18,13 @@
 
 #include <common.h>
 
+#define CSR_REG_NUM 1025
+
 typedef struct {
   word_t gpr[32];//General purpose registers, 32!
   vaddr_t pc;//program counter
+
+  word_t CSR_REG[CSR_REG_NUM];
 } riscv32_CPU_state;
 
 // decode
