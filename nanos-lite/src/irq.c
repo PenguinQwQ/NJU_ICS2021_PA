@@ -8,7 +8,6 @@ static Context* do_event(Event e, Context* c) {
     case EVENT_YIELD: Log("Yield Event Occurred!!!"); break; //EVENT_YIELD = 1
     default: panic("Unhandled event ID = %d", e.event);
   }
-
   return c;
 }
 

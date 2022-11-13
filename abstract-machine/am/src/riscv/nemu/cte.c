@@ -37,7 +37,7 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
   return NULL;
 }
 
-void yield() {
+void yield() { // From the assembly code, we know that Yield Event will fill the a7 with -1!!! 
   asm volatile("li a7, -1; ecall");
 }
 
