@@ -60,7 +60,7 @@ static char *number(char *str, int num, int base, int size, int flags)
 
 int printf(const char *fmt, ...) {
   int len = 0;
-  char output_buf[20000];
+  char output_buf[2000000];
   va_list ap;
   va_start(ap, fmt);
   len = vsprintf(output_buf, fmt, ap);
