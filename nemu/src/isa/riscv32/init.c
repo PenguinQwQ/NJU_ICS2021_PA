@@ -31,6 +31,8 @@ static void restart() {
 
   /* The zero register is always 0. */
   cpu.gpr[0] = 0;
+
+//  cpu.CSR_REG[0x300] = 1ll * 0xa00001800;
 }
 
 void init_isa() { //

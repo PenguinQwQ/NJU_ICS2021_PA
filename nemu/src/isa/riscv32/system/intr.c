@@ -37,7 +37,7 @@ extern enum {
 
   MSCRATCH = 0x340,
   MEPC = 0x341,
-  MCLAUSE = 0x342,
+  MCAUSE = 0x342,
   MTVAL = 0x343,
   MIP = 0x344,
   MTINST = 0x34A,
@@ -61,8 +61,10 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
    * Then return the address of the interrupt/exception vector.
    */
   cpu.CSR_REG[MEPC] = epc;
+  cpu.CSR_REG[MCAUSE] = NO;
+  cpu.CSR_REG[MSTATUS] = 0x1800;//set the entry!
 
-  return 0;
+  return cpu.CSR_REG[MTVEC];
 }
 
 word_t isa_query_intr() {
