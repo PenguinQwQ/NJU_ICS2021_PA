@@ -50,7 +50,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
       Elf_Xword memsz = phdr->p_memsz;
       Elf_Addr vaddr = phdr->p_vaddr;
       assert(filesz <= memsz);
-      memcpy((void *)vaddr, (void *)offset, filesz);
+      memcpy((void *)vaddr, (void *)(file_buf + offset), filesz);
       memset((void *)(vaddr + (Elf_Addr)filesz), 0, memsz - filesz);
     }
   }
