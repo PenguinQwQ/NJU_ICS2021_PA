@@ -58,7 +58,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
       uint32_t memsz = phdr->p_memsz;
       uint32_t vaddr = phdr->p_vaddr;
       assert(filesz <= memsz);
-      memcpy((void *)vaddr, file_buf + offset, filesz);
+      ramdisk_read((void *)vaddr, phoff + num * phentsize + offset, filesz);
       memset((void *)(vaddr + filesz), 0, memsz - filesz);
     }
   }
