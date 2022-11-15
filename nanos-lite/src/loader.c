@@ -45,13 +45,13 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
     if(phdr->p_type == PT_LOAD)
     {
       assert(phdr->p_type == PT_LOAD);
-      Elf_Off offset = phdr->p_offset;
-      Elf_Xword filesz = phdr->p_filesz;
-      Elf_Xword memsz = phdr->p_memsz;
-      Elf_Addr vaddr = phdr->p_vaddr;
+      uint32_t offset = phdr->p_offset;
+      uint32_t filesz = phdr->p_filesz;
+      uint32_t memsz = phdr->p_memsz;
+      uint32_t vaddr = phdr->p_vaddr;
       assert(filesz <= memsz);
-      memcpy((void *)vaddr, (void *)(file_buf + offset), filesz);
-      memset((void *)(vaddr + (Elf_Addr)filesz), 0, memsz - filesz);
+      memcpy((void *)vaddr, file_buf + offset, filesz);
+      memset((void *)(vaddr + filesz), 0, memsz - filesz);
     }
   }
 /*
@@ -59,7 +59,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   printf("The Elf64 Header is %d bytes \n", sizeof(Elf64_Ehdr));
   printf("The Nanos Lite Elf Header is %d bytes \n", sizeof(Elf_Ehdr));
 */
-  return *(uint32_t *)elf->e_entry;
+  return elf->e_entry;
 }
 
 void naive_uload(PCB *pcb, const char *filename) {
