@@ -71,8 +71,8 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 
 void naive_uload(PCB *pcb, const char *filename) {
   uintptr_t entry = loader(pcb, filename);
-  assert(entry == 6);
-//  assert(entry == 0x830003fc);
+//  assert(entry == 6);
+  assert(entry == 0x830003fc);
   Log("Jump to entry = %d", entry);
   ((void(*)())entry) ();
 }
