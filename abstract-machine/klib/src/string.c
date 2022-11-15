@@ -108,7 +108,7 @@ void *memcpy(void *out, const void *in, size_t n) {
     return NULL;
   }
   */
- 
+  
   unsigned char* p1 = (unsigned char*)out;
   const char* p2 = (const char*)in;
   int i = 1;
