@@ -37,7 +37,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   assert(*(elf->e_ident + 4) == ELFCLASS32);
   //Check the elf aligned method
   assert(*(elf->e_ident + 5) == ELFDATA2LSB);
-  //
+  //Check the exact elf entry in virtual memory
   assert(elf->e_entry == 0x830003fc);
 
   Elf_Off phoff = elf->e_phoff;
@@ -71,6 +71,8 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 
 void naive_uload(PCB *pcb, const char *filename) {
   uintptr_t entry = loader(pcb, filename);
+  assert(entry == 6);
+  assert(entry == 0x830003fc);
   Log("Jump to entry = %d", entry);
   ((void(*)())entry) ();
 }
