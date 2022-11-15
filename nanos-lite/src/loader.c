@@ -38,9 +38,9 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   //Check the elf aligned method
   assert(*(elf->e_ident + 5) == ELFDATA2LSB);
   //Check the exact elf entry in virtual memory
-  assert(elf->e_entry == 0x830003fc);
-  uintptr_t ptr = (uintptr_t)elf->e_entry;
-  assert(ptr == 0x830003fc);
+//  assert(elf->e_entry == 0x830003fc);
+//  uintptr_t ptr = (uintptr_t)elf->e_entry;
+//  assert(ptr == 0x830003fc);
   Elf_Off phoff = elf->e_phoff;
   Elf_Half phnum = elf->e_phnum;
   Elf_Half phentsize = elf->e_phentsize;
@@ -67,7 +67,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   printf("The Elf64 Header is %d bytes \n", sizeof(Elf64_Ehdr));
   printf("The Nanos Lite Elf Header is %d bytes \n", sizeof(Elf_Ehdr));
 */
-  return ptr;
+  return elf->e_entry;
 }
 
 void naive_uload(PCB *pcb, const char *filename) {
