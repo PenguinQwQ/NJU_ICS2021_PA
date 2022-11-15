@@ -47,6 +47,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 
   for (Elf_Half num = 0 ; num < phnum ; num++)
   {
+    printf("IS PT_LOAD!\n");
     //Read a program header section into file_buf
     assert(ramdisk_read(file_buf, phoff + num * phentsize, phentsize) == phentsize);
     Elf_Phdr *phdr = (Elf_Phdr *)file_buf;
