@@ -31,7 +31,13 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   //The Elf file is at least 4 bytes!
   assert(ramdisk_read(file_buf, 0, sizeof(Elf_Ehdr)) == sizeof(Elf_Ehdr));
   Elf_Ehdr *elf = (Elf_Ehdr *)file_buf;
+  //Check the magic number
   assert(*(uint32_t *)elf->e_ident == 0x464c457f);
+  //Check the elf support ISA type
+  assert(*(elf->e_ident + 4) == ELFCLASS32);
+  //Check the elf aligned method
+  assert(*(elf->e_ident + 5) == ELFDATA2LSB);
+
 
   Elf_Off phoff = elf->e_phoff;
   Elf_Half phnum = elf->e_phnum;
@@ -64,7 +70,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 
 void naive_uload(PCB *pcb, const char *filename) {
   uintptr_t entry = loader(pcb, filename);
-  Log("Jump to entry = %d", entry);
+  Log("Jump to entry = %p", entry);
   ((void(*)())entry) ();
 }
 
