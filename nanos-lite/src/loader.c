@@ -40,23 +40,26 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   for (Elf_Half num = 0 ; num < phnum ; num++)
   {
     //Read a program header section into file_buf
-    assert(ramdisk_read(file_buf, phoff + num * phentsize, phentsize) == phentsize);
+    assert(ramdisk_read(file_buf, (uintptr_t)elf + phoff + num * phentsize, phentsize) == phentsize);
     Elf_Phdr *phdr = (Elf_Phdr *)file_buf;
     if(phdr->p_type == PT_LOAD)
     {
-      printf("Find PT_LOAD!!!\n");
+      assert(phdr->p_type == PT_LOAD);
+      Elf_Off offset = phdr->p_offset;
+      Elf_Xword filesz = phdr->p_filesz;
+      Elf_Xword memsz = phdr->p_memsz;
+      Elf_Addr vaddr = phdr->p_vaddr;
+      assert(filesz <= memsz);
+      memcpy((void *)vaddr, (void *)offset, filesz);
+      memset((void *)(vaddr + (Elf_Addr)filesz), 0, memsz - filesz);
     }
   }
-
-
 /*
   printf("The Elf32 Header is %d bytes \n", sizeof(Elf32_Ehdr));
   printf("The Elf64 Header is %d bytes \n", sizeof(Elf64_Ehdr));
   printf("The Nanos Lite Elf Header is %d bytes \n", sizeof(Elf_Ehdr));
 */
-
-
-  return 0;
+  return elf->e_entry;
 }
 
 void naive_uload(PCB *pcb, const char *filename) {
