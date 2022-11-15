@@ -29,7 +29,7 @@ static uint8_t file_buf[MAX_BUFFER_SIZE];
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
   //The Elf file is at least 4 bytes!
-  assert(ramdisk_read(file_buf, 0, sizeof(Elf_Ehdr)) == sizeof(Elf_Ehdr));
+  assert(ramdisk_read(file_buf, 0, MAX_BUFFER_SIZE) <= MAX_BUFFER_SIZE);
   Elf_Ehdr *elf = (Elf_Ehdr *)file_buf;
   //Check the magic number
   assert(*(uint32_t *)elf->e_ident == 0x464c457f);
@@ -46,13 +46,12 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   Elf_Half phentsize = elf->e_phentsize;
 
   for (Elf_Half num = 0 ; num < phnum ; num++)
-  {
-    printf("IS PT_LOAD!\n");
-    //Read a program header section into file_buf
-    assert(ramdisk_read(file_buf, phoff + num * phentsize, phentsize) == phentsize);
-    Elf_Phdr *phdr = (Elf_Phdr *)file_buf;
+  {    //Read a program header section into file_buf
+//    assert(ramdisk_read(file_buf, phoff + num * phentsize, phentsize) == phentsize);
+    Elf_Phdr *phdr = (Elf_Phdr *)(file_buf + phoff + num * phentsize);
     if(phdr->p_type == PT_LOAD)
     {
+      printf("Here PT_LOAD!");
       assert(phdr->p_type == PT_LOAD);
       uint32_t offset = phdr->p_offset;
       uint32_t filesz = phdr->p_filesz;
