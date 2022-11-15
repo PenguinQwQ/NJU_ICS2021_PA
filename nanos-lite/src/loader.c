@@ -59,7 +59,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   printf("The Elf64 Header is %d bytes \n", sizeof(Elf64_Ehdr));
   printf("The Nanos Lite Elf Header is %d bytes \n", sizeof(Elf_Ehdr));
 */
-  return elf->e_entry;
+  return *(uint32_t *)elf->e_entry;
 }
 
 void naive_uload(PCB *pcb, const char *filename) {
