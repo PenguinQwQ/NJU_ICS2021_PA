@@ -29,7 +29,7 @@ static uint8_t file_buf[MAX_BUFFER_SIZE];
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
   //The Elf file is at least 4 bytes!
-  assert(ramdisk_read(file_buf, 0, MAX_BUFFER_SIZE) <= MAX_BUFFER_SIZE);
+  assert(ramdisk_read(file_buf, 0, 50000) <= 50000);
   Elf_Ehdr *elf = (Elf_Ehdr *)file_buf;
   //Check the magic number
   assert(*(uint32_t *)elf->e_ident == 0x464c457f);
