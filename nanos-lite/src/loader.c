@@ -33,7 +33,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   assert(*(uint32_t *)elf->e_ident == 0x464c457f);
   printf("The Elf32 Header is %d bytes \n", sizeof(Elf32_Ehdr));
   printf("The Elf64 Header is %d bytes \n", sizeof(Elf64_Ehdr));
-
+  printf("The Nanos Lite Elf Header is %d bytes \n", sizeof(Elf_Ehdr));
 
 
   return 0;
