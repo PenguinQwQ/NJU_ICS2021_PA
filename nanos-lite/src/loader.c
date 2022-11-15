@@ -37,7 +37,8 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   assert(*(elf->e_ident + 4) == ELFCLASS32);
   //Check the elf aligned method
   assert(*(elf->e_ident + 5) == ELFDATA2LSB);
-
+  //
+  assert(elf->e_entry > 0x83000000);
 
   Elf_Off phoff = elf->e_phoff;
   Elf_Half phnum = elf->e_phnum;
