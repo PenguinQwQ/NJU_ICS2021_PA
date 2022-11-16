@@ -27,9 +27,18 @@ size_t get_ramdisk_size();
 #define MAX_BUFFER_SIZE 656600
 static uint8_t file_buf[MAX_BUFFER_SIZE];
 
+size_t fs_open(const char *pathname, int flags, int mode);
+size_t fs_read(int fd, void *buf, size_t len);
+size_t fs_write(int fd, void *buf, size_t len);
+size_t fs_lseek(int fd, size_t offset, int whence);
+int fs_close(int fd);
+
+
 static uintptr_t loader(PCB *pcb, const char *filename) {
+  int fd = fs_open(filename, 0, 0);
+  assert(fs_read(fd, file_buf, MAX_BUFFER_SIZE) <= MAX_BUFFER_SIZE);
+  fs_close(fd);
   //The Elf file is at least 4 bytes!
-  assert(ramdisk_read(file_buf, 0, 20000) <= 20000);
   Elf_Ehdr *elf = (Elf_Ehdr *)file_buf;
   //Check the magic number
   assert(*(uint32_t *)elf->e_ident == 0x464c457f);
@@ -58,7 +67,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
       uint32_t memsz = phdr->p_memsz;
       uint32_t vaddr = phdr->p_vaddr;
       assert(filesz <= memsz);
-      ramdisk_read((void *)vaddr, offset, filesz);
+      memcpy((void *)vaddr, file_buf + offset, filesz);
       memset((void *)(vaddr + filesz), 0, memsz - filesz);
     }
   }
