@@ -23,7 +23,7 @@ void naive_uload(PCB *pcb, const char *filename);
 
 void init_proc() {
   switch_boot_pcb();
-  naive_uload(NULL, "/bin/file-test");
+  naive_uload(NULL, "/bin/dummy");
 
   Log("Initializing processes...");
 
