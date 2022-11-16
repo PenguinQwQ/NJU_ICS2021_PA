@@ -23,7 +23,7 @@ void naive_uload(PCB *pcb, const char *filename);
 
 void init_proc() {
   switch_boot_pcb();
-  naive_uload(NULL, "/bin/dummy-am_native");
+  naive_uload(NULL, "/bin/hello-riscv32");
 
   Log("Initializing processes...");
   // load program here
