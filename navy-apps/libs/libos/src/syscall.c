@@ -64,8 +64,16 @@ int _write(int fd, void *buf, size_t count) {
   return _syscall_(SYS_write, fd, (intptr_t)buf, count);
 }
 
+extern char _end;
+static intptr_t p_break = 0, old_break = 0, new_break;
 void *_sbrk(intptr_t increment) {
-  return (void *)-1;
+  p_break = (p_break == 0) ? (intptr_t)_end : p_break;
+  old_break = p_break;
+  new_break = p_break + increment;
+  int ret = _syscall_(SYS_brk, new_break, 0, 0);
+  if(ret == -1) return (void *)-1;
+  p_break = new_break;
+  return (void *)old_break;
 }
 
 int _read(int fd, void *buf, size_t count) {
