@@ -24,7 +24,7 @@ size_t ramdisk_read(void *buf, size_t offset, size_t len);
 size_t ramdisk_write(const void *buf, size_t offset, size_t len);
 size_t get_ramdisk_size();
 
-#define MAX_BUFFER_SIZE 656600
+#define MAX_BUFFER_SIZE 6566000
 static uint8_t file_buf[MAX_BUFFER_SIZE];
 
 size_t fs_open(const char *pathname, int flags, int mode);
@@ -47,10 +47,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   assert(*(elf->e_ident + 4) == ELFCLASS32);
   //Check the elf aligned method
   assert(*(elf->e_ident + 5) == ELFDATA2LSB);
-  //Check the exact elf entry in virtual memory
-//  assert(elf->e_entry == 0x830003fc);
-//  uintptr_t ptr = (uintptr_t)elf->e_entry;
-//  assert(ptr == 0x830003fc);
+
   Elf_Off phoff = elf->e_phoff;
   Elf_Half phnum = elf->e_phnum;
   Elf_Half phentsize = elf->e_phentsize;
