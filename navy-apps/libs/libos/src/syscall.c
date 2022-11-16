@@ -64,7 +64,7 @@ int _write(int fd, void *buf, size_t count) {
 }
 
 extern char _end;
-static intptr_t p_break = 0, old_break = 0, new_break;
+static intptr_t p_break = 0, old_break = 0, new_break = 0;
 void *_sbrk(intptr_t increment) {
   p_break = (p_break == 0) ? (intptr_t)_end : p_break;
   old_break = p_break;
