@@ -57,7 +57,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   for (Elf_Half num = 0 ; num < phnum ; num++)
   {    //Read a program header section into file_buf
 //    assert(ramdisk_read(file_buf, phoff + num * phentsize, phentsize) == phentsize);
-    Elf_Phdr *phdr = (Elf_Phdr *)(file_buf + phoff + num * phentsize);
+    Elf_Phdr *phdr = (Elf_Phdr *)(elf + phoff + num * phentsize);
     if(phdr->p_type == PT_LOAD)
     {
      // printf("Here PT_LOAD!");
