@@ -45,101 +45,6 @@ static Finfo file_table[] __attribute__((used)) = {
 
 
 
-
-
-void init_fs() {}
-
-
-int fs_open(const char *pathname, int flags, int mode){
-  int nfs = sizeof(file_table)/sizeof(Finfo);
-  bool is_find = 0;
-  int ret = 0;
-  for(int i = 0; i < nfs; i++){
-    if(strcmp(pathname,file_table[i].name) == 0){
-      ret = i;
-      is_find = 1;
-      break;
-    }
-  }
-  if(!is_find){
-    panic("%s: No such file !\n",pathname);
-  }
-  return ret;
-}
-
-size_t fs_read(int fd, void *buf, size_t len){
-  if(file_table[fd].read)
-    return file_table[fd].read(buf, file_table[fd].open_offset, len);
-  
-  assert(buf);
-  size_t offset = file_table[fd].disk_offset + file_table[fd].open_offset;
-
-  assert(file_table[fd].size >= file_table[fd].open_offset);
-
-  size_t readable = file_table[fd].size - file_table[fd].open_offset;
-  
-  if(readable == 0) return 0;
-
-  size_t bytes = len;
-  if(readable < len) bytes = readable;
-
-  ramdisk_read(buf, offset, bytes);
-  file_table[fd].open_offset += bytes;
-
-  return bytes;
-}
-
-size_t fs_write(int fd, const void *buf, size_t len){
-  if(file_table[fd].write)
-    return file_table[fd].write(buf, file_table[fd].open_offset, len);
-  
-  //assert(fd >= 4);
-  assert(buf);
-  size_t offset = file_table[fd].disk_offset + file_table[fd].open_offset;
-
-  assert(file_table[fd].size >= file_table[fd].open_offset);
-
-  size_t writable = file_table[fd].size - file_table[fd].open_offset;
-  
-  if(writable == 0) return 0;
-
-
-  size_t bytes = len;
-  if(writable < len) bytes = writable;
-
-  ramdisk_write(buf, offset, bytes);
-  file_table[fd].open_offset += bytes;
-
-  return bytes;
-}
-
-size_t fs_lseek(int fd, size_t offset, int whence){
-  switch (whence){
-  case SEEK_SET:
-    file_table[fd].open_offset = offset;
-    break;
-  case SEEK_CUR:
-    file_table[fd].open_offset += offset;
-    break;
-  case SEEK_END:
-    file_table[fd].open_offset = file_table[fd].size + offset;
-    break;
-  default: 
-    assert(0);
-    break;
-  }
-  return file_table[fd].open_offset;
-}
-
-int fs_close(int fd){
-  file_table[fd].open_offset = 0;
-  return 0;
-}
-/*
-
-
-
-
 static uint32_t file_num = sizeof(file_table)/sizeof(Finfo);
 
 size_t fs_open(const char *pathname, int flags, int mode)
@@ -197,6 +102,7 @@ size_t fs_lseek(int fd, size_t offset, int whence)
 
 int fs_close(int fd)
 {
+  file_table[fd].open_offset = 0;
   return 0;
 }
 
@@ -205,6 +111,5 @@ void init_fs() {
   // TODO: initialize the size of /dev/fb
 }
 
-*/
 
 
