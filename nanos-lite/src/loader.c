@@ -34,6 +34,7 @@ size_t fs_lseek(int fd, size_t offset, int whence);
 int fs_close(int fd);
 
 
+
 static uintptr_t loader(PCB *pcb, const char *filename) {
   int fd = fs_open(filename, 0, 0);
   assert(fs_read(fd, file_buf, MAX_BUFFER_SIZE) <= MAX_BUFFER_SIZE);
@@ -73,6 +74,8 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   }
   return elf->e_entry;
 }
+
+
 
 void naive_uload(PCB *pcb, const char *filename) {
   uintptr_t entry;
