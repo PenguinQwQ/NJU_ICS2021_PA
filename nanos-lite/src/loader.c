@@ -1,4 +1,3 @@
-/*
 #include <proc.h>
 #include <elf.h>
 #include <fs.h>
@@ -83,8 +82,6 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
     phoff += phsz;
   }
   fs_close(fd);
-
-*/
 /*
 
 
@@ -121,7 +118,6 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
     }
   }
   */
- /*
   return ehdr.e_entry;
 }
 
@@ -132,7 +128,8 @@ void naive_uload(PCB *pcb, const char *filename) {
   ((void(*)())entry) ();
 }
 
-*/
+
+/*
 
 #include <proc.h>
 #include <fs.h>
@@ -224,3 +221,4 @@ void naive_uload(PCB *pcb, const char *filename) {
   ((void(*)())entry) ();
 }
 
+*/
