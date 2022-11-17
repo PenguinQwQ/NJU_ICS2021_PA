@@ -56,7 +56,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
     Elf_Phdr *phdr = (Elf_Phdr *)(file_buf + phoff + num * phentsize);
     if(phdr->p_type == PT_LOAD)
     {
-      printf("Here PT_LOAD!");
+      printf("Here PT_LOAD!\n");
       assert(phdr->p_type == PT_LOAD);
       uint32_t offset = phdr->p_offset;
       uint32_t filesz = phdr->p_filesz;
