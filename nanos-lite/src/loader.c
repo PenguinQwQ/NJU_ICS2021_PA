@@ -45,13 +45,20 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   assert(ehdr.e_ident[2] == 0x4c);
   assert(ehdr.e_ident[3] == 0x46);
 
-  Elf_Off phoff = ehdr.e_phoff;
-  Elf_Half phnum = ehdr.e_phnum;
-  Elf_Half phsz = ehdr.e_phentsize;
+  int phoff = ehdr.e_phoff;
+  int shoff = ehdr.e_shoff;
+  int phnum = ehdr.e_phnum;
+  int phsz = ehdr.e_phentsize;
+
+  printf("phnum = %p \n", phnum);
+  printf("phsz = %p \n", phsz);
+  printf("phoff = %p \n", phoff);
+  printf("shoff = %p \n", shoff);
 
   for (Elf_Half num = 0 ; num < phnum ; num++)
   {
     Elf_Phdr phdr;
+    printf("%p \n", phoff);
     assert(fs_lseek(fd, phoff, SEEK_SET) == phoff);
     assert(fs_read(fd, &phdr, sizeof(phdr)) == sizeof(phdr));
   if(phdr.p_type == PT_LOAD)
@@ -62,6 +69,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
     Elf_Xword memsz = phdr.p_memsz;
     assert(filesz <= memsz);
     Elf_Off offset = phdr.p_offset;
+    assert(0);
     assert(fs_lseek(fd, offset, SEEK_SET) == offset);
     assert(fs_read(fd, (void *)vaddr, filesz) == filesz);
     memset((void *)(vaddr + (Elf_Addr)filesz), 0, memsz - filesz);
