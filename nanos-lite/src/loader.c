@@ -57,10 +57,17 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   if(phdr.p_type == PT_LOAD)
   {
     Log("PT_LOAD DETECTED!!!");
+    Elf_Addr vaddr = phdr.p_vaddr;
+    Elf_Xword filesz = phdr.p_filesz;
+    Elf_Xword memsz = phdr.p_memsz;
+    assert(filesz <= memsz);
+    Elf_Off offset = phdr.p_offset;
+    assert(fs_lseek(fd, offset, SEEK_SET) == offset);
+    assert(fs_read(fd, (void *)vaddr, filesz) == filesz);
+    memset((void *)(vaddr + (Elf_Addr)filesz), 0, memsz - filesz);
   }
     phoff += phsz;
   }
-
 /*
 
 
