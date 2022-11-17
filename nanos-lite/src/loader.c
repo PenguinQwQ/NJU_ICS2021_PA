@@ -70,12 +70,13 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
     assert(filesz <= memsz);
     Elf_Off offset = phdr.p_offset;
    // assert(0);
-    assert(fs_lseek(fd, phoff + offset, SEEK_SET) == phoff + offset);
+    assert(fs_lseek(fd, offset, SEEK_SET) == offset);
     assert(fs_read(fd, (void *)vaddr, filesz) == filesz);
     memset((void *)(vaddr + (Elf_Addr)filesz), 0, memsz - filesz);
   }
     phoff += phsz;
   }
+  fs_close(fd);
 /*
 
 
