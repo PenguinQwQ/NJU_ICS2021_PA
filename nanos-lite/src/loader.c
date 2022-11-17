@@ -76,6 +76,6 @@ void naive_uload(PCB *pcb, const char *filename) {
   uintptr_t entry;
   entry = loader(pcb, filename);
  // assert(entry == 0x830003fc);
-  Log("Jump to entry = %d", entry);
+  Log("Jump to entry = %p", entry);
   ((void(*)())entry) ();
 }
