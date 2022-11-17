@@ -35,7 +35,7 @@ int fs_close(int fd);
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
   int fd = fs_open(filename, 0, 0);
-  assert(fs_read(fd, file_buf, MAX_BUFFER_SIZE) <= MAX_BUFFER_SIZE);
+  assert(fs_read(fd, (void *)file_buf, MAX_BUFFER_SIZE) <= MAX_BUFFER_SIZE);
   fs_close(fd);
   //The Elf file is at least 4 bytes!
   Elf_Ehdr *elf = (Elf_Ehdr *)file_buf;
