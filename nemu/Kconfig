@@ -161,9 +161,13 @@ config DTRACE
 
 config FTRACE
   depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
-  bool "ENable fuction tracer"
+  bool "Enable fuction tracer"
   default y
 
+config STRACE
+  depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
+  bool "Enable system convention tracer"
+  default y
 
 
 

@@ -24,6 +24,11 @@ void naive_uload(PCB *pcb, const char *filename);
 void init_proc() {
   switch_boot_pcb();
   naive_uload(NULL, "/bin/file-test");
+  #ifdef CONFIG_STRACE
+    Log("STRACE Defined!!!");
+  #endif
+
+
   Log("Initializing processes...");
   // load program here
 
