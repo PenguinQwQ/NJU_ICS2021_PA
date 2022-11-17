@@ -37,7 +37,7 @@ void ftrace_display(uint32_t addr);
 //This Function Read the content stored in the CSR_REG[CSR_INDEX]!
 word_t CSR_READ(uint32_t inst)
 {
-  int32_t CSR_ADDR = SEXT(BITS(inst,31,20),12); //Decode the inst to find the CSR_ADDR
+  int32_t CSR_ADDR = BITS(inst,31,20); //Decode the inst to find the CSR_ADDR
   if(CSR_ADDR > 1024 || CSR_ADDR < 0)
   {
     panic("The CSR Register Address is invalid!!!\n");
@@ -48,7 +48,7 @@ word_t CSR_READ(uint32_t inst)
 //This Function Write data to the CSR_REG[CSR_INDEX]!
 void CSR_WRITE(uint32_t inst, word_t DATA)
 {
-  int32_t CSR_ADDR = SEXT(BITS(inst,31,20),12); //Decode the inst to find the CSR_ADDR
+  int32_t CSR_ADDR = BITS(inst,31,20); //Decode the inst to find the CSR_ADDR
   if(CSR_ADDR > 1024 || CSR_ADDR < 0)
   {
     panic("The CSR Register Address is invalid!!!\n");
