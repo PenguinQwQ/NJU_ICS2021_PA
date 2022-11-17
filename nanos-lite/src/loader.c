@@ -1,5 +1,6 @@
 #include <proc.h>
 #include <elf.h>
+#include <fs.h>
 
 #ifdef __LP64__
 # define Elf_Ehdr Elf64_Ehdr
@@ -25,7 +26,7 @@ size_t ramdisk_write(const void *buf, size_t offset, size_t len);
 size_t get_ramdisk_size();
 
 #define MAX_BUFFER_SIZE 656600
-static uint8_t file_buf[MAX_BUFFER_SIZE];
+//static uint8_t file_buf[MAX_BUFFER_SIZE];
 
 size_t fs_open(const char *pathname, int flags, int mode);
 size_t fs_read(int fd, void *buf, size_t len);
@@ -35,6 +36,17 @@ int fs_close(int fd);
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
   int fd = fs_open(filename, 0, 0);
+
+  assert(fs_lseek(fd, 0, SEEK_SET) == 0);
+  Elf_Ehdr ehdr;
+  assert(fs_read(fd, &ehdr, sizeof(ehdr)) == sizeof(ehdr));
+  assert(ehdr.e_ident[0] == 0x7f);
+  assert(ehdr.e_ident[1] == 0x45);
+  assert(ehdr.e_ident[2] == 0x4c);
+  assert(ehdr.e_ident[3] == 0x46);
+/*
+
+
   assert(fs_read(fd, (void *)file_buf, MAX_BUFFER_SIZE) <= MAX_BUFFER_SIZE);
   fs_close(fd);
   //The Elf file is at least 4 bytes!
@@ -67,7 +79,8 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
       memset((void *)(vaddr + filesz), 0, memsz - filesz);
     }
   }
-  return elf->e_entry;
+  */
+  return ehdr.e_entry;
 }
 
 
