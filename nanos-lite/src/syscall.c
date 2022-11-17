@@ -19,10 +19,12 @@ static size_t sys_read(int fd, void *buf, size_t len)
 
 static size_t sys_write(int fd, void *buf, size_t len)
 {
+  /*
   const char *str = (const char *)buf;
   int i = -1;
   for (i = 0 ; i < len ; i++)
     putch(*str++);
+    */
   return fs_write(fd, buf, len);
 }
 
