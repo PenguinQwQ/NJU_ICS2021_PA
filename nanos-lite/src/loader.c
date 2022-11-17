@@ -70,6 +70,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
     Elf_Xword memsz = phdr.p_memsz;
     assert(filesz <= memsz);
     Elf_Off offset = phdr.p_offset;
+  printf("offset = %p \n", offset);
   printf("vaddr = %p \n", vaddr);
   printf("filesz = %p \n", filesz);
   printf("memsz = %p \n", memsz);
