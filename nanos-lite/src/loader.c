@@ -76,7 +76,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
    // assert(0);
     assert(fs_lseek(fd, offset, SEEK_SET) == offset);
     assert(fs_read(fd, (void *)vaddr, filesz) == filesz);
-    memset((void *)(vaddr + (Elf_Addr)filesz), 0, memsz - filesz);
+    memset((void *)(vaddr + (Elf_Addr)filesz), 0, (size_t)(memsz - filesz));
   }
     phoff += phsz;
   }
