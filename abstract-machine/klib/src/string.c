@@ -109,7 +109,7 @@ void *memcpy(void *out, const void *in, size_t n) {
   unsigned char* p1 = (unsigned char*)out;
   const char* p2 = (const char*)in;
   int i = 1;
-  while(i <= n && (p1 != NULL) && (p2 != NULL))
+  while(i <= n)
   {
     *p1 = *p2;
     p1++;p2++;i++;
