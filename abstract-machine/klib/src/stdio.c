@@ -5,9 +5,9 @@
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 #define __do_div(n, base) ({ \
-int __res; \
-__res = ((int)n) % (int) base; \
-n = ((int)n) / (int) base; \
+unsigned long int __res; \
+__res = ((unsigned long int)n) % (unsigned long int) base; \
+n = ((unsigned long int)n) / (unsigned long int) base; \
 __res; })
 
 
@@ -41,12 +41,16 @@ static char *number(char *str, int num, int base, int size, int flags)
     
     if(num >= 0 && (flags & POSITIVE))
         *str++ = '+';
-    if(num < 0){//一般的数，取反后写入
+    if(num < 0 && base == 10){//一般的数，取反后写入
         *str++ = '-';
         num = -num;
     }
+
+    if(base == 16)
+    {
+        num = (unsigned long int)num;
+    }
     i = 0;
-    
     if (num == 0)
         tmp[i++] = '0';
     else
