@@ -80,15 +80,10 @@ int strncmp(const char *s1, const char *s2, size_t n) {
 }
 
 void *memset(void *s, int c, size_t n) {
-   	if(s == NULL)
-  {
-    panic("The s is a nullptr!!!");
-    return NULL;
-  }
-  unsigned char* p = (unsigned char* )s;
+  unsigned char* p = (unsigned char * )s;
   unsigned char ch = (unsigned char)c;
   int i = 1;
-  while(i <= n && p != NULL)
+  while(i <= n)
   {
     *p = ch;
     p++;i++;
