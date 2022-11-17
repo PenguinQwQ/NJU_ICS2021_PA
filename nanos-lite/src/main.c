@@ -17,6 +17,10 @@ int main() {
 
   init_device();
 
+  #ifdef CONFIG_STRACE
+    Log("STRACE Defined!!!");
+  #endif
+
   init_ramdisk();
 
 #ifdef HAS_CTE
