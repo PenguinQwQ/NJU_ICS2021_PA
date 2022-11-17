@@ -44,6 +44,23 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   assert(ehdr.e_ident[1] == 0x45);
   assert(ehdr.e_ident[2] == 0x4c);
   assert(ehdr.e_ident[3] == 0x46);
+
+  Elf_Off phoff = ehdr.e_phoff;
+  Elf_Half phnum = ehdr.e_phnum;
+  Elf_Half phsz = ehdr.e_phentsize;
+
+  for (Elf_Half num = 0 ; num < phnum ; num++)
+  {
+    Elf_Phdr phdr;
+    assert(fs_lseek(fd, phoff, SEEK_SET) == SEEK_SET);
+    assert(fs_read(fd, &phdr, sizeof(phdr)) == sizeof(phdr));
+  if(phdr.p_type == PT_LOAD)
+  {
+    Log("PT_LOAD DETECTED!!!");
+  }
+    phoff += phsz;
+  }
+
 /*
 
 
