@@ -101,14 +101,11 @@ void *memmove(void *dst, const void *src, size_t n) {
 }
 
 void *memcpy(void *out, const void *in, size_t n) {
-  /*
   if(out == NULL)
   {
     panic("The out ptr is a nullptr!!!");
     return NULL;
   }
-  */
-  
   unsigned char* p1 = (unsigned char*)out;
   const char* p2 = (const char*)in;
   int i = 1;
