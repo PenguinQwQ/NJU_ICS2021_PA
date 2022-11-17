@@ -134,6 +134,10 @@ int vsprintf(char *buf, const char *fmt, va_list args)
             *tmp_str = (unsigned char)va_arg(args, int);
             tmp_str++;
 			break;
+        case 'p':
+            num = va_arg(args, int);
+            tmp_str = number(tmp_str, num, 16, field_width, flags);
+            break;
         default:
 			break;
         }
