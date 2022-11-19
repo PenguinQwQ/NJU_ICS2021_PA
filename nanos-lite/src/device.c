@@ -21,20 +21,21 @@ size_t serial_write(const void *buf, size_t offset, size_t len) {
   return len;
 }
 
-/*
+
 size_t events_read(void *buf, size_t offset, size_t len) {
-//  char *str = (char *)buf;
+  *((char *)buf) = 0;
   AM_INPUT_KEYBRD_T kbd = io_read(AM_INPUT_KEYBRD);
   if(kbd.keycode == AM_KEY_NONE) return 0;
   bool isdown = kbd.keydown;
   if(isdown) strcat(buf,"kd ");//This means down keyboard!
   else strcat(buf,"ku "); //This means up keyboard!
   strcat(buf, keyname[kbd.keycode]);
+  strcat(buf, "\n");
   assert(strlen(buf) <= len);
   return strlen(buf);
 }
-*/
 
+/*
 size_t events_read(void *buf, size_t offset, size_t len) {
   char *str = buf;
   AM_INPUT_KEYBRD_T ev=io_read(AM_INPUT_KEYBRD);
@@ -50,7 +51,7 @@ size_t events_read(void *buf, size_t offset, size_t len) {
   assert(ret <= len);
   return ret;
 }
-
+*/
 
 size_t dispinfo_read(void *buf, size_t offset, size_t len) {
   return 0;
