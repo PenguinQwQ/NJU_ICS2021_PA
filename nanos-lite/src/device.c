@@ -26,8 +26,7 @@ size_t events_read(void *buf, size_t offset, size_t len) {
   *((char *)buf) = 0;
   AM_INPUT_KEYBRD_T kbd = io_read(AM_INPUT_KEYBRD);
   if(kbd.keycode == AM_KEY_NONE) return 0;
-  bool isdown = kbd.keydown;
-  if(isdown) strcat(buf,"kd ");//This means down keyboard!
+  if(kbd.keydown) strcat(buf,"kd ");//This means down keyboard!
   else strcat(buf,"ku "); //This means up keyboard!
   strcat(buf, keyname[kbd.keycode]);
   strcat(buf, "\n");
@@ -38,7 +37,7 @@ size_t events_read(void *buf, size_t offset, size_t len) {
 
 size_t dispinfo_read(void *buf, size_t offset, size_t len) {
   AM_GPU_CONFIG_T gpu = io_read(AM_GPU_CONFIG);
-  sprintf(buf, "The width:%d\n height:%d\n", gpu.width, gpu.height);
+  sprintf(buf, "w:%d h:%d\n", gpu.width, gpu.height);
   int ret = strlen(buf);
   assert(ret <= len);
   return ret;
