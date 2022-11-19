@@ -8,18 +8,18 @@ size_t ramdisk_write(const void *buf, size_t offset, size_t len);
 size_t get_ramdisk_size();
 
 size_t serial_write(const void *buf, size_t offset, size_t len);
-
+size_t events_read(void *buf, size_t offset, size_t len);
 
 typedef struct {
   char *name;
   size_t size;
   size_t disk_offset;
-  size_t open_offset;
   ReadFn read;
   WriteFn write;
+  size_t open_offset;
 } Finfo;
 
-enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_FB};
+enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_EVENTS, FD_DISPINFO, FD_FB};
 
 size_t invalid_read(void *buf, size_t offset, size_t len) {
   panic("should not reach here");
@@ -37,15 +37,12 @@ size_t invalid_write(const void *buf, size_t offset, size_t len) {
 
 
 static Finfo file_table[] __attribute__((used)) = {
-  [FD_STDIN]  = {"stdin", 0, 0, 0, invalid_read, invalid_write},
-  [FD_STDOUT] = {"stdout", 0, 0, 0, invalid_read, serial_write},
-  [FD_STDERR] = {"stderr", 0, 0, 0, invalid_read, serial_write},
+  [FD_STDIN]  = {"stdin", 0, 0, invalid_read, invalid_write, 0},
+  [FD_STDOUT] = {"stdout", 0, 0, invalid_read, serial_write, 0},
+  [FD_STDERR] = {"stderr", 0, 0, invalid_read, serial_write, 0},
+  [FD_EVENTS] = {"/dev/events", 0, 0, events_read, invalid_write, 0},
 #include "files.h"
 };
-
-
-
-
 
 static uint32_t file_num = sizeof(file_table)/sizeof(Finfo);
 
@@ -68,6 +65,9 @@ size_t fs_read(int fd, void *buf, size_t len)
 {
   assert(buf);
   if(fd < 0 || fd >= file_num) return -1;//Not exists!
+  if(file_table[fd].read)
+    return file_table[fd].read(buf, file_table[fd].open_offset, len);
+
   size_t remain_size = file_table[fd].size - file_table[fd].open_offset;
   len = (remain_size < len) ? remain_size : len;
   assert(file_table[fd].size >= file_table[fd].open_offset);
@@ -80,6 +80,8 @@ size_t fs_write(int fd, void *buf, size_t len)
 {
   assert(buf);
   if(fd < 0 || fd >= file_num) return -1;  
+  if(file_table[fd].write)
+    return file_table[fd].write(buf, file_table[fd].open_offset, len);
   size_t remain_size = file_table[fd].size - file_table[fd].open_offset;
   len = (remain_size < len) ? remain_size : len;
   assert(file_table[fd].size >= file_table[fd].open_offset);
