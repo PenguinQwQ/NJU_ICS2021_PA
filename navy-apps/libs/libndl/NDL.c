@@ -24,7 +24,7 @@ int NDL_PollEvent(char *buf, int len) {
   if(bytes) return 1;
   else return 0;
 }
-
+static int canva_h, canva_w;
 void NDL_OpenCanvas(int *w, int *h) {
   if (getenv("NWM_APP")) {
     int fbctl = 4;
@@ -43,6 +43,17 @@ void NDL_OpenCanvas(int *w, int *h) {
     }
     close(fbctl);
   }
+  if(*w == 0 && *h == 0){
+    canva_h = screen_h;
+    canva_w = screen_w;
+    *w = screen_w;
+    *h = screen_h;
+  }
+  else{
+    canva_h = *h;
+    canva_w = *w;
+  }
+  printf("The canvas width is %d , height is %d\n", canva_w, canva_h);
 }
 
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
@@ -70,5 +81,5 @@ int NDL_Init(uint32_t flags) {
 }
 
 void NDL_Quit() {
-//  close(0);
+  close(0);
 }
