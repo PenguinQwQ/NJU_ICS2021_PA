@@ -1,4 +1,3 @@
-/*
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -110,8 +109,9 @@ int NDL_Init(uint32_t flags) {
 void NDL_Quit() {
   close(frame_buffer_fd);
 }
-*/
 
+
+/*
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -154,7 +154,7 @@ void NDL_OpenCanvas(int *w, int *h) {
       int nread = read(3, buf, sizeof(buf) - 1);
       if (nread <= 0) continue;
       buf[nread] = '\0';
-      if (strcmp(buf, "mmap ok") == 0) break;
+      if (strcmp(buf, "mmap ok") == 0) break; 
     }
     //close(fbctl);
   }
@@ -228,3 +228,5 @@ int NDL_Init(uint32_t flags) {
 void NDL_Quit() {
   close(fbfd);
 }
+
+*/

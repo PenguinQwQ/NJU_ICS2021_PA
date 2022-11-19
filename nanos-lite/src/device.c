@@ -1,3 +1,4 @@
+/*
 #include <common.h>
 
 #if defined(MULTIPROGRAM) && !defined(TIME_SHARING)
@@ -55,9 +56,9 @@ void init_device() {
   ioe_init();
 }
 
+*/
 
 
-/*
 
 #include <common.h>
 
@@ -120,4 +121,3 @@ void init_device() {
   Log("Initializing devices...");
   ioe_init();
 }
-*/
