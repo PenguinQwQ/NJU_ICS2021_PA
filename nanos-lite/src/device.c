@@ -43,32 +43,14 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len) {
   assert(ret <= len);
   return ret;
 }
-/*
-size_t dispinfo_read(void *buf, size_t offset, size_t len) {
-  AM_GPU_CONFIG_T gpu = io_read(AM_GPU_CONFIG);
-  sprintf(buf, "The Canvas width is %d, height is %d\n", gpu.width, gpu.height);
-  assert(strlen(buf) <= len);
-  return strlen(buf);
-}
-*/
 
-size_t fb_write(const void *buf, size_t offset, size_t len) {
-  AM_GPU_CONFIG_T gpu = io_read(AM_GPU_CONFIG);
-  size_t pix = offset >> 2;
-  int wi = gpu.width;
-  int x, y;
-  y = pix / wi; x = pix % wi;
-  io_write(AM_GPU_FBDRAW, x, y, (uint32_t*)buf, len >> 2, 1, true);
-  return len;
-}
-/*
 size_t fb_write(const void *buf, size_t offset, size_t len) {
   AM_GPU_CONFIG_T gpu = io_read(AM_GPU_CONFIG);
   int x = (offset >> 2) % gpu.width, y = (offset >> 2) / gpu.width;
   io_write(AM_GPU_FBDRAW, x, y, (uint32_t *)buf, len >> 2, 1, true);
   return len;
 }
-*/
+
 
 void init_device() {
   Log("Initializing devices...");
