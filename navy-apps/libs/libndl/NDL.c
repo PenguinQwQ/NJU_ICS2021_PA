@@ -70,5 +70,5 @@ int NDL_Init(uint32_t flags) {
 }
 
 void NDL_Quit() {
-  close(0);
+//  close(0);
 }
