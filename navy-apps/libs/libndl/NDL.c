@@ -99,6 +99,16 @@ int NDL_Init(uint32_t flags) {
   if (getenv("NWM_APP")) {
     evtdev = 3;
   }
+  int fd = open("/proc/dispinfo", 0, 0);
+  char buf[64];
+  assert(read(fd,buf,sizeof(buf)));
+  strtok(buf,":\n");
+  screen_w = atoi(strtok(NULL,":\n"));
+  strtok(NULL,":\n");
+  screen_h = atoi(strtok(NULL,":\n"));
+  close(fd);
+  frame_buffer_fd = open("/dev/fb", 0, 0);
+  //printf("screen_h = %d, screen_w = %d\n",screen_h,screen_w);
   return 0;
 }
 
