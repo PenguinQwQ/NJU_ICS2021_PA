@@ -1,6 +1,20 @@
 #include <common.h>
 #include "syscall.h"
 
+//Gettimeofday definitions
+struct timeval
+{
+  int64_t tv_sec;
+  int64_t tv_usec;
+};
+struct timezone {
+  int tz_minuteswest;     /* minutes west of Greenwich */
+  int tz_dsttime;         /* type of DST correction */
+};
+
+
+
+
 
 size_t fs_open(const char *pathname, int flags, int mode);
 size_t fs_read(int fd, void *buf, size_t len);
@@ -19,12 +33,12 @@ static size_t sys_read(int fd, void *buf, size_t len)
 
 static size_t sys_write(int fd, void *buf, size_t len)
 {
-  /*
+  
   const char *str = (const char *)buf;
   int i = -1;
   for (i = 0 ; i < len ; i++)
     putch(*str++);
-    */
+    
   return fs_write(fd, buf, len);
 }
 
@@ -56,6 +70,16 @@ static int sys_brk(void *addr)
   return 0;//single thread always return 0 as true!
 }
 
+static int sys_gettimeofday(struct timeval *tv, struct timezone *tz){
+  assert(tv);
+  uint64_t us = io_read(AM_TIMER_UPTIME).us;
+  tv->tv_sec = us / 1000000;
+  tv->tv_usec = us % 1000000;
+  return 0;
+}
+
+
+
 
 void do_syscall(Context *c) {
   uintptr_t a[4];
@@ -73,6 +97,7 @@ void do_syscall(Context *c) {
     case SYS_write: c->GPRx = sys_write((int)a[1], (void *)a[2], (size_t)a[3]); break;
     case SYS_close: c->GPRx = sys_close((int)a[1]); break;
     case SYS_lseek: c->GPRx = sys_lseek((int)a[1], (size_t)a[2], (int)a[3]); break;
+    case SYS_gettimeofday: c->GPRx = sys_gettimeofday((struct timeval *)a[1], (struct timezone *)a[2]); break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
 }
