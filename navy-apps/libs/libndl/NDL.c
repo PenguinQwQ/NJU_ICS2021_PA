@@ -24,7 +24,7 @@ int NDL_PollEvent(char *buf, int len) {
   if(bytes) return 1;
   else return 0;
 }
-static int canva_h, canva_w;
+static int canva_h, canva_w, canva_x, canva_y;
 void NDL_OpenCanvas(int *w, int *h) {
   if (getenv("NWM_APP")) {
     int fbctl = 4;
@@ -53,11 +53,33 @@ void NDL_OpenCanvas(int *w, int *h) {
     canva_h = *h;
     canva_w = *w;
   }
-  printf("The canvas width is %d , height is %d\n", canva_w, canva_h);
+//  printf("The canvas width is %d , height is %d\n", canva_w, canva_h);
+//  assert(canva_h <= screen_h && canva_w <= screen_w);
+  canva_x = (screen_w - canva_w) >> 1;
+  canva_y = (screen_h - canva_h) >> 1;
 }
 
+static int frame_buffer_fd = 0;
+void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
+  if(w == 0 && h == 0){
+    w = canva_w;
+    h = canva_h;
+  }
+  uint32_t *pix= pixels + y * canva_w + x;
+  uint32_t scroff = ((canva_y + y) * screen_w + (canva_x + x)) << 2;
+  for(int i = 0; i < h; i++){
+    lseek(frame_buffer_fd, scroff, SEEK_SET);
+    write(frame_buffer_fd, pix, w << 2);
+    pix = pix + canva_w;
+    scroff += screen_w << 2; 
+  }
+}
+
+/*
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
 }
+*/
+
 
 void NDL_OpenAudio(int freq, int channels, int samples) {
 }
