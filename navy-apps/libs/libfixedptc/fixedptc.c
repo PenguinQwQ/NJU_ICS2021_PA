@@ -15,7 +15,7 @@ void fixedpt_str(fixedpt A, char *str, int max_dec) {
 	fixedptud fr, ip;
 	const fixedptud one = (fixedptud)1 << FIXEDPT_BITS;
 	const fixedptud mask = one - 1;
-
+ 
 	if (max_dec == -1)
 #if FIXEDPT_BITS == 32
 #if FIXEDPT_WBITS > 16

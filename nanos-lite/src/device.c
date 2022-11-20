@@ -21,7 +21,6 @@ size_t serial_write(const void *buf, size_t offset, size_t len) {
   return len;
 }
 
-
 size_t events_read(void *buf, size_t offset, size_t len) {
   *((char *)buf) = 0;
   AM_INPUT_KEYBRD_T kbd = io_read(AM_INPUT_KEYBRD);
@@ -34,7 +33,6 @@ size_t events_read(void *buf, size_t offset, size_t len) {
   return strlen(buf);
 }
 
- 
 size_t dispinfo_read(void *buf, size_t offset, size_t len) {
   AM_GPU_CONFIG_T gpu = io_read(AM_GPU_CONFIG);
   sprintf(buf, "WIDTH:%d\n HEIGHT:%d\n", gpu.width, gpu.height);
