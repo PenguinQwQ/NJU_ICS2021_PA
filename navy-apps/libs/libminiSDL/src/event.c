@@ -61,6 +61,9 @@ int SDL_PeepEvents(SDL_Event *ev, int numevents, int action, uint32_t mask) {
   return 0;
 }
 
+static bool is_called=0;
 uint8_t* SDL_GetKeyState(int *numkeys) {
-  return NULL;
+    if(!is_called) memset(kty_st,0,sizeof(kty_st));
+    is_called=1;
+    return kty_st;
 }
