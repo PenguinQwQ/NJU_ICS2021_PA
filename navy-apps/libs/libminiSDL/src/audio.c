@@ -2,8 +2,6 @@
 #include <SDL.h>
 
 int SDL_OpenAudio(SDL_AudioSpec *desired, SDL_AudioSpec *obtained) {
-  Log("Not implemented SDL_OpenAudio!");
-  assert(0);
   return 0;
 }
 
