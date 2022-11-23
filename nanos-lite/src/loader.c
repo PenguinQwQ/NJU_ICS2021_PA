@@ -39,11 +39,19 @@ int fs_close(int fd);
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
   int fd = fs_open(filename, 0, 0);
-
+  //Make sure the file describer is valid
+  assert(fd != -1);
+  //Move the file describer to SEEK_SET
   assert(fs_lseek(fd, 0, SEEK_SET) == 0);
   Elf_Ehdr ehdr;
+  //Read the elf head
   assert(fs_read(fd, &ehdr, sizeof(ehdr)) == sizeof(ehdr));
+  //Check The Elf file's magic number and file type
   assert(*(uint32_t *)ehdr.e_ident == 0x464c457f);
+  //Check The Elf file's ISA type
+  assert(ehdr.e_ident[4] == ELFCLASS);
+  //Check The Elf file's data type
+  assert(ehdr.e_ident[5] == ELFDATA);
   /*
   assert(ehdr.e_ident[0] == 0x7f);
   assert(ehdr.e_ident[1] == 0x45);
@@ -51,6 +59,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   assert(ehdr.e_ident[3] == 0x46);
   */
   int phoff = ehdr.e_phoff;
+  int phpos = phoff;
   int phnum = ehdr.e_phnum;
   int phsz = ehdr.e_phentsize;
 /*
@@ -62,17 +71,18 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   for (Elf_Half num = 0 ; num < phnum ; num++)
   {
     Elf_Phdr phdr;
+    phpos = phoff + num * phsz;
 //    printf("num = %d \n", num);
 //    printf("loader's phoff = %p \n", phoff);
-    assert(fs_lseek(fd, phoff, SEEK_SET) == phoff);
+    assert(fs_lseek(fd, phpos, SEEK_SET) == phpos);
     assert(fs_read(fd, &phdr, sizeof(phdr)) == sizeof(phdr));
   if(phdr.p_type == PT_LOAD)
   {
-    Log("PT_LOAD DETECTED!!!");
+  //  Log("PT_LOAD DETECTED!!!");
     Elf_Addr vaddr = phdr.p_vaddr;
     Elf_Xword filesz = phdr.p_filesz;
     Elf_Xword memsz = phdr.p_memsz;
-    assert(filesz <= memsz);
+    assert(filesz <= memsz); //Make sure file size is less than memory size!
     Elf_Off offset = phdr.p_offset;
     /*
   printf("offset = %p \n", offset);
@@ -83,9 +93,9 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
    // assert(0);
     assert(fs_lseek(fd, offset, SEEK_SET) == offset);
     assert(fs_read(fd, (void *)vaddr, filesz) == filesz);
+    //Set the remain space to 0!
     memset((void *)(vaddr + (Elf_Addr)filesz), 0, (size_t)(memsz - filesz));
   }
-    phoff += phsz;
   }
   fs_close(fd);
 /*
