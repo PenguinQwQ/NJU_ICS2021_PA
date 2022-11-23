@@ -11,7 +11,7 @@ Context* __am_irq_handle(Context *c) {
       case 11:
               if(c->GPR1 == -1) ev.event = EVENT_YIELD;
               if(c->GPR1 >= 0 && c->GPR1 <= 19) ev.event = EVENT_SYSCALL;
-              if(c->GPR1 < -1 || c->GPR1 > 19) ev.event = EVENT_ERROR;
+              //if(c->GPR1 < -1 || c->GPR1 > 19) ev.event = EVENT_ERROR;
               c->mepc += 4;
               break;
       default: ev.event = EVENT_ERROR; break;
