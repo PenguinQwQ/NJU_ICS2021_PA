@@ -10,7 +10,8 @@
 # define Elf_Word Elf64_Word
 # define Elf_Xword Elf64_Xword
 # define Elf_Off Elf64_Off
-
+# define ELFCLASS ELFCLASS64
+# define ELFDATA ELFDATA2LSB
 #else
 # define Elf_Ehdr Elf32_Ehdr
 # define Elf_Phdr Elf32_Phdr
@@ -19,6 +20,8 @@
 # define Elf_Word Elf32_Word
 # define Elf_Xword Elf32_Xword
 # define Elf_Off Elf32_Off
+# define ELFCLASS ELFCLASS32
+# define ELFDATA ELFDATA2LSB
 #endif
 
 size_t ramdisk_read(void *buf, size_t offset, size_t len);
@@ -40,11 +43,13 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   assert(fs_lseek(fd, 0, SEEK_SET) == 0);
   Elf_Ehdr ehdr;
   assert(fs_read(fd, &ehdr, sizeof(ehdr)) == sizeof(ehdr));
+  assert(*(uint32_t *)ehdr.e_ident == 0x464c457f);
+  /*
   assert(ehdr.e_ident[0] == 0x7f);
   assert(ehdr.e_ident[1] == 0x45);
   assert(ehdr.e_ident[2] == 0x4c);
   assert(ehdr.e_ident[3] == 0x46);
-
+  */
   int phoff = ehdr.e_phoff;
   int phnum = ehdr.e_phnum;
   int phsz = ehdr.e_phentsize;

@@ -114,5 +114,5 @@ int fs_close(int fd)
 void init_fs() {
   // TODO: initialize the size of /dev/fb
   AM_GPU_CONFIG_T gpu = io_read(AM_GPU_CONFIG);
-  file_table[FD_FB].size = gpu.width * gpu.height * 4;
+  file_table[FD_FB].size = gpu.width * gpu.height * sizeof(uint32_t);
 }
