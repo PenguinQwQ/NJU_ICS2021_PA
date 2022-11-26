@@ -92,6 +92,7 @@ size_t fs_write(int fd, void *buf, size_t len)
 size_t fs_lseek(int fd, size_t offset, int whence)
 {
   if(fd < 0 || fd >= file_num) return -1;
+  printf("offset = %p\n file_table[%d].size = %p\n", offset, fd, file_table[fd].size);
   assert(offset <= file_table[fd].size);
   switch (whence)
   {
