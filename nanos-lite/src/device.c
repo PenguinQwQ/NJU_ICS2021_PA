@@ -112,7 +112,7 @@ static inline void dispinfo_init(){
 }
 
 size_t fb_write(const void *buf, size_t offset, size_t len) {
-  offset/=sizeof(uint32_t);
+  offset /= sizeof(uint32_t);
   void* ptr = (void *)buf;
   size_t w=disp_info.width;
   io_write(AM_GPU_FBDRAW,offset%w,offset/w,ptr,len/sizeof(uint32_t),1,true);
