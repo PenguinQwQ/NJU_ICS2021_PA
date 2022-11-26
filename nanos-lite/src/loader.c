@@ -67,8 +67,6 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   assert(ehdr.e_ident[4] == ELFCLASS);
   //Check The Elf file's data type
   assert(ehdr.e_ident[5] == ELFDATA);
-    //Check the expect type!
-  assert(ehdr.e_machine == EXPECT_TYPE);
   /*
   assert(ehdr.e_ident[0] == 0x7f);
   assert(ehdr.e_ident[1] == 0x45);
@@ -76,7 +74,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   assert(ehdr.e_ident[3] == 0x46);
   */
   int phoff = ehdr.e_phoff;
-  int phpos = phoff;
+//  int phpos = phoff;
   int phnum = ehdr.e_phnum;
   int phsz = ehdr.e_phentsize;
 /*
@@ -88,10 +86,10 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   for (Elf_Half num = 0 ; num < phnum ; num++)
   {
     Elf_Phdr phdr;
-    phpos = phoff + num * phsz;
+//    phpos = phoff + num * phsz;
 //    printf("num = %d \n", num);
 //    printf("loader's phoff = %p \n", phoff);
-    assert(fs_lseek(fd, phpos, SEEK_SET) == phpos);
+    assert(fs_lseek(fd, phoff, SEEK_SET) == phoff);
     assert(fs_read(fd, &phdr, sizeof(phdr)) == sizeof(phdr));
   if(phdr.p_type == PT_LOAD)
   {
@@ -113,6 +111,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
     //Set the remain space to 0!
     memset((void *)(vaddr + (Elf_Addr)filesz), 0, (size_t)(memsz - filesz));
   }
+  phoff += phsz;
   }
   fs_close(fd);
   return ehdr.e_entry;
