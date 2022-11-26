@@ -21,7 +21,8 @@ int NDL_PollEvent(char *buf, int len) {
   int fd = open("/dev/events", 0, 0);
   int ret = read(fd, buf, len);
   close(fd);
-  return ret;
+  if(ret) return 1;
+  else return 0;
 }
 static int canva_h, canva_w, canva_x, canva_y;
 
@@ -67,7 +68,7 @@ void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
     lseek(frame_buffer_fd, offset, SEEK_SET);
     write(frame_buffer_fd, pix, w << 2);
     pix += canva_w;
-    offset += screen_w * sizeof(uint32_t); 
+    offset += screen_w << 2;
   }
 }
 
