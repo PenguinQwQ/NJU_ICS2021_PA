@@ -43,9 +43,6 @@ size_t ramdisk_read(void *buf, size_t offset, size_t len);
 size_t ramdisk_write(const void *buf, size_t offset, size_t len);
 size_t get_ramdisk_size();
 
-#define MAX_BUFFER_SIZE 656600
-//static uint8_t file_buf[MAX_BUFFER_SIZE];
-
 size_t fs_open(const char *pathname, int flags, int mode);
 size_t fs_read(int fd, void *buf, size_t len);
 size_t fs_write(int fd, void *buf, size_t len);
@@ -74,7 +71,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   assert(ehdr.e_ident[3] == 0x46);
   */
   int phoff = ehdr.e_phoff;
-//  int phpos = phoff;
+  int phpos = phoff;
   int phnum = ehdr.e_phnum;
   int phsz = ehdr.e_phentsize;
 /*
@@ -86,10 +83,10 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   for (Elf_Half num = 0 ; num < phnum ; num++)
   {
     Elf_Phdr phdr;
-//    phpos = phoff + num * phsz;
+    phpos = phoff + num * phsz;
 //    printf("num = %d \n", num);
 //    printf("loader's phoff = %p \n", phoff);
-    assert(fs_lseek(fd, phoff, SEEK_SET) == phoff);
+    assert(fs_lseek(fd, phpos, SEEK_SET) == phpos);
     assert(fs_read(fd, &phdr, sizeof(phdr)) == sizeof(phdr));
   if(phdr.p_type == PT_LOAD)
   {
@@ -111,7 +108,6 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
     //Set the remain space to 0!
     memset((void *)(vaddr + (Elf_Addr)filesz), 0, (size_t)(memsz - filesz));
   }
-  phoff += phsz;
   }
   fs_close(fd);
   return ehdr.e_entry;
