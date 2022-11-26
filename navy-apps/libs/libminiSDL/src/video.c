@@ -75,8 +75,7 @@ void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
 }
 
 void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
-  //printf("%x\n",*(s->pixels));
-  //assert(0);
+    assert(s != NULL);
   	int valid_w, valid_h; 
     uint32_t offset = x + y * s->w;
   	uint32_t* pix = (uint32_t *)malloc(s->w * s->h * sizeof(uint32_t));
@@ -97,10 +96,8 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
  	else{
   	for(int i = 0 ; i < valid_h ; i++){
   	  for(int j = 0 ; j < valid_w ; j++){
-  	    SDL_Color *colpt = s->format->palette->colors + (s->pixels)[offset];
-  	  	uint32_t tmp = ((uint32_t)(colpt->a) << 24) | ((uint32_t)(colpt->r) << 16) | ((uint32_t)(colpt->g) << 8) | ((uint32_t)(colpt->b));
-  	    *(pix + offset)=tmp;
-  	    offset++;
+        *(pix + offset) = *((uint32_t *)s->pixels + (y + i) * s->w + x + j);
+  	     offset++;
   	  }
   	  offset =offset - valid_w + s->w;
  	}
