@@ -100,7 +100,7 @@ int NDL_Init(uint32_t flags) {
     sscanf(ch,"%s:%d",str, &val);
     if(strcmp(str, "WIDTH") == 0) screen_w = val;
     if(strcmp(str, "HEIGHT") == 0) screen_h = val;
-    while(*ch && *ch!='\n') ch++;
+    while(*ch && *ch != '\n') ch++;
     ch++;
   }
   frame_buffer_fd = open("/dev/fb", 0, 0);

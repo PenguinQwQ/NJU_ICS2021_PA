@@ -92,6 +92,7 @@ size_t fs_write(int fd, void *buf, size_t len)
 size_t fs_lseek(int fd, size_t offset, int whence)
 {
   if(fd < 0 || fd >= file_num) return -1;
+  assert(offset <= file_table[fd].size);
   switch (whence)
   {
   case SEEK_CUR: file_table[fd].open_offset += offset; break;
