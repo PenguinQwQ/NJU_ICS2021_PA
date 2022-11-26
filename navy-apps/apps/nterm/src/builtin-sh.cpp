@@ -45,36 +45,48 @@ void builtin_sh_run() {
   }
 }
 */
+
+static char* args[3];//args[0]->c_name, args[1]->c_arg, arg[2]->NULL
+static char* c_args;
+static char* const * envp = NULL;
+
 static void sh_handle_cmd(const char *cmd) {
   char* cmd_p = (char*)cmd;
   char* c_name = strtok(cmd_p," \n");
 
   /* No Command */
   if(c_name == NULL) return;
+
   /* Echo Command */
   if(strcmp(c_name, "echo") == 0)
   {
-    char* str = strtok(NULL," ");
-    sh_printf("%s",str);
+    char* echo_str = strtok(NULL," ");
+    sh_printf("%s", echo_str);
     return;
   }
-  /* Exit */
+  /* Exit Command */
   if(strcmp(c_name, "exit") == 0)
   {
     exit(0);
     return;
   }
+
   /* Execution */
-  char* c_args=strtok(NULL," \n");
-  char* args[] = {c_name, c_args, NULL};
-  char* envp[]=  {NULL};
+  c_args = strtok(NULL," \n");
+  args[0] = c_name;
+  args[1] = c_args;
+  args[2] = NULL;
   int ret = execvp(c_name, args);
-    if(ret==-1){
-      if(c_name[0]=='/'){
-          if(execve(c_name,args,envp)==-1) sh_printf("No such file \"%s\"\n",c_name);
-        }
-        else sh_printf("No such command \"%s\"\n",c_name);
-    }
+  if(ret != -1) 
+  {
+    sh_printf("Execute App/File \"%s\" Successfully!\n", c_name);
+    return;
+  }
+  else
+  {
+    if(c_name[0] == '/' && execve(c_name, args, envp) == -1) sh_printf("There is no \"%s\" file exists!!! \n", c_name);
+    else sh_printf("The command \"%s\" is not supported or not implemented!!!\n", c_name);
+  }     
 }
 
 void builtin_sh_run() {
