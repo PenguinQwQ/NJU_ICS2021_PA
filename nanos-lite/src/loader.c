@@ -24,6 +24,21 @@
 # define ELFDATA ELFDATA2LSB
 #endif
 
+#if defined(__ISA_AM_NATIVE__)
+# define EXPECT_TYPE EM_X86_64
+#elif defined(__ISA_X86__)
+# define EXPECT_TYPE EM_386
+#elif defined(__ISA_MIPS32__)
+# define EXPECT_TYPE EM_MIPS_X
+#elif defined(__ISA_RISCV32__)
+# define EXPECT_TYPE EM_RISCV
+#elif defined(__ISA_RISCV64__)
+# define EXPECT_TYPE EM_RISCV
+#else
+# error Unsupported ISA
+#endif
+
+
 size_t ramdisk_read(void *buf, size_t offset, size_t len);
 size_t ramdisk_write(const void *buf, size_t offset, size_t len);
 size_t get_ramdisk_size();
@@ -52,6 +67,8 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   assert(ehdr.e_ident[4] == ELFCLASS);
   //Check The Elf file's data type
   assert(ehdr.e_ident[5] == ELFDATA);
+    //Check the expect type!
+  assert(ehdr.e_machine == EXPECT_TYPE);
   /*
   assert(ehdr.e_ident[0] == 0x7f);
   assert(ehdr.e_ident[1] == 0x45);
