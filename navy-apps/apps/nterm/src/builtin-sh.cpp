@@ -47,7 +47,7 @@ void builtin_sh_run() {
 */
 
 static char* args[3];//args[0]->c_name, args[1]->c_arg, arg[2]->NULL
-static char* c_args;
+static char* command_args;
 static char* const * envp = NULL;
 
 static void sh_handle_cmd(const char *cmd) {
@@ -72,9 +72,9 @@ static void sh_handle_cmd(const char *cmd) {
   }
 
   /* Execution */
-  c_args = strtok(NULL," \n");
+  command_args = strtok(NULL," \n");
   args[0] = c_name;
-  args[1] = c_args;
+  args[1] = command_args;
   args[2] = NULL;
   int ret = execvp(c_name, args);
   if(ret != -1) 

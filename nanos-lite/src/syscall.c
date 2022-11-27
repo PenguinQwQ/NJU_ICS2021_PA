@@ -38,8 +38,6 @@ static int sys_execve(const char *fname, char * const argv[], char *const envp[]
   return -1;
 }
 
-
-
 void do_syscall(Context *c) {
   uintptr_t a[4];
   a[0] = c->GPR1;
