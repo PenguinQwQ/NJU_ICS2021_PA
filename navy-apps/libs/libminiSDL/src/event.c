@@ -1,5 +1,4 @@
-//event.c
-/*
+
 #include <NDL.h>
 #include <SDL.h>
 
@@ -71,8 +70,8 @@ uint8_t* SDL_GetKeyState(int *numkeys) {
     }
     return key_st;
 }
-*/
 
+/*
 #include <NDL.h>
 #include <SDL.h>
 #include <assert.h>
@@ -143,3 +142,5 @@ uint8_t* SDL_GetKeyState(int *numkeys) {
     is_called=1;
     return kty_st;
 }
+
+*/
