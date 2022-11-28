@@ -132,6 +132,10 @@ static int screen_w = 0, screen_h = 0;
 static int canva_w = 0, canva_h = 0, canva_x = 0, canva_y = 0;
 static char file_buf[128];
 #define FILE_BUF_SIZE 128
+static int frame_buffer_fd = 0;
+
+
+
 uint32_t NDL_GetTicks() {
   struct timeval tv;
   gettimeofday(&tv,NULL);
@@ -172,23 +176,22 @@ void NDL_OpenCanvas(int *w, int *h) {
   assert(canva_h <= screen_h && canva_w <= screen_w);
 }
 
-int fbfd = 0;
+
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
+  assert(x + w <= canva_w && y + h <= canva_h);
+  canva_x = (screen_w - canva_w) >> 1;
+  canva_y = (screen_h - canva_h) >> 1;
   if(w == 0 && h == 0){
     w = canva_w;
     h = canva_h;
   }
-  //assert(0);
-  canva_x = (screen_w - canva_w) >> 1;
-  canva_y = (screen_h - canva_h) >> 1;
-
-  uint32_t *fixoff = pixels + y*canva_w + x;
-  uint32_t scroff = ( (canva_y + y) * screen_w + (canva_x + x) ) << 2;
+  uint32_t *pix = pixels + y * canva_w + x;
+  uint32_t offset = ((canva_y + y) * screen_w + (canva_x + x)) * sizeof(uint32_t);
   for(int i = 0; i < h; i++){
-    lseek(fbfd, scroff, SEEK_SET);
-    write(fbfd, fixoff, w << 2);
-    fixoff = fixoff + canva_w;
-    scroff += screen_w << 2; 
+    lseek(frame_buffer_fd, offset, SEEK_SET);
+    write(frame_buffer_fd, pix, w << 2);
+    pix += canva_w;
+    offset += screen_w << 2;
   }
 }
 
@@ -212,18 +215,18 @@ int NDL_Init(uint32_t flags) {
   }
   int fd = open("/proc/dispinfo", 0, 0);
   assert(read(fd, file_buf, FILE_BUF_SIZE));
-  
+
   strtok(file_buf,":\n");
   screen_w = atoi(strtok(NULL,":\n"));
   strtok(NULL,":\n");
   screen_h = atoi(strtok(NULL,":\n"));
   close(fd);
-  fbfd = open("/dev/fb", 0, 0);
+  frame_buffer_fd = open("/dev/fb", 0, 0);
   //printf("screen_h = %d, screen_w = %d\n",screen_h,screen_w);
   return 0;
 }
 
 void NDL_Quit() {
-  close(fbfd);
+  close(frame_buffer_fd);
 }
 
