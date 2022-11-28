@@ -39,7 +39,7 @@ int SDL_PollEvent(SDL_Event *ev) {
       ev->key.keysym.sym = i;
       break;
     }
-    key_state[ev->key.keysym.sym] = 1 - ev->type;
+    key_state[ev->key.keysym.sym] = 1 ^ ev->type;
     return 1;
 }
 
