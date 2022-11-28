@@ -1,4 +1,3 @@
-/*
 #include <NDL.h>
 #include <SDL.h>
 #include <assert.h>
@@ -34,6 +33,7 @@ int SDL_PollEvent(SDL_Event *ev) {
     case 'd': ev->type = SDL_KEYDOWN; break;
     default : printf("Cannot identify the type of event!!!\n"); break;
     }
+    buf[strlen(buf) - 1] = '\0';
     for(size_t i = 0 ; i < sz ; i++)
     if(strcmp(buf + 3,keyname[i]) == 0)
     {       
@@ -56,6 +56,7 @@ int SDL_WaitEvent(SDL_Event *event) {
     case 'd': event->type = SDL_KEYDOWN; break;
     default : printf("Cannot identify the type of event!!!\n"); break;
     }
+    buf[strlen(buf) - 1] = '\0';
       for(size_t i = 0 ;i < sz;i++)
       if(strcmp(buf + 3,keyname[i]) == 0){       
         event->key.keysym.sym = i;
@@ -73,7 +74,8 @@ uint8_t* SDL_GetKeyState(int *numkeys) {
     flag = true;
     return key_state;
 }
-*/
+
+/*
 #include <NDL.h>
 #include <SDL.h>
 #include <assert.h>
@@ -144,3 +146,4 @@ uint8_t* SDL_GetKeyState(int *numkeys) {
     is_called=1;
     return kty_st;
 }
+*/
