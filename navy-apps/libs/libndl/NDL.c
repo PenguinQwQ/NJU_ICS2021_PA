@@ -130,7 +130,8 @@ static int evtdev = -1;
 static int fbdev = -1;
 static int screen_w = 0, screen_h = 0;
 static int canva_w = 0, canva_h = 0, canva_x = 0, canva_y = 0;
-
+static char file_buf[128];
+#define FILE_BUF_SIZE 128
 uint32_t NDL_GetTicks() {
   struct timeval tv;
   gettimeofday(&tv,NULL);
@@ -166,11 +167,9 @@ void NDL_OpenCanvas(int *w, int *h) {
     *w = screen_w;
     *h = screen_h;
   }
-    canva_h = *h;
-    canva_w = *w;
+  canva_h = *h;
+  canva_w = *w;
   assert(canva_h <= screen_h && canva_w <= screen_w);
-  canva_x = (screen_w - canva_w) >> 1;
-  canva_y = (screen_h - canva_h) >> 1;
 }
 
 int fbfd = 0;
@@ -180,7 +179,9 @@ void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
     h = canva_h;
   }
   //assert(0);
-  
+  canva_x = (screen_w - canva_w) >> 1;
+  canva_y = (screen_h - canva_h) >> 1;
+
   uint32_t *fixoff = pixels + y*canva_w + x;
   uint32_t scroff = ( (canva_y + y) * screen_w + (canva_x + x) ) << 2;
   for(int i = 0; i < h; i++){
@@ -210,25 +211,12 @@ int NDL_Init(uint32_t flags) {
     evtdev = 3;
   }
   int fd = open("/proc/dispinfo", 0, 0);
-  char buf[64], str[120];
-  int val;
-  assert(read(fd,buf,sizeof(buf)));
-  char *ch = buf;
-  while (*ch){
-    sscanf(ch,"%s:%d",str, &val);
-    if(strcmp(str, "WIDTH") == 0) screen_w = val;
-    if(strcmp(str, "HEIGHT") == 0) screen_h = val;
-    while(*ch && *ch != '\n') ch++;
-    ch++;
-  }
-
-/*
-  strtok(buf,":\n");
+  assert(read(fd, file_buf, FILE_BUF_SIZE));
+  
+  strtok(file_buf,":\n");
   screen_w = atoi(strtok(NULL,":\n"));
   strtok(NULL,":\n");
   screen_h = atoi(strtok(NULL,":\n"));
-*/
-
   close(fd);
   fbfd = open("/dev/fb", 0, 0);
   //printf("screen_h = %d, screen_w = %d\n",screen_h,screen_w);
