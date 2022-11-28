@@ -1,4 +1,4 @@
-
+/*
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -114,9 +114,9 @@ void NDL_Quit() {
   close(frame_buffer_fd);
 }
 
+*/
 
 
-/*
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -139,10 +139,9 @@ uint32_t NDL_GetTicks() {
 
 int NDL_PollEvent(char *buf, int len) {
   int fd = open("/dev/events", 0, 0);
-  int bytes = read(fd, buf, len);
+  int flag = read(fd, buf, len);
   close(fd);
-  if(bytes) return 1;
-  else return 0;
+  return flag ? 1 : 0;
 }
 
 void NDL_OpenCanvas(int *w, int *h) {
@@ -164,20 +163,16 @@ void NDL_OpenCanvas(int *w, int *h) {
     //close(fbctl);
   }
   if(*w == 0 && *h == 0){
-    canva_h = screen_h;
-    canva_w = screen_w;
     *w = screen_w;
     *h = screen_h;
   }
-  else{
     canva_h = *h;
     canva_w = *w;
-  }
   assert(canva_h <= screen_h && canva_w <= screen_w);
   canva_x = (screen_w - canva_w) >> 1;
   canva_y = (screen_h - canva_h) >> 1;
-  //printf("cx = %d, cy = %d, cw = %d, ch = %d\n",canva_x,canva_y,canva_w,canva_h);
 }
+
 int fbfd = 0;
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
   if(w == 0 && h == 0){
@@ -189,14 +184,11 @@ void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
   uint32_t *fixoff = pixels + y*canva_w + x;
   uint32_t scroff = ( (canva_y + y) * screen_w + (canva_x + x) ) << 2;
   for(int i = 0; i < h; i++){
-    //lseek(fd,(canva_y+i+y)*screen_w+canva_x+x,0);
-    //printf("scroff = %d\n",scroff);  
     lseek(fbfd, scroff, SEEK_SET);
     write(fbfd, fixoff, w << 2);
     fixoff = fixoff + canva_w;
     scroff += screen_w << 2; 
   }
-  //close(fd);
 }
 
 void NDL_OpenAudio(int freq, int channels, int samples) {
@@ -218,12 +210,25 @@ int NDL_Init(uint32_t flags) {
     evtdev = 3;
   }
   int fd = open("/proc/dispinfo", 0, 0);
-  char buf[64];
+  char buf[64], str[120];
+  int val;
   assert(read(fd,buf,sizeof(buf)));
+  char *ch = buf;
+  while (*ch){
+    sscanf(ch,"%s:%d",str, &val);
+    if(strcmp(str, "WIDTH") == 0) screen_w = val;
+    if(strcmp(str, "HEIGHT") == 0) screen_h = val;
+    while(*ch && *ch != '\n') ch++;
+    ch++;
+  }
+
+/*
   strtok(buf,":\n");
   screen_w = atoi(strtok(NULL,":\n"));
   strtok(NULL,":\n");
   screen_h = atoi(strtok(NULL,":\n"));
+*/
+
   close(fd);
   fbfd = open("/dev/fb", 0, 0);
   //printf("screen_h = %d, screen_w = %d\n",screen_h,screen_w);
@@ -233,4 +238,4 @@ int NDL_Init(uint32_t flags) {
 void NDL_Quit() {
   close(fbfd);
 }
-*/
+
