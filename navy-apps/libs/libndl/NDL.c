@@ -1,4 +1,4 @@
-/*
+
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -113,8 +113,10 @@ int NDL_Init(uint32_t flags) {
 void NDL_Quit() {
   close(frame_buffer_fd);
 }
-*/
 
+
+
+/*
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -231,4 +233,4 @@ int NDL_Init(uint32_t flags) {
 void NDL_Quit() {
   close(fbfd);
 }
-
+*/
