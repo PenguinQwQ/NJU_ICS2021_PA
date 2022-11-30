@@ -1,36 +1,5 @@
 
-//video.c
-#include <NDL.h>
-#include <sdl-video.h>
-#include <assert.h>
-#include <string.h>
-#include <stdlib.h>
-
-void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_Rect *dstrect) {//////////////???
-  assert(dst && src && dst->format->BitsPerPixel == src->format->BitsPerPixel);
-  const unsigned char * dst_pix = (const unsigned char *)dst->pixels;
-  const unsigned char * src_pix = (const unsigned char *)src->pixels;
-  int src_x, src_y, src_w, src_h, dst_x, dst_y, sp, dp, sz;
-  src_x = (srcrect == NULL) ? 0 : srcrect->x;
-  src_y = (srcrect == NULL) ? 0 : srcrect->y;
-  src_w = (srcrect == NULL) ? 0 : srcrect->w;
-  src_h = (srcrect == NULL) ? 0 : srcrect->h;
-  sp = src->pitch;
-  dst_x = (dstrect == NULL) ? 0 : dstrect->x;
-  dst_y = (dstrect == NULL) ? 0 : dstrect->x;
-  dp = dst->pitch;
-  sz = dst->format->BytesPerPixel;
-  while(src_h)
-  {
-    //memcpy((unsigned char *)dst->pixels + dst_y * dst->pitch + dst_x * dst->format->BytesPerPixel, (unsigned char *)src->pixels + src_y * src->pitch + src_x * dst->format->BytesPerPixel, src_w * dst->format->BytesPerPixel);
-    memcpy(dst_pix + dst_y * dp + dst_x * sz, src_pix + src_y * sp + src_x * sz, src_w * sz);
-    src_h--;
-    dst_y++;
-    src_y++;
-  }
-  return;
-}
-
+/*
 void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
   assert(dst);
   unsigned char * dst_pix = (unsigned char *)dst->pixels;
@@ -107,13 +76,43 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
   }
 }
 
-/*
+*/
+
+
+
 #include <NDL.h>
 #include <sdl-video.h>
 #include <assert.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+
+void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_Rect *dstrect) {//////////////???
+  assert(dst && src && dst->format->BitsPerPixel == src->format->BitsPerPixel);
+  const unsigned char * dst_pix = (const unsigned char *)dst->pixels;
+  const unsigned char * src_pix = (const unsigned char *)src->pixels;
+  int src_x, src_y, src_w, src_h, dst_x, dst_y, sp, dp, sz;
+  src_x = (srcrect == NULL) ? 0 : srcrect->x;
+  src_y = (srcrect == NULL) ? 0 : srcrect->y;
+  src_w = (srcrect == NULL) ? 0 : srcrect->w;
+  src_h = (srcrect == NULL) ? 0 : srcrect->h;
+  sp = src->pitch;
+  dst_x = (dstrect == NULL) ? 0 : dstrect->x;
+  dst_y = (dstrect == NULL) ? 0 : dstrect->x;
+  dp = dst->pitch;
+  sz = dst->format->BytesPerPixel;
+  while(src_h)
+  {
+    //memcpy((unsigned char *)dst->pixels + dst_y * dst->pitch + dst_x * dst->format->BytesPerPixel, (unsigned char *)src->pixels + src_y * src->pitch + src_x * dst->format->BytesPerPixel, src_w * dst->format->BytesPerPixel);
+    memcpy(dst_pix + dst_y * dp + dst_x * sz, src_pix + src_y * sp + src_x * sz, src_w * sz);
+    src_h--;
+    dst_y++;
+    src_y++;
+  }
+  return;
+}
+
+/*
 void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_Rect *dstrect) {//////////////???
   assert(dst && src);
   assert(dst->format->BitsPerPixel == src->format->BitsPerPixel);
@@ -148,7 +147,7 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
   	}
    }
 }
-
+*/
 void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
   //assert(0);//*dstrect->h
   
@@ -202,7 +201,7 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
   }
 }
 
-*/
+
 // APIs below are already implemented.
 
 static inline int maskToShift(uint32_t mask) {
