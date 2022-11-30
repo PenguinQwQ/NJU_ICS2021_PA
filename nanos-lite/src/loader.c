@@ -84,8 +84,6 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   {
     Elf_Phdr phdr;
     phpos = phoff + num * phsz;
-    printf("num = %d \n", num);
-    printf("loader's phoff = %p \n", phoff);
     assert(fs_lseek(fd, phpos, SEEK_SET) == phpos);
     assert(fs_read(fd, &phdr, sizeof(phdr)) == sizeof(phdr));
   if(phdr.p_type == PT_LOAD)
