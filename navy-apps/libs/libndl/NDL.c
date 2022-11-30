@@ -69,8 +69,10 @@ void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
   uint32_t *pix = pixels + y * canva_w + x;
   uint32_t offset = ((canva_y + y) * screen_w + (canva_x + x)) * sizeof(uint32_t);
   for(int i = 0; i < h; i++){
-    lseek(frame_buffer_fd, offset + i * (screen_w << 2), SEEK_SET);
-    write(frame_buffer_fd, pix + i * canva_w, w << 2);
+    lseek(frame_buffer_fd, offset , SEEK_SET);
+    write(frame_buffer_fd, pix , w << 2);
+    offset += screen_w << 2;
+    pix += canva_w;
   }
 }
 
