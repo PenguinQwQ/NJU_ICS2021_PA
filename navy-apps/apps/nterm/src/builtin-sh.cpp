@@ -35,7 +35,6 @@ static char* token;
 static void sh_handle_cmd(const char *cmd) {
   memset(cmd_buf, 0, CMD_BUF_SIZE);
   strcpy(cmd_buf, cmd);
-  cmd_buf[strlen(cmd_buf) - 1] = '\0';//erase '\n
   char* cmd_p = cmd_buf;
   char* c_name = strtok(cmd_p," \n");
 
