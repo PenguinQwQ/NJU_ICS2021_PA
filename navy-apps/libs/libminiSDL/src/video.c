@@ -89,8 +89,8 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
 
 void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_Rect *dstrect) {//////////////???
   assert(dst && src && dst->format->BitsPerPixel == src->format->BitsPerPixel);
-  const unsigned char * dst_pix = (const unsigned char *)dst->pixels;
-  const unsigned char * src_pix = (const unsigned char *)src->pixels;
+  unsigned char * dst_pix = (unsigned char *)dst->pixels;
+  unsigned char * src_pix = (unsigned char *)src->pixels;
   int src_x, src_y, src_w, src_h, dst_x, dst_y, sp, dp, sz;
   src_x = (srcrect == NULL) ? 0 : srcrect->x;
   src_y = (srcrect == NULL) ? 0 : srcrect->y;
