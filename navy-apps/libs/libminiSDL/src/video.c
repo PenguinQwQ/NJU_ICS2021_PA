@@ -180,7 +180,8 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
     size_t* pix = (size_t *)malloc(s->w * s->h * sizeof(uint32_t));
   	for(int i = 0 ; i < valid_h ; i++){
   	  for(int j = 0 ; j < valid_w ; j++){
-        SDL_Color *colpt=s->format->palette->colors+(s->pixels)[offset];
+        SDL_Color *colpt=s->format->palette->colors + (s->pixels)[offset];
+        *(pix+offset) = 0;
   	    *(pix+offset) |=((uint32_t)(colpt->r)<<16);
         *(pix+offset) |=((uint32_t)(colpt->g)<<8);
         *(pix+offset) |=((uint32_t)(colpt->b));
