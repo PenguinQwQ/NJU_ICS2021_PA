@@ -160,6 +160,8 @@ void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
 
 void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
     assert(s != NULL);
+    size_t offset = x + y * s->w;
+    size_t* pix = (size_t *)malloc(s->w * s->h * sizeof(uint32_t));
   	int valid_w, valid_h; 
     if(w == 0 && h == 0)
     {
@@ -176,19 +178,17 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
     NDL_DrawRect((uint32_t *)(s->pixels), x, y, w, h);
   }
  	else{
-    size_t offset = x + y * s->w;
-    size_t* pix = (size_t *)malloc(s->w * s->h * sizeof(uint32_t));
   	for(int i = 0 ; i < valid_h ; i++){
   	  for(int j = 0 ; j < valid_w ; j++){
         SDL_Color col = s->format->palette->colors[s->pixels[offset]];
-  	    *(pix+offset) = col.val;// ((uint32_t)(col.r)<<16)|((uint32_t)(col.g)<<8)|((uint32_t)(col.b));
+  	    *(pix+offset) = ((uint32_t)(col.a)<<24)|((uint32_t)(col.r)<<16)|((uint32_t)(col.g)<<8)|((uint32_t)(col.b));
   	    offset++;
   	  }
   	  offset = offset - valid_w + s->w;
  	}
   	NDL_DrawRect(pix, x, y, valid_w, valid_h);
-  	free(pix);
   }
+  free(pix);
 }
 
 
