@@ -101,13 +101,11 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
   dst_y = (dstrect == NULL) ? 0 : dstrect->x;
   dp = dst->pitch;
   sz = dst->format->BytesPerPixel;
-  while(src_h)
-  {
-    //memcpy((unsigned char *)dst->pixels + dst_y * dst->pitch + dst_x * dst->format->BytesPerPixel, (unsigned char *)src->pixels + src_y * src->pitch + src_x * dst->format->BytesPerPixel, src_w * dst->format->BytesPerPixel);
-    memcpy(dst_pix + dst_y * dp + dst_x * sz, src_pix + src_y * sp + src_x * sz, src_w * sz);
-    src_h--;
-    dst_y++;
-    src_y++;
+
+  int pp=dst->format->BytesPerPixel;
+  for(;src_h;src_h--,dst_y++,src_y++){
+//    printf("Copy %d:%d-%d to %d:%d-%d\n",dy,dx,dx+sw,sy,sx,sx+sw);
+    memcpy(dst_pix+dst_y * dst->pitch+dst_x * pp,src_pix+src_y * src->pitch+src_x*pp,src_w*pp);
   }
   return;
 }
