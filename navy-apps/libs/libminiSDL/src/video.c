@@ -126,9 +126,9 @@ void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
   {
     for (int i = 0 ; i < dst->format->palette->ncolors; i++)
       if((*(dst->format->palette->colors+i)).val == color)
-        {
-          color = i; break;
-        }
+          {
+            color = i; break;
+          }
     int a = y, b = x;
   for (int i = 0 ; i < h ; i++)
   {
@@ -156,6 +156,38 @@ void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
   }
   }
   return;
+}
+
+void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
+    assert(s != NULL);
+  	int valid_w, valid_h; 
+    uint32_t offset = x + y * s->w;
+  	uint32_t* pix = (uint32_t *)malloc(s->w * s->h * sizeof(uint32_t));
+    if(w == 0 && h == 0)
+    {
+      valid_w = s->w;
+      valid_h = s->h;
+    }
+    else
+    {
+      valid_w = w;
+      valid_h = h;
+    }
+    
+  if(s->format->BytesPerPixel == 4){
+    NDL_DrawRect((uint32_t *)(s->pixels), x, y, w, h);
+  }
+ 	else{
+  	for(int i = 0 ; i < valid_h ; i++){
+  	  for(int j = 0 ; j < valid_w ; j++){
+        *(pix + offset) = *((uint32_t *)s->pixels + (y + i) * s->w + x + j);
+  	     offset++;
+  	  }
+  	  offset =offset - valid_w + s->w;
+ 	}
+  	NDL_DrawRect(pix, x, y, valid_w, valid_h);
+  	free(pix);
+  }
 }
 
 
@@ -225,7 +257,7 @@ void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
   }
 }
 
-*/
+
 
 void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
   //printf("%x\n",*(s->pixels));
@@ -252,7 +284,7 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
   }
 }
 
-
+*/
 // APIs below are already implemented.
 
 static inline int maskToShift(uint32_t mask) {
