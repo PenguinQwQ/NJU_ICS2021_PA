@@ -35,8 +35,8 @@ static char* token;
 static void sh_handle_cmd(const char *cmd) {
   memset(cmd_buf, 0, CMD_BUF_SIZE);
   strcpy(cmd_buf, cmd);
-  char* cmd_p = cmd_buf;
-  char* c_name = strtok(cmd_p," \n");
+  char* cmd_arg = cmd_buf;
+  char* c_name = strtok(cmd_arg," \n");
 
   //c_name contains the first command arg we get!
   //none command
