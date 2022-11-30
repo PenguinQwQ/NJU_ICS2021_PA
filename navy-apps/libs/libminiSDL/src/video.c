@@ -91,14 +91,14 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
   assert(dst && src && dst->format->BitsPerPixel == src->format->BitsPerPixel);
   unsigned char * dst_pix = (unsigned char *)dst->pixels;
   unsigned char * src_pix = (unsigned char *)src->pixels;
-  int src_x, src_y, src_w, src_h, dst_x, dst_y, sp, dp, sz;
+  size_t src_x, src_y, src_w, src_h, dst_x, dst_y, sp, dp, sz;
   src_x = (srcrect == NULL) ? 0 : srcrect->x;
   src_y = (srcrect == NULL) ? 0 : srcrect->y;
   src_w = (srcrect == NULL) ? 0 : srcrect->w;
   src_h = (srcrect == NULL) ? 0 : srcrect->h;
   sp = src->pitch;
   dst_x = (dstrect == NULL) ? 0 : dstrect->x;
-  dst_y = (dstrect == NULL) ? 0 : dstrect->x;
+  dst_y = (dstrect == NULL) ? 0 : dstrect->y;
   dp = dst->pitch;
   sz = dst->format->BytesPerPixel;
 
