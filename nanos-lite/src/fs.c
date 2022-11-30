@@ -116,11 +116,12 @@ size_t fs_lseek(int fd, size_t offset, int whence){
       return -1;
     }
 //Check the offset&size is compatiable accordingly!
+assert(offset <= file_table[fd].size); 
 //  printf("fd= %d , offset = %p, file_table[fd].open_offset = %p\n", fd, offset, file_table[fd].open_offset);
   switch (whence){
-  case SEEK_SET: assert(offset <= file_table[fd].size); file_table[fd].open_offset = offset; break;
+  case SEEK_SET: file_table[fd].open_offset = offset; break;
   case SEEK_CUR: assert(file_table[fd].open_offset + offset <= file_table[fd].size); file_table[fd].open_offset += offset; break;
-  case SEEK_END: assert(offset <= file_table[fd].size); file_table[fd].open_offset = file_table[fd].size + offset; break;
+  case SEEK_END: file_table[fd].open_offset = file_table[fd].size + offset; break;
   default: printf("Invalid Pointer Placement!!!\n"); assert(0); return -1;
   }
   return file_table[fd].open_offset;

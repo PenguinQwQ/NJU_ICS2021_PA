@@ -20,7 +20,7 @@ static int frame_buffer_fd = 0;
 uint32_t NDL_GetTicks() {
   struct timeval tv;
   gettimeofday(&tv,NULL);
-  return tv.tv_usec / 1000 + tv.tv_sec*1000;
+  return tv.tv_usec / 1000;
 }
 
 int NDL_PollEvent(char *buf, int len) {
@@ -31,6 +31,13 @@ int NDL_PollEvent(char *buf, int len) {
 }
 
 void NDL_OpenCanvas(int *w, int *h) {
+  if(*w == 0 && *h == 0){
+    *w = screen_w;
+    *h = screen_h;
+  }
+  canva_h = *h;
+  canva_w = *w;
+  assert(canva_h <= screen_h && canva_w <= screen_w);
   if (getenv("NWM_APP")) {
     int fbctl = 4;
     fbdev = 5;
@@ -46,19 +53,13 @@ void NDL_OpenCanvas(int *w, int *h) {
       buf[nread] = '\0';
       if (strcmp(buf, "mmap ok") == 0) break;
     }
-    //close(fbctl);
+    close(fbctl);
   }
-  if(*w == 0 && *h == 0){
-    *w = screen_w;
-    *h = screen_h;
-  }
-  canva_h = *h;
-  canva_w = *w;
-  assert(canva_h <= screen_h && canva_w <= screen_w);
 }
 
 
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
+  assert(w >= 0 && h >= 0);
   assert(x + w <= canva_w && y + h <= canva_h);
   canva_x = (screen_w - canva_w) >> 1;
   canva_y = (screen_h - canva_h) >> 1;
@@ -69,10 +70,8 @@ void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
   uint32_t *pix = pixels + y * canva_w + x;
   uint32_t offset = ((canva_y + y) * screen_w + (canva_x + x)) * sizeof(uint32_t);
   for(int i = 0; i < h; i++){
-    lseek(frame_buffer_fd, offset, SEEK_SET);
-    write(frame_buffer_fd, pix, w << 2);
-    pix += canva_w;
-    offset += screen_w << 2;
+    lseek(frame_buffer_fd, x + (y + i) * screen_w, SEEK_SET);
+    write(frame_buffer_fd, pix + i * w, w << 2);
   }
 }
 
