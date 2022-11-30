@@ -36,24 +36,9 @@ static void sh_handle_cmd(const char *cmd) {
   memset(cmd_buf, 0, CMD_BUF_SIZE);
   strcpy(cmd_buf, cmd);
   cmd_buf[strlen(cmd_buf) - 1] = '\0';//erase '\n
-//  char* cmd_p = cmd_buf;
-//  char* c_name = strtok(cmd_p," \n");
+  char* cmd_p = cmd_buf;
+  char* c_name = strtok(cmd_p," \n");
 
-  char *token;
-  char *argv[16];
-  int argc = 0;
-
-  /* 获取第一个子字符串 */
-  token = strtok(cmd_buf, " ");
-  
-  /* 继续获取其他的子字符串 */
-  while( token != NULL) {
-    argv[argc++] = token;
-    token = strtok(NULL, " ");
-  }
-  argv[argc] = NULL;
-  execvp(argv[0], argv);
-/*
   //c_name contains the first command arg we get!
   //none command
   if(c_name == NULL) return;
@@ -87,7 +72,6 @@ static void sh_handle_cmd(const char *cmd) {
     if(c_name[0] == '/' && execve(c_name, args, envp) == -1) sh_printf("There is no \"%s\" file exists!!! \n", c_name);
     else sh_printf("The command \"%s\" is not supported or not implemented!!!\n", c_name);
   }    
-  */ 
 }
 
 void builtin_sh_run() {
