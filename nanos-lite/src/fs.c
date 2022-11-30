@@ -41,30 +41,21 @@ static Finfo file_table[] __attribute__((used)) = {
 };
 
 static int file_num = sizeof(file_table) / sizeof(Finfo);
-static bool flag = 0;
 size_t ramdisk_read(void *buf, size_t offset, size_t len);
 size_t ramdisk_write(const void *buf, size_t offset, size_t len);
 size_t get_ramdisk_size();
 
-void init_fs() {
-  AM_GPU_CONFIG_T gpu = io_read(AM_GPU_CONFIG);
-  file_table[FD_FB].size = gpu.width * gpu.height * sizeof(uint32_t);
-}
+
+
 int fs_open(const char *pathname, int flags, int mode){
-  flag = false;
-  int ret = -1;
   for(int i = 0; i < file_num; i++){
     if(strcmp(pathname, file_table[i].name) == 0){
-      ret = i;
-      flag = true;
-      break;
+      return i;
     }
   }
-  if(flag == false){
     printf("The path: %s file not found!!!\n", pathname);
     assert(0);
-  }
-  return ret;
+  return -1;
 }
 
 size_t fs_read(int fd, void *buf, size_t len){
@@ -133,4 +124,9 @@ size_t fs_lseek(int fd, size_t offset, int whence){
 int fs_close(int fd){
   file_table[fd].open_offset = 0;
   return 0;
+}
+
+void init_fs() {
+  AM_GPU_CONFIG_T gpu = io_read(AM_GPU_CONFIG);
+  file_table[FD_FB].size = gpu.width * gpu.height * sizeof(uint32_t);
 }
