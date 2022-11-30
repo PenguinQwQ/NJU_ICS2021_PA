@@ -24,7 +24,7 @@ int SDL_PushEvent(SDL_Event *ev) {
 }
 
 int SDL_PollEvent(SDL_Event *ev) {   
-    memset(buf, 0, BUF_SIZE);
+   memset(buf, 0, BUF_SIZE);
    if(NDL_PollEvent(buf, BUF_SIZE) == false) return 0;
    if(ev == NULL) return 1;
     switch (buf[1])
@@ -40,7 +40,7 @@ int SDL_PollEvent(SDL_Event *ev) {
       ev->key.keysym.sym = i;
       break;
     }
-    key_state[ev->key.keysym.sym] = 1 ^ ev->type;
+    key_state[ev->key.keysym.sym] = 1 - ev->type;
     return 1;
 }
 
