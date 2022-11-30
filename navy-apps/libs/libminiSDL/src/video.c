@@ -112,84 +112,6 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
   return;
 }
 
-void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
-  assert(dst);
-  unsigned char * dst_pix = (unsigned char *)dst->pixels;
-  int x, y, w, h, dp, sp, sz;
-  x = (dstrect == NULL) ? 0 : dstrect->x;
-  y = (dstrect == NULL) ? 0 : dstrect->y;
-  w = (dstrect == NULL) ? dst->w : dstrect->w;
-  h = (dstrect == NULL) ? dst->h : dstrect->h;
-  dp = dst->pitch;
-  sz = dst->format->BytesPerPixel;
-  if(dst->format->BitsPerPixel == 8)
-  {
-    for (int i = 0 ; i < dst->format->palette->ncolors; i++)
-      if((*(dst->format->palette->colors+i)).val == color)
-        {
-          color = i; break;
-        }
-    int a = y, b = x;
-  for (int i = 0 ; i < h ; i++)
-  {
-    for (int j = 0 ; j < w ; j++)
-    {
-      *(dst_pix + a * dp + b * sz) = (uint8_t)color;
-      b++;
-    }
-    a++;
-  }
-  }
-  else
-  {
-    int a = y, b = x;
-  for (int i = 0 ; i < h ; i++)
-  {
-    for (int j = 0 ; j < w ; j++)
-    {
-      *(dst_pix + a * dp + b * sz) = (uint32_t)color;
-      b++;
-    }
-    a++;
-  }
-  }
-  return;
-}
-
-void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
-    assert(s != NULL);
-  	int valid_w, valid_h; 
-    uint32_t offset = x + y * s->w;
-  	uint32_t* pix = (uint32_t *)malloc(s->w * s->h * sizeof(uint32_t));
-    if(w == 0 && h == 0)
-    {
-      valid_w = s->w;
-      valid_h = s->h;
-    }
-    else
-    {
-      valid_w = w;
-      valid_h = h;
-    }
-    
-  if(s->format->BytesPerPixel == 4){
-    NDL_DrawRect((uint32_t *)(s->pixels), x, y, w, h);
-  }
- 	else{
-  	for(int i = 0 ; i < valid_h ; i++){
-  	  for(int j = 0 ; j < valid_w ; j++){
-        *(pix + offset) = *((uint32_t *)s->pixels + (y + i) * s->w + x + j);
-  	     offset++;
-  	  }
-  	  offset =offset - valid_w + s->w;
- 	}
-  	NDL_DrawRect(pix, x, y, valid_w, valid_h);
-  	free(pix);
-  }
-}
-
-
-
 
 /*
 void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_Rect *dstrect) {//////////////???
@@ -226,6 +148,8 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
   	}
    }
 }
+
+*/
 
 void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
   //assert(0);//*dstrect->h
@@ -280,7 +204,7 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
   }
 }
 
-*/
+
 // APIs below are already implemented.
 
 static inline int maskToShift(uint32_t mask) {
