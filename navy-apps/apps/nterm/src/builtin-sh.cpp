@@ -23,30 +23,55 @@ static void sh_prompt() {
   sh_printf("sh> ");
 }
 
+#define CMD_BUF_SIZE 32656
 
-static char* args[3];//args[0]->c_name, args[1]->c_arg, arg[2]->NULL
+static char* args[CMD_BUF_SIZE];//args[0]->c_name, args[1]->c_arg, arg[2]->NULL
 static char* command_args;
 static char* const * envp = NULL;
+static char cmd_buf[CMD_BUF_SIZE];
+static char* token;
+
 
 static void sh_handle_cmd(const char *cmd) {
-  char* cmd_p = (char*)cmd;
-  char* c_name = strtok(cmd_p," \n");
+  memset(cmd_buf, 0, CMD_BUF_SIZE);
+  strcpy(cmd_buf, cmd);
+  cmd_buf[strlen(cmd_buf) - 1] = '\0';//erase '\n
+//  char* cmd_p = cmd_buf;
+//  char* c_name = strtok(cmd_p," \n");
 
+  char *token;
+  char *argv[16];
+  int argc = 0;
+
+  /* 获取第一个子字符串 */
+  token = strtok(cmd_buf, " ");
+  
+  /* 继续获取其他的子字符串 */
+  while( token != NULL) {
+    argv[argc++] = token;
+    token = strtok(NULL, " ");
+  }
+  argv[argc] = NULL;
+  execvp(argv[0], argv);
+/*
+  //c_name contains the first command arg we get!
+  //none command
   if(c_name == NULL) return;
-
+  //echo command
   if(strcmp(c_name, "echo") == 0)
   {
     char* echo_str = strtok(NULL," ");
     sh_printf("%s", echo_str);
     return;
   }
-
+  //exit command
   if(strcmp(c_name, "exit") == 0)
   {
     exit(0);
     return;
   }
 
+  //else, the execute with env variable path!
   command_args = strtok(NULL," \n");
   args[0] = c_name;
   args[1] = command_args;
@@ -61,7 +86,8 @@ static void sh_handle_cmd(const char *cmd) {
   {
     if(c_name[0] == '/' && execve(c_name, args, envp) == -1) sh_printf("There is no \"%s\" file exists!!! \n", c_name);
     else sh_printf("The command \"%s\" is not supported or not implemented!!!\n", c_name);
-  }     
+  }    
+  */ 
 }
 
 void builtin_sh_run() {
