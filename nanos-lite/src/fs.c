@@ -128,7 +128,6 @@ assert(offset <= file_table[fd].size);
 }
 
 int fs_close(int fd){
-  assert(fd >= 3 && fd < file_num);
   file_table[fd].open_offset = 0;
   return 0;
 }
