@@ -1,4 +1,6 @@
 #include <fs.h>
+#define min(a,b) ((a)<(b))?(a):(b)
+
 
 typedef size_t (*ReadFn) (void *buf, size_t offset, size_t len);
 typedef size_t (*WriteFn) (const void *buf, size_t offset, size_t len);
@@ -50,11 +52,12 @@ size_t get_ramdisk_size();
 int fs_open(const char *pathname, int flags, int mode){
   for(int i = 0; i < file_num; i++){
     if(strcmp(pathname, file_table[i].name) == 0){
+      file_table[i].open_offset = 0;
       return i;
     }
   }
-    printf("The path: %s file not found!!!\n", pathname);
-    assert(0);
+  printf("The path: %s file not found!!!\n", pathname);
+  assert(0);
   return -1;
 }
 
@@ -70,41 +73,44 @@ size_t fs_read(int fd, void *buf, size_t len){
   if(file_table[fd].read)
     return file_table[fd].read(buf, file_table[fd].open_offset, len);
   size_t offset = file_table[fd].disk_offset + file_table[fd].open_offset;
-  assert(file_table[fd].size >= file_table[fd].open_offset);
   size_t read_len = file_table[fd].size - file_table[fd].open_offset;
   if(read_len == 0) return 0;
-  size_t read_bytes = len;
-  read_bytes = (read_len < len) ? read_len : read_bytes;
+  size_t read_bytes = min(read_len, len);
   ramdisk_read(buf, offset, read_bytes);
+  assert(file_table[fd].size >= file_table[fd].open_offset);
   file_table[fd].open_offset += read_bytes;
   return read_bytes;
 }
 
 size_t fs_write(int fd, const void *buf, size_t len){
   assert(buf);
+  if(fd == 0)
+  {
+    Log("Machine should never write to stdin!");
+    assert(0);
+    return -1;
+  }
   if(fd < 0 || fd >= file_num)
-    {
-      panic("Invalid File Describer!!!");
-      return -1;
-    }
-
+  {
+    Log("Invalid File Describer!!!");
+    assert(0);
+    return -1;
+  }
   if(file_table[fd].write)
     return file_table[fd].write(buf, file_table[fd].open_offset, len);
-    
   size_t offset = file_table[fd].disk_offset + file_table[fd].open_offset;
-  assert(file_table[fd].size >= file_table[fd].open_offset);
   size_t write_len = file_table[fd].size - file_table[fd].open_offset;
   if(write_len == 0) return 0;
-  size_t write_bytes = len;
-  write_bytes = (write_len < len) ? write_len : write_bytes;
+  size_t write_bytes = min(len, write_len);
   ramdisk_write(buf, offset, write_bytes);
+  assert(file_table[fd].size >= file_table[fd].open_offset);
   file_table[fd].open_offset += write_bytes;
   return write_bytes;
 }
 
 size_t fs_lseek(int fd, size_t offset, int whence){
   //Check the file describer is valid!
-    if(fd < 0 || fd >= file_num)
+    if(fd < 2 || fd >= file_num)
     {
       panic("Invalid File Describer!!!");
       return -1;
@@ -116,12 +122,13 @@ size_t fs_lseek(int fd, size_t offset, int whence){
   case SEEK_SET: file_table[fd].open_offset = offset; break;
   case SEEK_CUR: file_table[fd].open_offset += offset; break;
   case SEEK_END: file_table[fd].open_offset = file_table[fd].size + offset; break;
-  default: printf("Invalid Pointer Placement!!!\n"); assert(0); break;
+  default: printf("Invalid Pointer Placement!!!\n"); assert(0); return -1;
   }
   return file_table[fd].open_offset;
 }
 
 int fs_close(int fd){
+  assert(fd >= 3 && fd < file_num);
   file_table[fd].open_offset = 0;
   return 0;
 }
