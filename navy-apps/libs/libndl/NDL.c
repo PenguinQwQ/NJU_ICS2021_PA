@@ -98,6 +98,7 @@ int NDL_Init(uint32_t flags) {
 
   FILE *fp = fopen("/proc/dispinfo", "r");
   fscanf(fp, "WIDTH:%d\nHEIGHT:%d\n", &screen_w, &screen_h);
+  printf("screen_w is %d, screen_h is %d \n", screen_w, screen_h);
 /*
   strtok(file_buf,":\n");
   //Get screen_w
