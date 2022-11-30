@@ -100,16 +100,8 @@ int NDL_Init(uint32_t flags) {
   FILE *fp = fopen("/proc/dispinfo", "r");
   fscanf(fp, "WIDTH:%d\nHEIGHT:%d\n", &screen_w, &screen_h);
   printf("screen_w is %d, screen_h is %d \n", screen_w, screen_h);
-/*
-  strtok(file_buf,":\n");
-  //Get screen_w
-  screen_w = atoi(strtok(NULL,":\n"));
-  strtok(NULL,":\n");
-  //Get screen_h
-  screen_h = atoi(strtok(NULL,":\n"));
-
-  close(fd);
-*/
+  fclose(fp);
+  
   frame_buffer_fd = open("/dev/fb", 0, 0);
   return 0;
 }
