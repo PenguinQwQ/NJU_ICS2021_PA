@@ -31,13 +31,6 @@ int NDL_PollEvent(char *buf, int len) {
 }
 
 void NDL_OpenCanvas(int *w, int *h) {
-  if(*w == 0 && *h == 0){
-    *w = screen_w;
-    *h = screen_h;
-  }
-  canva_h = *h;
-  canva_w = *w;
-  assert(canva_h <= screen_h && canva_w <= screen_w);
   if (getenv("NWM_APP")) {
     int fbctl = 4;
     fbdev = 5;
@@ -53,8 +46,15 @@ void NDL_OpenCanvas(int *w, int *h) {
       buf[nread] = '\0';
       if (strcmp(buf, "mmap ok") == 0) break;
     }
-    close(fbctl);
+  //  close(fbctl);
   }
+    if(*w == 0 && *h == 0){
+    *w = screen_w;
+    *h = screen_h;
+  }
+  canva_h = *h;
+  canva_w = *w;
+  assert(canva_h <= screen_h && canva_w <= screen_w);
 }
 
 
