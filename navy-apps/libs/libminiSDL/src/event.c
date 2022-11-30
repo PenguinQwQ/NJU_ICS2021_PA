@@ -35,12 +35,12 @@ int SDL_PollEvent(SDL_Event *ev) {
     }
     buf[strlen(buf) - 1] = '\0';
     for(size_t i = 0 ; i < sz ; i++)
-    if(strcmp(buf + 3,keyname[i]) == 0)
+    if(strcmp(buf + 3, keyname[i]) == 0)
     {       
       ev->key.keysym.sym = i;
+      key_state[i] = (ev->type == SDL_KEYDOWN) ? 1 : 0;
       break;
     }
-    key_state[ev->key.keysym.sym] = 1 - ev->type;
     return 1;
 }
 
@@ -60,9 +60,9 @@ int SDL_WaitEvent(SDL_Event *event) {
       for(size_t i = 0 ;i < sz;i++)
       if(strcmp(buf + 3,keyname[i]) == 0){       
         event->key.keysym.sym = i;
+        key_state[i] = (event->type == SDL_KEYDOWN) ? 1 : 0;
         break;
       }
-      key_state[event->key.keysym.sym] = event->type;
     return 1;
 }
 
