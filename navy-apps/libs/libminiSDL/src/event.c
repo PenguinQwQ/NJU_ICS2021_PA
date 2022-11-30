@@ -45,9 +45,9 @@ int SDL_PollEvent(SDL_Event *ev) {
 
 int SDL_WaitEvent(SDL_Event *event) {
     if(event == NULL) return 0;
+    memset(buf, 0, BUF_SIZE);
     event->type = SDL_USEREVENT;
     event->key.keysym.sym = 0;
-    memset(buf, 0, BUF_SIZE);
     while(NDL_PollEvent(buf, BUF_SIZE) == false);   
     switch (buf[1])
     {

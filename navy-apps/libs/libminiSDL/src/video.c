@@ -1,4 +1,4 @@
-/*
+
 //video.c
 #include <NDL.h>
 #include <sdl-video.h>
@@ -107,7 +107,7 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
   }
 }
 
-*/
+/*
 #include <NDL.h>
 #include <sdl-video.h>
 #include <assert.h>
@@ -202,7 +202,7 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
   }
 }
 
-
+*/
 // APIs below are already implemented.
 
 static inline int maskToShift(uint32_t mask) {
