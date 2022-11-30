@@ -181,7 +181,7 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
   	for(int i = 0 ; i < valid_h ; i++){
   	  for(int j = 0 ; j < valid_w ; j++){
         SDL_Color col = s->format->palette->colors[s->pixels[offset]];
-  	    *(pix+offset) =((uint32_t)(col.r)<<16)|((uint32_t)(col.g)<<8)|((uint32_t)(col.b));
+  	    *(pix+offset) = col.val;// ((uint32_t)(col.r)<<16)|((uint32_t)(col.g)<<8)|((uint32_t)(col.b));
   	    offset++;
   	  }
   	  offset = offset - valid_w + s->w;
