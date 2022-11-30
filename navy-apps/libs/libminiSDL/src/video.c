@@ -91,7 +91,6 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
   assert(dst && src && dst->format->BitsPerPixel == src->format->BitsPerPixel);
   unsigned char * dst_pix = (unsigned char *)dst->pixels;
   unsigned char * src_pix = (unsigned char *)src->pixels;
-  
   size_t src_x, src_y, src_w, src_h, dst_x, dst_y, sp, dp, sz;
   src_x = (srcrect == NULL) ? 0 : srcrect->x;
   src_y = (srcrect == NULL) ? 0 : srcrect->y;
@@ -103,8 +102,12 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
   dp = dst->pitch;
   sz = dst->format->BytesPerPixel;
   int pp=dst->format->BytesPerPixel;
-  for(;src_h;src_h--,dst_y++,src_y++){
-    memcpy(dst_pix+dst_y * dst->pitch+dst_x * pp,src_pix+src_y * src->pitch+src_x*pp,src_w*pp);
+  while(src_h)
+  {
+    memcpy(dst_pix+dst_y * dp + dst_x * sz, src_pix + src_y * sp + src_x * sz,src_w * sz);
+    src_h--;
+    dst_y++;
+    src_y++;
   }
   return;
 }
