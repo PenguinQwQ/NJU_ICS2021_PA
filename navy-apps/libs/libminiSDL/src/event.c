@@ -14,7 +14,6 @@ static const char *keyname[] = {
 static uint8_t key_state[128];
 static char buf[256];
 static int sz = sizeof(keyname);
-static bool flag = false;
 
 int SDL_PushEvent(SDL_Event *ev) {
     if(ev == NULL) return 0;
@@ -70,7 +69,5 @@ int SDL_PeepEvents(SDL_Event *ev, int numevents, int action, uint32_t mask) {
   return 0;
 }
 uint8_t* SDL_GetKeyState(int *numkeys) {
-    if(flag == false) memset(key_state,0,sizeof(key_state));
-    flag = true;
     return key_state;
 }
