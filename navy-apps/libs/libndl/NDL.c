@@ -97,10 +97,10 @@ int NDL_Init(uint32_t flags) {
   int fd = open("/proc/dispinfo", 0, 0);
   assert(read(fd, file_buf, FILE_BUF_SIZE));
 
-//  FILE *fp = fopen("/proc/dispinfo", "r");
-//  fscanf(fp, "WIDTH:%d\nHEIGHT:%d\n", &screen_w, &screen_h);
-//  printf("screen_w is %d, screen_h is %d \n", screen_w, screen_h);
-
+  FILE *fp = fopen("/proc/dispinfo", "r");
+  fscanf(fp, "WIDTH:%d\nHEIGHT:%d\n", &screen_w, &screen_h);
+  printf("screen_w is %d, screen_h is %d \n", screen_w, screen_h);
+/*
   strtok(file_buf,":\n");
   //Get screen_w
   screen_w = atoi(strtok(NULL,":\n"));
@@ -109,7 +109,7 @@ int NDL_Init(uint32_t flags) {
   screen_h = atoi(strtok(NULL,":\n"));
 
   close(fd);
-
+*/
   frame_buffer_fd = open("/dev/fb", 0, 0);
   return 0;
 }
