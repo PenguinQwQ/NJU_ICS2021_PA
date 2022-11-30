@@ -93,16 +93,20 @@ int NDL_Init(uint32_t flags) {
   if (getenv("NWM_APP")) {
     evtdev = 3;
   }
-  int fd = open("/proc/dispinfo", 0, 0);
-  assert(read(fd, file_buf, FILE_BUF_SIZE));
+//  int fd = open("/proc/dispinfo", 0, 0);
+//  assert(read(fd, file_buf, FILE_BUF_SIZE));
 
+  FILE *fp = fopen("/proc/dispinfo", "r");
+  fscanf(fp, "WIDTH:%d\nHEIGHT:%d\n", &screen_w, &screen_h);
+/*
   strtok(file_buf,":\n");
   //Get screen_w
   screen_w = atoi(strtok(NULL,":\n"));
   strtok(NULL,":\n");
   //Get screen_h
   screen_h = atoi(strtok(NULL,":\n"));
-  close(fd);
+*/
+//  close(fd);
 
   frame_buffer_fd = open("/dev/fb", 0, 0);
   return 0;

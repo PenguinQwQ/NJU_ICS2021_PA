@@ -35,7 +35,7 @@ AM_GPU_CONFIG_T gpu;
 static inline void disp_init()
 {
   gpu = io_read(AM_GPU_CONFIG);
-  sprintf(dispinfo, "WIDTH:%d\n HEIGHT:%d\n", gpu.width, gpu.height);
+  sprintf(dispinfo, "WIDTH:%d\nHEIGHT:%d\n", gpu.width, gpu.height);
 }
 
 size_t dispinfo_read(void *buf, size_t offset, size_t len) {
