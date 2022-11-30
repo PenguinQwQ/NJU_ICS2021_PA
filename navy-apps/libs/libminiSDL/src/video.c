@@ -89,42 +89,22 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
 
 void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_Rect *dstrect) {//////////////???
   assert(dst && src && dst->format->BitsPerPixel == src->format->BitsPerPixel);
-  /*
   unsigned char * dst_pix = (unsigned char *)dst->pixels;
   unsigned char * src_pix = (unsigned char *)src->pixels;
   
   size_t src_x, src_y, src_w, src_h, dst_x, dst_y, sp, dp, sz;
   src_x = (srcrect == NULL) ? 0 : srcrect->x;
   src_y = (srcrect == NULL) ? 0 : srcrect->y;
-  src_w = (srcrect == NULL) ? 0 : srcrect->w;
-  src_h = (srcrect == NULL) ? 0 : srcrect->h;
+  src_w = (srcrect == NULL) ? src->w : srcrect->w;
+  src_h = (srcrect == NULL) ? src->h : srcrect->h;
   sp = src->pitch;
   dst_x = (dstrect == NULL) ? 0 : dstrect->x;
   dst_y = (dstrect == NULL) ? 0 : dstrect->y;
   dp = dst->pitch;
   sz = dst->format->BytesPerPixel;
-
   int pp=dst->format->BytesPerPixel;
   for(;src_h;src_h--,dst_y++,src_y++){
-//    printf("Copy %d:%d-%d to %d:%d-%d\n",dy,dx,dx+sw,sy,sx,sx+sw);
     memcpy(dst_pix+dst_y * dst->pitch+dst_x * pp,src_pix+src_y * src->pitch+src_x*pp,src_w*pp);
-  }
-
-*/
-    int sx,sy,sw,sh,dx,dy;
-  if(srcrect==NULL) sx=sy=0,sw=src->w,sh=src->h;
-  else sx=srcrect->x,sy=srcrect->y,sw=srcrect->w,sh=srcrect->h;
-  if(dstrect==NULL) dx=dy=0;
-  else dx=dstrect->x,dy=dstrect->y;
-  
-//  printf("%d %d %d %d %d %d\n",sx,sy,sw,sh,dx,dy);
-//  printf("%d %d %d %d\n",src->w,src->h,dst->w,dst->h);
-  unsigned char * d=(unsigned char *)dst->pixels;
-  unsigned char * s=(unsigned char *)src->pixels;
-  int pp=dst->format->BytesPerPixel;
-  for(;sh;sh--,dy++,sy++){
-//    printf("Copy %d:%d-%d to %d:%d-%d\n",dy,dx,dx+sw,sy,sx,sx+sw);
-    memcpy(d+dy*dst->pitch+dx*pp,s+sy*src->pitch+sx*pp,sw*pp);
   }
   return;
 }
