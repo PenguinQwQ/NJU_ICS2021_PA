@@ -68,6 +68,7 @@ int execve(const char *pathname, char *const argv[], char *const envp[])
 
 void exit(int status)
 {
+  panic("in exit!");
   if (status == 0)
   {
     execve("/bin/nterm", NULL, NULL);
