@@ -39,6 +39,9 @@
 #endif
 
 
+extern uint8_t NR_PROC;
+
+
 size_t ramdisk_read(void *buf, size_t offset, size_t len);
 size_t ramdisk_write(const void *buf, size_t offset, size_t len);
 size_t get_ramdisk_size();
@@ -116,4 +119,13 @@ void naive_uload(PCB *pcb, const char *filename) {
   entry = loader(pcb, filename);
   Log("Jump to entry = %p", entry);
   ((void(*)())entry) ();
+}
+
+Context *context_kload(PCB *pcb, void (*entry)(void *), void *arg)
+{
+  Area kstack = RANGE(pcb, (char *)pcb + STACK_SIZE);
+  Context *ctx = kcontext(kstack, entry, arg);
+  ctx->pdir = NULL;
+  NR_PROC++;
+  return ctx;
 }

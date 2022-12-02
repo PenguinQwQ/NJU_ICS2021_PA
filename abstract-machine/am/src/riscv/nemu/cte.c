@@ -34,8 +34,26 @@ bool cte_init(Context*(*handler)(Event, Context*)) {
   return true;
 }
 
-Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
-  return NULL;
+Context *kcontext(Area kstack, void (*entry)(void *), void *arg)
+{
+  // return NULL;
+  Context *ctx = (Context *)((uint8_t *)(kstack.end) - sizeof(Context));
+  memset(ctx, 0, sizeof(ctx));
+
+  ctx->gpr[0] = 0;
+  ctx->mepc = (uintptr_t)entry;
+  ctx->mstatus = 0x1800 | 0x80;
+  ctx->GPRx = (uintptr_t)arg;
+  // ctx->pdir = NULL;
+  ctx->mscratch = 0;
+  // printf("args is %d\n", *((int *)ctx->gpr[10]));
+  // while (1)
+  // {
+  //   /* code */
+  // }
+
+  // printf("ctx gpr 0 is %d\n", ctx->gpr[0]);
+  return ctx;
 }
 
 void yield() { // From the assembly code, we know that Yield Event will fill the a7 with -1!!! 
