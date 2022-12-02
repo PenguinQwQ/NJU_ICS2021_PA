@@ -36,11 +36,10 @@ Context *context_kload(PCB *pcb, void (*entry)(void *), void *arg);
  
 
 void init_proc() {
+  pcb[0].cp = context_kload(&pcb[0], (void *)hello_fun, NULL);
   switch_boot_pcb();
   Log("Initializing processes...");
-  naive_uload(NULL, "/bin/menu");
-  pcb[0].cp = context_kload(&pcb[0], (void *)hello_fun, NULL);
-  
+//  naive_uload(NULL, "/bin/menu");
   // load program here
 }
 
@@ -53,15 +52,8 @@ Context *schedule(Context *prev)
 
 int execve(const char *pathname, char *const argv[], char *const envp[])
 {
-  int fd = fs_open(pathname, 0, 0);
-  if (fd == -1)
-  {
-    return -1;
-  }
-  else
-    fs_close(fd);
   current->cp = pcb[0].cp;//context_kload(&pcb[0], (void *)hello_fun, NULL);
-  switch_boot_pcb();
+  
   yield();
   return 0;
 }
