@@ -28,10 +28,11 @@ Context *context_kload(PCB *pcb, void (*entry)(void *), void *arg);
  
 
 void init_proc() {
-  naive_uload(NULL, "/bin/menu");
-  context_kload(&pcb[0], (void *)hello_fun, NULL);
   switch_boot_pcb();
   Log("Initializing processes...");
+  naive_uload(NULL, "/bin/menu");
+  pcb[0].cp = context_kload(&pcb[0], (void *)hello_fun, NULL);
+  
   // load program here
 }
 
