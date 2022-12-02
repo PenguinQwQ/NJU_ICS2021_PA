@@ -47,7 +47,7 @@ void do_syscall(Context *c) {
 
   switch (a[0]) {
     case SYS_yield: yield(); c->GPRx = 0; break;
-    case SYS_exit:  c->GPRx = sys_execve("/bin/nterm",NULL,NULL); break;
+    case SYS_exit:  c->GPRx = sys_execve("/bin/menu",NULL,NULL); break;
     case SYS_brk: c->GPRx = sys_brk((void *)a[1]); break;
     case SYS_open:c->GPRx = fs_open((const char *)a[1], (int)a[2], (int)a[3]); break;
     case SYS_read: c->GPRx = fs_read((int)a[1], (void *)a[2], (size_t)a[3]); break;
