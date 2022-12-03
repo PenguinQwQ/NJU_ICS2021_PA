@@ -126,6 +126,5 @@ Context *context_kload(PCB *pcb, void (*entry)(void *), void *arg)
   Area kstack = RANGE(pcb, (char *)pcb + STACK_SIZE);
   Context *ctx = kcontext(kstack, entry, arg);
   ctx->pdir = NULL;
-  NR_PROC++;
   return ctx;
 }

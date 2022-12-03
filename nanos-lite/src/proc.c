@@ -45,15 +45,17 @@ void init_proc() {
 
 Context *schedule(Context *prev)
 {
+  //save the current pcb context pointer
   current->cp = prev;
+  //Load the pcb[0] process
   current =  &pcb[0];
+  //Return the current context pointer
   return current->cp;
 }
 
 int execve(const char *pathname, char *const argv[], char *const envp[])
 {
-  current->cp = pcb[0].cp;//context_kload(&pcb[0], (void *)hello_fun, NULL);
-  
+  // current->cp = pcb[0].cp;//context_kload(&pcb[0], (void *)hello_fun, NULL);
   yield();
   return 0;
 }
