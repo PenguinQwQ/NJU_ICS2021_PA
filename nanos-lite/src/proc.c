@@ -60,7 +60,6 @@ Context *schedule(Context *prev)
 
 int execve(const char *pathname, char *const argv[], char *const envp[])
 {
-  assert(0);
   // current->cp = pcb[0].cp;//context_kload(&pcb[0], (void *)hello_fun, NULL);
   yield();
   return 0;
@@ -68,11 +67,5 @@ int execve(const char *pathname, char *const argv[], char *const envp[])
 
 void exit(int status)
 {
-  assert(0);
-  if (status == 0)
-  {
-    execve("/bin/nterm", NULL, NULL);
-  }
-  else
-    halt(status);
+    halt(0);
 }
