@@ -41,7 +41,6 @@ static inline void disp_init()
 }
 
 size_t dispinfo_read(void *buf, size_t offset, size_t len) {
-  yield();
   memcpy(buf, dispinfo, len);
   return strlen(buf);
 }
