@@ -45,13 +45,7 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg)
   ctx->GPRx = (uintptr_t)arg;
   // ctx->pdir = NULL;
   ctx->mscratch = 0;
-  // printf("args is %d\n", *((int *)ctx->gpr[10]));
-  // while (1)
-  // {
-  //   /* code */
-  // }
 
-  // printf("ctx gpr 0 is %d\n", ctx->gpr[0]);
   return ctx;
 }
 

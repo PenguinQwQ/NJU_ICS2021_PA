@@ -30,7 +30,6 @@ f(30) f(31)
 #define OFFSET_STATUS     (33 * XLEN)
 #define OFFSET_EPC        (34 * XLEN)
 #define OFFSET_SCRATCH    (35 * XLEN)
-
 .align 3
 .globl __am_asm_trap
 __am_asm_trap:

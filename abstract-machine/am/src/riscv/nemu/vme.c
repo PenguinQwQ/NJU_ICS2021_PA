@@ -71,7 +71,6 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 
 Context *ucontext(AddrSpace *as, Area kstack, void *entry)
 {
-
   Context *ctx = (Context *)((uint8_t *)(kstack.end) - sizeof(Context));
   memset(ctx, 0, sizeof(ctx));
   ctx->mepc = (uintptr_t)entry;
@@ -79,7 +78,7 @@ Context *ucontext(AddrSpace *as, Area kstack, void *entry)
   ctx->gpr[0] = 0;
 
   ctx->mscratch = (uintptr_t)kstack.end;
-  ctx->GPRx = (uintptr_t)(heap.end);
+  //ctx->GPRx = (uintptr_t)(heap.end);
   // printf("the heap end is %p\n", heap.end);
 
   return ctx;
