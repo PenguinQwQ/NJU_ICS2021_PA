@@ -129,8 +129,6 @@ Context *context_kload(PCB *pcb, void (*entry)(void *), void *arg)
   return ctx;
 }
 
-
-
 Context *context_uload(PCB *pcb, char *filename, char *const argv[], char *const envp[])
 {
   Area kstack = RANGE(pcb, (char *)pcb + STACK_SIZE);

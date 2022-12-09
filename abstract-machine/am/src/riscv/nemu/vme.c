@@ -69,16 +69,12 @@ void __am_switch(Context *c) {
 void map(AddrSpace *as, void *va, void *pa, int prot) {
 }
 
-#include <klib.h>
 Context *ucontext(AddrSpace *as, Area kstack, void *entry)
 {
 
   Context *ctx = (Context *)((uint8_t *)(kstack.end) - sizeof(Context));
   memset(ctx, 0, sizeof(ctx));
-
   ctx->mepc = (uintptr_t)entry;
-  assert(ctx->mepc >= 0x40000000 && ctx->mepc <= 0x88000000);
-
   ctx->mstatus = 0x1800 | 0x80;
   ctx->gpr[0] = 0;
 
