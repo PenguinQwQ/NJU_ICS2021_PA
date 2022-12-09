@@ -40,7 +40,7 @@ void init_proc() {
   p1 = (uintptr_t)&up1;
   p2 = (uintptr_t)&up2;
   pcb[0].cp = context_kload(&pcb[0], (void *)hello_fun, (void *)p1);
-  pcb[1].cp = context_uload(&pcb[1], "/bin/nterm", NULL, NULL);
+  pcb[1].cp = context_uload(&pcb[1], "/bin/file-test", NULL, NULL);
   switch_boot_pcb();
   Log("Initializing processes...");
 //  naive_uload(NULL, "/bin/menu");
