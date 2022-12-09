@@ -15,7 +15,6 @@ static const char *keyname[256] __attribute__((used)) = {
 };
 
 size_t serial_write(const void *buf, size_t offset, size_t len) {
-  yield();
   const char *str = (const char *)buf;
   for (int i = 0 ; i < len ; i++)
     putch(*str++);
@@ -23,7 +22,6 @@ size_t serial_write(const void *buf, size_t offset, size_t len) {
 }
 
 size_t events_read(void *buf, size_t offset, size_t len) {
-  yield();
   *((char *)buf) = 0;
   AM_INPUT_KEYBRD_T kbd = io_read(AM_INPUT_KEYBRD);
   if(kbd.keycode == AM_KEY_NONE) return 0;
@@ -46,7 +44,6 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len) {
 }
 
 size_t fb_write(const void *buf, size_t offset, size_t len) {
-  yield();
   AM_GPU_CONFIG_T gpu = io_read(AM_GPU_CONFIG);
   int x = (offset >> 2) % gpu.width, y = (offset >> 2) / gpu.width;
   io_write(AM_GPU_FBDRAW, x, y, (uint32_t *)buf, len >> 2, 1, true);
