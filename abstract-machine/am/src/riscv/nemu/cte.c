@@ -43,9 +43,6 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg)
   ctx->mepc = (uintptr_t)entry;
   ctx->mstatus = 0x1800 | 0x80;
   ctx->GPRx = (uintptr_t)arg;
-  // ctx->pdir = NULL;
-  ctx->mscratch = 0;
-
   return ctx;
 }
 
