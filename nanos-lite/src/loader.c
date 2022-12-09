@@ -128,3 +128,13 @@ Context *context_kload(PCB *pcb, void (*entry)(void *), void *arg)
   ctx->pdir = NULL;
   return ctx;
 }
+
+
+
+Context *context_uload(PCB *pcb, char *filename, char *const argv[], char *const envp[])
+{
+  Area kstack = RANGE(pcb, (char *)pcb + STACK_SIZE);
+  uintptr_t entry = loader(pcb, filename);
+  Context *ctx = ucontext(NULL, kstack, (void *)entry);
+  return ctx;
+}
