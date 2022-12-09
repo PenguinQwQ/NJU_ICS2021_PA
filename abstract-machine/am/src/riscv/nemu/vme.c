@@ -76,7 +76,6 @@ Context *ucontext(AddrSpace *as, Area kstack, void *entry)
   ctx->mepc = (uintptr_t)entry;
   ctx->mstatus = 0x1800 | 0x80;
   ctx->gpr[0] = 0;
-
   ctx->mscratch = (uintptr_t)kstack.end;
   //ctx->GPRx = (uintptr_t)(heap.end);
   // printf("the heap end is %p\n", heap.end);
