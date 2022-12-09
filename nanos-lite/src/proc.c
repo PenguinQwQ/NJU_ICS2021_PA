@@ -40,7 +40,7 @@ void init_proc() {
   p1 = (uintptr_t)&up1;
   p2 = (uintptr_t)&up2;
 //  pcb[0].cp = context_kload(&pcb[0], (void *)hello_fun, (void *)p1);
-  pcb[0].cp = context_uload(&pcb[1], "/bin/pal", NULL, NULL);
+  pcb[0].cp = context_uload(&pcb[0], "/bin/pal", NULL, NULL);
   switch_boot_pcb();
   Log("Initializing processes...");
 //  naive_uload(NULL, "/bin/menu");
@@ -52,8 +52,8 @@ Context *schedule(Context *prev)
   //save the current pcb context pointer
   current->cp = prev;
   //Load the pcb[0] process
-//  current =  &pcb[0];
-  current = (current == &pcb[0]) ? (&pcb[1]) : (&pcb[0]);
+  current =  &pcb[0];
+//  current = (current == &pcb[0]) ? (&pcb[1]) : (&pcb[0]);
   //Return the current context pointer
   return current->cp;
 }
