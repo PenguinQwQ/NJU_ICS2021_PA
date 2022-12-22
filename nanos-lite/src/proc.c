@@ -58,14 +58,19 @@ Context *schedule(Context *prev)
   return current->cp;
 }
 
-int execve(const char *pathname, char *const argv[], char *const envp[])
-{
-  // current->cp = pcb[0].cp;//context_kload(&pcb[0], (void *)hello_fun, NULL);
+int execve(const char *filename, char *const argv[], char *const envp[]){
+  if (fs_open(filename, 0, 0) == -1){// 文件不存在
+    return -1;
+  }
+  printf("Loading from %s ...\n", filename);
+  context_uload(&pcb[0], (char *)filename, argv, envp);
+  switch_boot_pcb();  
+  
+  pcb[0].cp->pdir = NULL;
+  //TODO: 这是一种trade-off
+  //set_satp(pcb[1].cp->pdir);
+  printf("PCB[0] pdir: %p cp: %p\n", pcb[0].cp->pdir, pcb[0].cp);
+
   yield();
   return 0;
-}
-
-void exit(int status)
-{
-    halt(0);
 }

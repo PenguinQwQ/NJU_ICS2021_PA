@@ -20,9 +20,12 @@ size_t fs_read(int fd, void *buf, size_t len);
 size_t fs_write(int fd, void *buf, size_t len);
 size_t fs_lseek(int fd, size_t offset, int whence);
 int fs_close(int fd);
-void exit(int status);
 int execve(const char *pathname, char *const argv[], char *const envp[]);
-
+int sys_exit(){
+  //naive_uload(NULL, "/bin/nterm");
+  //c->GPRx = 0;
+  return 0;
+}
 static int sys_brk(void *addr)
 {
   return 0;//single thread always return 0 as true!
@@ -51,7 +54,7 @@ void do_syscall(Context *c) {
 
   switch (a[0]) {
     case SYS_yield: yield(); c->GPRx = 0; break;
-    case SYS_exit:  exit((int)a[1]); break;//c->GPRx = sys_execve("/bin/menu",NULL,NULL); break;
+    case SYS_exit: c->GPRx = sys_exit(); break;//c->GPRx = sys_execve("/bin/menu",NULL,NULL); break;
     case SYS_brk: c->GPRx = sys_brk((void *)a[1]); break;
     case SYS_open:c->GPRx = fs_open((const char *)a[1], (int)a[2], (int)a[3]); break;
     case SYS_read: c->GPRx = fs_read((int)a[1], (void *)a[2], (size_t)a[3]); break;
