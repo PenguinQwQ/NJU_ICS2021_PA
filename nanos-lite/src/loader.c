@@ -28,20 +28,6 @@ static void read(int fd, void *buf, size_t offset, size_t len){
 #define NR_PAGE 8
 #define PAGESIZE 4096
 
- __attribute__ ((__used__)) static void * alloc_section_space(AddrSpace *as, uintptr_t vaddr, size_t p_memsz){
-  //size_t page_n = p_memsz % PAGESIZE == 0 ? p_memsz / 4096 : (p_memsz / 4096 + 1);
-  size_t page_n = ((vaddr + p_memsz - 1) >> 12) - (vaddr >> 12) + 1;
-  void *page_start = new_page(page_n);
-
-  printf("Loaded Segment from [%x to %x)\n", vaddr, vaddr + p_memsz);
-  for (int i = 0; i < page_n; ++i){
-    // TODO: 这里prot参数不规范
-    map(as, (void *)((vaddr & ~0xfff) + i * PAGESIZE), (void *)(page_start + i * PAGESIZE), 1);
-  }
-
-  return page_start;
-}
-
 #define MAX(a, b)((a) > (b) ? (a) : (b))
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
@@ -73,7 +59,13 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
     uintptr_t virt_addr;
     if(section_entry.p_type == PT_LOAD) {
       virt_addr = section_entry.p_vaddr;
-      phys_addr = alloc_section_space(as, virt_addr, section_entry.p_memsz);
+      size_t page_n = ((virt_addr + section_entry.p_memsz - 1) >> 12) - (virt_addr >> 12) + 1;
+      void *page_start = new_page(page_n);
+      for (int i = 0; i < page_n; ++i){
+         // TODO: 这里prot参数不规范
+          map(as, (void *)((virt_addr & ~0xfff) + i * PAGESIZE), (void *)(page_start + i * PAGESIZE), 1);
+        }
+      phys_addr = page_start;
    //   read(fd, phys_addr + (virt_addr & 0xfff), section_entry.p_offset, section_entry.p_filesz);
       fs_lseek(fd, section_entry.p_offset, SEEK_SET);
       fs_read(fd, phys_addr + (virt_addr & 0xfff), section_entry.p_filesz);
