@@ -5,12 +5,15 @@
 #ifdef __LP64__
 # define Elf_Ehdr Elf64_Ehdr
 # define Elf_Phdr Elf64_Phdr
-# define ELF_Off  Elf64_Off
-
+# define Elf_Shdr Elf64_Shdr
+# define Elf_class ELFCLASS64
+# define ELF_Off Elf64_Off
 #else
 # define Elf_Ehdr Elf32_Ehdr
 # define Elf_Phdr Elf32_Phdr
-# define ELF_Off  Elf32_Off
+# define Elf_Shdr Elf32_Shdr
+# define Elf_class ELFCLASS32
+# define ELF_Off Elf32_Off
 #endif
 
 int fs_open(const char *pathname, int flags, int mode);
@@ -18,15 +21,11 @@ size_t fs_read(int fd, void *buf, size_t len);
 size_t fs_write(int fd, const void *buf, size_t len);
 size_t fs_lseek(int fd, size_t offset, int whence);
 int fs_close(int fd);
-/*
-static void read(int fd, void *buf, size_t offset, size_t len){
-  fs_lseek(fd, offset, SEEK_SET);
-  fs_read(fd, buf, len);
-}
-*/
+
 
 #define NR_PAGE 8
 #define PAGESIZE 4096
+#define PG_MASK 0xfff
 
 #define MAX(a, b)((a) > (b) ? (a) : (b))
 
@@ -34,45 +33,39 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   int fd = fs_open(filename, 0, 0);
   if (fd == -1){ 
     printf("The file %s not found!", filename);
-    assert(0); //filename指向文件不存在
+    assert(0); 
   }
-
   AddrSpace *as = &pcb->as;
   Elf_Ehdr elf_header;
-  //read(fd, &elf_header, 0, sizeof(elf_header));
-  fs_lseek(fd, 0, SEEK_SET);
-  fs_read(fd, &elf_header, sizeof(elf_header));
+  assert(fs_lseek(fd, 0, SEEK_SET) != -1);
+  assert(fs_read(fd, &elf_header, sizeof(Elf_Ehdr)) == sizeof(Elf_Ehdr));
 
-
-  //根据小端法 0x7F E L F
   assert(*(uint32_t *)elf_header.e_ident == 0x464c457f);
-  ELF_Off program_header_offset = elf_header.e_phoff;
-  size_t headers_entry_size = elf_header.e_phentsize;
+
+  ELF_Off phpos = elf_header.e_phoff;
+  size_t phsize = elf_header.e_phentsize;
   int headers_entry_num = elf_header.e_phnum;
   for (int i = 0; i < headers_entry_num; ++i){
-    Elf_Phdr section_entry;
-  //  read(fd, &section_entry, 
-  //    i * headers_entry_size + program_header_offset, sizeof(elf_header));
-    fs_lseek(fd, i * headers_entry_size + program_header_offset, SEEK_SET);
-    fs_read(fd, &section_entry, sizeof(elf_header));
-    void *phys_addr;
-    uintptr_t virt_addr;
-    if(section_entry.p_type == PT_LOAD) {
-      virt_addr = section_entry.p_vaddr;
-      size_t page_n = ((virt_addr + section_entry.p_memsz - 1) >> 12) - (virt_addr >> 12) + 1;
-      void *page_start = new_page(page_n);
-      for (int i = 0; i < page_n; ++i){
-         // TODO: 这里prot参数不规范
-          map(as, (void *)((virt_addr & ~0xfff) + i * PAGESIZE), (void *)(page_start + i * PAGESIZE), 1);
-        }
-      phys_addr = page_start;
-   //   read(fd, phys_addr + (virt_addr & 0xfff), section_entry.p_offset, section_entry.p_filesz);
-      fs_lseek(fd, section_entry.p_offset, SEEK_SET);
-      fs_read(fd, phys_addr + (virt_addr & 0xfff), section_entry.p_filesz);
+    Elf_Phdr phdr;
+    assert(fs_lseek(fd, phpos, SEEK_SET) != -1);
+    assert(fs_read(fd, &phdr, sizeof(Elf_Phdr)) == sizeof(Elf_Phdr));
+    phpos += phsize;
 
-      memset(phys_addr + (virt_addr & 0xfff) + section_entry.p_filesz, 0, section_entry.p_memsz - section_entry.p_filesz);
-      if (section_entry.p_filesz < section_entry.p_memsz){// 应该是.bss节
-        pcb->max_brk = ROUNDUP(section_entry.p_vaddr + section_entry.p_memsz, 0xfff);
+    if(phdr.p_type == PT_LOAD) {
+    void *p_addr;
+      uintptr_t v_addr = phdr.p_vaddr;
+      size_t page_num = ((v_addr + phdr.p_memsz - 1) >> 12) - (v_addr >> 12) + 1;
+      void *page_start = new_page(page_num);
+      for (int i = 0; i < page_num; ++i)
+          map(as, (void *)((v_addr & ~PG_MASK) + i * PAGESIZE), (void *)(page_start + i * PAGESIZE), 1);
+      p_addr = page_start;
+      assert(fs_lseek(fd, phdr.p_offset, SEEK_SET) != -1);
+      uint32_t filesz = phdr.p_filesz, memsz = phdr.p_memsz;
+      assert(filesz <= memsz);
+      assert(fs_read(fd, p_addr + (v_addr & PG_MASK), filesz) == filesz);
+      memset(p_addr + (v_addr & PG_MASK) + filesz, 0, memsz - filesz);
+      if (filesz < memsz){// 应该是.bss节
+        pcb->max_brk = ROUNDUP(v_addr + memsz, PG_MASK);
       }
     }
   }
