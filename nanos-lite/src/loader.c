@@ -54,11 +54,15 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   assert(fs_lseek(fd, 0, SEEK_SET) != -1);
   assert(fs_read(fd, &ehdr, sizeof(Elf_Ehdr)) == sizeof(Elf_Ehdr));
 
+  //Check the elf file and its property!
   assert(*(uint32_t *)ehdr.e_ident == 0x464c457f);
   assert(ehdr.e_machine == EXPECT_TYPE);
   assert(ehdr.e_type == ET_EXEC);
+  assert(ehdr.e_version == EV_CURRENT);
+  assert(ehdr.e_ident[EI_DATA] == ELFDATA2LSB);
+  assert(ehdr.e_ident[EI_CLASS] == Elf_class);
 
-
+  //Analysis the elf file!
   ELF_Off phpos = ehdr.e_phoff;
   size_t phsize = ehdr.e_phentsize;
   int cnt = ehdr.e_phnum;
@@ -67,12 +71,16 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
     assert(fs_lseek(fd, phpos, SEEK_SET) != -1);
     assert(fs_read(fd, &phdr, sizeof(Elf_Phdr)) == sizeof(Elf_Phdr));
     phpos += phsize;
-
+    //Extract the p_type, load the PT_LOAD program header!
     if(phdr.p_type == PT_LOAD) 
     {
+      //double check!
+      assert(phdr.p_type == PT_LOAD);
       void *p_addr;
       uintptr_t v_addr = phdr.p_vaddr;
+      //get pg_num
       size_t pg_num = ((v_addr + phdr.p_memsz - 1) >> 12) - (v_addr >> 12) + 1;
+      //alloc new pg
       void *pg_st = new_page(pg_num);
       uintptr_t pg_off = 0, pg_base = (v_addr & (~PG_MASK)), v_off = (v_addr & PG_MASK);
       while(pg_num--)
@@ -86,6 +94,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
       assert(fs_read(fd, p_addr + v_off, filesz) == filesz);
       assert(filesz <= memsz);
       memset(p_addr + v_off + filesz, 0, memsz - filesz);
+      //.bss section should round up!
       if (filesz < memsz)
         pcb->max_brk = ROUNDUP(v_addr + memsz, PG_MASK);
     }
@@ -101,34 +110,22 @@ void naive_uload(PCB *pcb, const char *filename) {
 }
 
 void context_kload(PCB *pcb, void (*entry)(void *), void *arg){
-  Area karea;
-  karea.start = &pcb->cp;
-  karea.end = &pcb->cp + STACK_SIZE;
-  pcb->cp = kcontext(karea, entry, arg);
+  Area kstack = RANGE(pcb, (char *)pcb + STACK_SIZE);
+  Context* context = kcontext(kstack, entry, arg);
+  pcb->cp = context;
 }
 
 void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]){
-  AddrSpace *as = &pcb->as;
-  protect(as);
-  void *alloced_page = new_page(NR_PAGE) + NR_PAGE * 4096; //得到栈顶
-
-  //这段代码有古怪，一动就会出问题，莫动
-  //这个问题确实已经被修正了，TMD，真cao dan
-  // 2021/12/16
+  protect(&pcb->as);
+  void *alloc_page = new_page(NR_PAGE) + NR_PAGE * PG_SIZE; //得到栈顶
   for (int i = 8 ; i >= 1 ; i--)
-      map(as, as->area.end - i * PG_SIZE, alloced_page - i * PG_SIZE, 1); 
-  char *brk = (char *)(alloced_page - 4);
+      map(&pcb->as, &pcb->as.area.end - i * PG_SIZE, alloc_page - i * PG_SIZE, 1); 
+  char *brk = (char *)(alloc_page - 4);
   intptr_t *ptr_brk = (intptr_t *)(brk);
-  //这条操作会把参数的内存空间扬了，要放在最后
   uintptr_t entry = loader(pcb, filename);
-  Area karea;
-  karea.start = &pcb->cp;
-  karea.end = &pcb->cp + STACK_SIZE;
-
-  Context* context = ucontext(as, karea, (void *)entry);
+  Area kstack = RANGE(pcb, (char *)pcb + STACK_SIZE);
+  Context* context = ucontext(&pcb->as, kstack, (void *)entry);
   pcb->cp = context;
-  ptr_brk -= 1;
-  *ptr_brk = 0;//为了t0_buffer
-  //设置了sp
-  context->gpr[2]  = (uintptr_t)ptr_brk - (uintptr_t)alloced_page + (uintptr_t)as->area.end;
+  ptr_brk--;
+  context->gpr[2]  = (uintptr_t)ptr_brk - (uintptr_t)alloc_page + (uintptr_t)pcb->as.area.end;
 }
