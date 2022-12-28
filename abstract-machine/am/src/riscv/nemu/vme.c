@@ -75,7 +75,7 @@ void __am_switch(Context *c) {
 #define OFFSET 12
 #define PG_SIZE 4096
 #define MAP_MASK ~0xfff
-static uint32_t V_PGN_MASK1 = 0x003FF000, V_PGN_MASK2 = 0xFFC00000, PTE_MASK = 0xFFFFFC00;
+static uint32_t V_PGN_MASK1 = 0x003FF000u, V_PGN_MASK2 = 0xFFC00000u, PTE_MASK = 0xFFFFFC00u;
 static uint32_t V_PGN_1(uint32_t x)
 {
   return (x & V_PGN_MASK1) >> OFFSET;
