@@ -117,15 +117,59 @@ void context_kload(PCB *pcb, void (*entry)(void *), void *arg){
 
 void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]){
   protect(&pcb->as);
-  void *alloc_page = new_page(NR_PAGE) + NR_PAGE * PG_SIZE; //得到栈顶
+  void *alloc_page = new_page(NR_PAGE) + NR_PAGE * PG_SIZE; 
+  int argc = 0, envc = 0;
+
+  while(argv != NULL && argv[argc] != NULL) argc++;
+  char *(args[argc]);
+  #ifdef HAS_VME
   for (int i = 8 ; i >= 1 ; i--)
       map(&pcb->as, &pcb->as.area.end - i * PG_SIZE, alloc_page - i * PG_SIZE, 1); 
+  #endif
   char *brk = (char *)(alloc_page - 4);
+
+  for (int i = 0; i < argc; ++i)
+  {
+    brk -= (strlen(argv[i]) + 1);
+    strcpy(brk, argv[i]);
+    args[i] = brk;
+  }
+
+  while(envp != NULL && envp[envc] != NULL) envc++;
+  char *(envs[envc]);
+  for (int i = 0; i < envc; ++i)
+  {
+    brk -= (strlen(envp[i]) + 1);
+    strcpy(brk, envp[i]);
+    envs[i] = brk;
+  }
+
+  char **sp_2 = (char **)brk;
+  --sp_2;
+  *sp_2 = NULL;
+
+  for (int i = envc - 1; i >= 0; --i)
+  {
+    --sp_2;
+    *sp_2 = envs[i];
+  }
+
+  --sp_2;
+  *sp_2 = NULL;
+
+  for (int i = argc - 1; i >= 0; --i)
+  {
+    --sp_2;
+    *sp_2 = args[i];
+  }
+
+  --sp_2;
+  *((int *)sp_2) = argc;
+
   intptr_t *ptr_brk = (intptr_t *)(brk);
   uintptr_t entry = loader(pcb, filename);
   Area kstack = RANGE(pcb, (char *)pcb + STACK_SIZE);
   Context* ctx = ucontext(&pcb->as, kstack, (void *)entry);
   pcb->cp = ctx;
   ptr_brk--;
- // ctx->gpr[2]  = (uintptr_t)ptr_brk - (uintptr_t)alloc_page + (uintptr_t)pcb->as.area.end;
 }
