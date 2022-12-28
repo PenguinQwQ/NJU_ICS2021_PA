@@ -29,7 +29,6 @@ bool vme_init(void* (*pgalloc_f)(int), void (*pgfree_f)(void*)) {
   pgfree_usr = pgfree_f;
 
   kas.ptr = pgalloc_f(PGSIZE);
-  printf("kas.ptr addr: %p\n", kas.ptr);
 
   int i;
   for (i = 0; i < LENGTH(segments); i ++) {
@@ -50,7 +49,6 @@ void protect(AddrSpace *as) {
   as->ptr = updir;
   as->area = USER_SPACE;
   as->pgsize = PGSIZE;
-  // map kernel space
   memcpy(updir, kas.ptr, PGSIZE);
 }
 
@@ -58,16 +56,13 @@ void unprotect(AddrSpace *as) {
 }
 
 void __am_get_cur_as(Context *c) {
-  if (c->pdir != NULL){ //自行添加
-    //printf("在__am_get_cur_as中设置为由%p，地址为%p，更改为，", c->pdir, &c->pdir);
+  if (c->pdir != NULL){
     c->pdir = (vme_enable ? (void *)get_satp() : NULL);
-    //printf("%p\n", c->pdir);
   }
 }
 
 void __am_switch(Context *c) {
   if (vme_enable && c->pdir != NULL) {
-    //printf("在__am_switch中设置satp为%p\n", c->pdir);
     set_satp(c->pdir);
   }
 }
