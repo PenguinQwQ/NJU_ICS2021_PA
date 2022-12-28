@@ -30,7 +30,7 @@ extern PCB *current;
 /* The brk() system call handler. */
 int mm_brk(uintptr_t brk) {
   static uint32_t OFFSET = 12;
-  uint32_t  alloc_pg_num = (brk >> 12) - (current->max_brk >> OFFSET) + 2;  
+  uint32_t  alloc_pg_num = (brk >> OFFSET) - (current->max_brk >> OFFSET) + 2;  
 
   if (current->max_brk <= brk){
     void *alloc_page =  new_page((brk >> OFFSET) - (current->max_brk >> OFFSET) + 2);//申请新的页
@@ -43,6 +43,7 @@ int mm_brk(uintptr_t brk) {
 
     current->max_brk = brk + PG_SIZE;
     assert(current->max_brk > brk);
+    return 0;
   }
 
   return 0;
