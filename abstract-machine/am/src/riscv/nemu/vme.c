@@ -90,23 +90,23 @@ static uint32_t PTE_PGN(uint32_t x)
 }
 
 void map(AddrSpace *as, void *va, void *pa, int prot) {
+  
+  PTE *PT_1 = as->ptr;
   va = (void *)(((uint32_t)va) & MAP_MASK);
-  pa = (void *)(((uint32_t)pa) & MAP_MASK);
+  PT_1 += V_PGN_2((uint32_t)va) * sizeof(uint32_t);
 
-  PTE *page_table_entry = as->ptr;
-  page_table_entry += V_PGN_2((uint32_t)va) * sizeof(uint32_t);
-
-  if ((*page_table_entry & PTE_V) == false){ // 说明二级表未分配
+  if ((*PT_1 & PTE_V) == false){ // 说明二级表未分配
     void *alloced_page = pgalloc_usr(PGSIZE);
-    *page_table_entry &= ~PTE_MASK;
-    *page_table_entry |= (PTE_MASK & ((uint32_t)alloced_page >> 2));
-    *page_table_entry |=  PTE_V;
+    *PT_1 &= ~PTE_MASK;
+    *PT_1 |= (PTE_MASK & ((uint32_t)alloced_page >> 2));
+    *PT_1 |=  PTE_V;
   }
   // 找到二级表中的表项
-  PTE *leaf_page_table_entry = (PTE *)(PTE_PGN(*page_table_entry) * PG_SIZE + V_PGN_1((uint32_t)va) * sizeof(uint32_t));
-  *leaf_page_table_entry = (PTE_MASK & ((uint32_t)pa >> 2));
-  *leaf_page_table_entry |= (PTE_V | PTE_R | PTE_W | PTE_X);
-  *leaf_page_table_entry |= (prot ? PTE_U : 0);
+  PTE *PT_2 = (PTE *)(PTE_PGN(*PT_1) * PG_SIZE + V_PGN_1((uint32_t)va) * sizeof(uint32_t));
+  pa = (void *)(((uint32_t)pa) & MAP_MASK);
+  *PT_2 = (PTE_MASK & ((uint32_t)pa >> 2));
+  *PT_2 |= (PTE_V | PTE_R | PTE_W | PTE_X);
+  *PT_2 |= (prot ? PTE_U : 0);
 }
 
 Context *ucontext(AddrSpace *as, Area kstack, void *entry)
