@@ -124,8 +124,8 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   intptr_t *ptr_brk = (intptr_t *)(brk);
   uintptr_t entry = loader(pcb, filename);
   Area kstack = RANGE(pcb, (char *)pcb + STACK_SIZE);
-  Context* context = ucontext(&pcb->as, kstack, (void *)entry);
-  pcb->cp = context;
+  Context* ctx = ucontext(&pcb->as, kstack, (void *)entry);
+  pcb->cp = ctx;
   ptr_brk--;
-  context->gpr[2]  = (uintptr_t)ptr_brk - (uintptr_t)alloc_page + (uintptr_t)pcb->as.area.end;
+ // ctx->gpr[2]  = (uintptr_t)ptr_brk - (uintptr_t)alloc_page + (uintptr_t)pcb->as.area.end;
 }
