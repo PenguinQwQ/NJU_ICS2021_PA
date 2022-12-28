@@ -55,6 +55,9 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   assert(fs_read(fd, &ehdr, sizeof(Elf_Ehdr)) == sizeof(Elf_Ehdr));
 
   assert(*(uint32_t *)ehdr.e_ident == 0x464c457f);
+  assert(ehdr.e_machine == EXPECT_TYPE);
+  assert(ehdr.e_type == ET_EXEC);
+
 
   ELF_Off phpos = ehdr.e_phoff;
   size_t phsize = ehdr.e_phentsize;
