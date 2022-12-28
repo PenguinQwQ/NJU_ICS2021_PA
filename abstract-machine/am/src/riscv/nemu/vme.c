@@ -96,9 +96,8 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
   PT_1 += V_PGN_2((uint32_t)va) * sizeof(uint32_t);
 
   if ((*PT_1 & PTE_V) == false){
-    void *alloced_page = pgalloc_usr(PGSIZE);
     *PT_1 &= ~PTE_MASK;
-    *PT_1 |= (((uint32_t)alloced_page >> 2) & PTE_MASK);
+    *PT_1 |= (((uint32_t)pgalloc_usr(PGSIZE) >> 2) & PTE_MASK);
     *PT_1 |=  PTE_V;
   }
 
