@@ -34,5 +34,5 @@ typedef struct {
   } inst;//as 
 } riscv32_ISADecodeInfo;
 
-#define isa_mmu_check(vaddr, len, type) (MMU_DIRECT)
+#define isa_mmu_check(vaddr, len, type) (cpu.CSR_REG[0x180] >> 31)
 #endif

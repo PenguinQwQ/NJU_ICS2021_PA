@@ -117,20 +117,20 @@ void context_kload(PCB *pcb, void (*entry)(void *), void *arg){
 
 void load_arg(void* brk, int argc, int envc, char *const argv[], char *const envp[], char* args[], char* envs[])
 {
+  //here we load the usr app args
   int t = 0;
   while(t < argc)
   {
     brk -= (strlen(argv[t]) + 1);
     strcpy(brk, argv[t]);
-    args[t] = brk;
-    t++;
+    args[t++] = brk;
   }
   t = 0;
   while(t < envc)
   {
     brk -= (strlen(envp[t]) + 1);
     strcpy(brk, envp[t]);
-    envs[t] = brk;
+    envs[t++] = brk;
   }
 
   const char **stk = (const char **)brk;

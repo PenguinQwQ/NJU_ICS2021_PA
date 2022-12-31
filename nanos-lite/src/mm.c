@@ -27,13 +27,12 @@ void free_page(void *p) {
 
 #define PG_MASK 0xfff
 extern PCB *current;
-/* The brk() system call handler. */
 int mm_brk(uintptr_t brk) {
   static uint32_t OFFSET = 12;
   uint32_t  alloc_pg_num = (brk >> OFFSET) - (current->max_brk >> OFFSET) + 2;  
 
   if (current->max_brk <= brk){
-    void *alloc_page =  new_page((brk >> OFFSET) - (current->max_brk >> OFFSET) + 2);//申请新的页
+    void *alloc_page =  new_page((brk >> OFFSET) - (current->max_brk >> OFFSET) + 2);
     while(alloc_pg_num--)
     {
       map(&current->as, (void *)(current->max_brk), (void *)(alloc_page), 1);
